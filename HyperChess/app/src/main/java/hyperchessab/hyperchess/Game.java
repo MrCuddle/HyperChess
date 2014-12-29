@@ -17,20 +17,19 @@ public class Game {
     GameBoard board;
     Camera camera;
 
-    public Game(Context context){
+    public Game(Context context, Camera camera){
         //bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
         //icon = context.getResources().getDrawable(R.drawable.ic_launcher);
         //icon.setBounds(0,0,200,200);
 
         board = new GameBoard(context);
-        camera = new Camera();
+        this.camera = camera;
     }
 
-    public void Update(double dt, float scale, int translationX, int translationY){
+    public void Update(double dt){
         //posX += dt*100.0;
         //icon.setBounds((int)posX,0,(int)posX + 200,200);
-        camera.setTranslation(translationX, translationY);
-        camera.setScale(scale);
+
     }
 
     public void Draw(Canvas c){

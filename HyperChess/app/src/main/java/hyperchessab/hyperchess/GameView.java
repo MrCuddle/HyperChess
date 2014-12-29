@@ -9,8 +9,6 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import static android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
-
 /**
  * Created by Perlwin on 29/12/2014.
  */
@@ -18,17 +16,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     GameLoop gameLoop;
     Game game;
-    int currentX, currentY, mCurrentIndex, mNumOfPointers;
+    Camera camera;
+    float currentX, currentY;
+    int mCurrentIndex, mNumOfPointers;
     float scaleFactor = 1.f;
 
     ScaleGestureDetector scaleGestureDetector;
 
     public GameView(Context context){
         super(context);
-        game = new Game(context);
+        camera = new Camera();
+        game = new Game(context, camera);
         gameLoop = new GameLoop(this);
         getHolder().addCallback(this);
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
+
+
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener{
@@ -36,6 +39,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         public boolean onScale(ScaleGestureDetector detector){
             scaleFactor *= detector.getScaleFactor();
             scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.f));
+            camera.setScale(scaleFactor);
             invalidate();
             return true;
         }
@@ -52,8 +56,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         mNumOfPointers = event.getPointerCount();
         if(event.getPointerCount() < 2) {
-            currentX = (int) event.getX();
-            currentY = (int) event.getY();
+            if(action == MotionEvent.ACTION_DOWN){
+                currentX = event.getX();
+                currentY = event.getY();
+            }
+            float dx = event.getX() - currentX;
+            float dy = event.getY() - currentY;
+
+            dx /= scaleFactor;
+            dy /= scaleFactor;
+            camera.Translate(dx,dy);
+
+            currentX = event.getX();
+            currentY = event.getY();
         }
         return true;
     }
@@ -71,7 +86,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void Update(double dt){
-        game.Update(dt, scaleFactor, currentX, currentY);
+        game.Update(dt);
     }
 
     @Override

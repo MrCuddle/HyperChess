@@ -31,9 +31,9 @@ public class Camera {
         scale = scaleFactor;
     }
 
-    public void setTranslation(float x, float y){
-        dx = x;
-        dy = y;
+    public void Translate(float x, float y){
+        dx += x;
+        dy += y;
     }
 
 }
