@@ -29,7 +29,7 @@ public class Game {
     public void Update(double dt){
         //posX += dt*100.0;
         //icon.setBounds((int)posX,0,(int)posX + 200,200);
-
+        board.Update(dt);
     }
 
     public void Draw(Canvas c){
