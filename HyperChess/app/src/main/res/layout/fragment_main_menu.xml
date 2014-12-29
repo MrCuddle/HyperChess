@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="hyperchessab.hyperchess.MainMenuFragment">
+
+    <TextView
+        android:id="@+id/mainmenu_text_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/game_name"
+        android:gravity="center"
+        android:textSize="@dimen/abc_text_size_headline_material"/>
+
+    <Button
+        android:id="@+id/mainmenu_button_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/play"
+        android:layout_below="@+id/mainmenu_text_header"/>
+
+    <Button
+        android:id="@+id/mainmenu_button_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/options"
+        android:layout_below="@+id/mainmenu_button_play"/>
+
+    <Button
+        android:id="@+id/mainmenu_button_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/exit"
+        android:layout_below="@+id/mainmenu_button_options"/>
+
+
+</RelativeLayout>

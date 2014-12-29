@@ -1,19 +1,24 @@
 package hyperchessab.hyperchess;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
-public class MainGameActivity extends ActionBarActivity {
+public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
+        //getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
+        setFragment(new MainMenuFragment(), false);
     }
 
 
@@ -37,5 +42,48 @@ public class MainGameActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setFragment(Fragment f, boolean addToBackStack){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if(addToBackStack){
+            ft.replace(R.id.fragment_container,f, f.getTag()).addToBackStack(null);
+        } else {
+            ft.replace(R.id.fragment_container, f, f.getTag());
+        }
+        ft.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getFragmentManager().getBackStackEntryCount() <= 0){
+            super.onBackPressed();
+        }
+        else{
+           getFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
+    public void onExitPressed() {
+        Toast.makeText(this, "Exit Pressed", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void onOptionsPressed() {
+        setFragment(new OptionFragment(), true);
+        Toast.makeText(this, "Options Pressed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPlayPressed() {
+        Toast.makeText(this, "Play pressed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onOptionInteraction(Uri uri) {
+        //placeholder
+        int i = 3 +4;
     }
 }
