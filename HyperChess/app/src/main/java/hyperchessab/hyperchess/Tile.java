@@ -1,7 +1,10 @@
 package hyperchessab.hyperchess;
 
 import android.content.Context;
+import android.graphics.AvoidXfermode;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 
 /**
@@ -20,6 +23,11 @@ public class Tile {
 
     public void Draw(Canvas c){
         shape.draw(c);
+    }
+
+    public void Highlight(){
+        shape.setColorFilter(0x00ff00, PorterDuff.Mode.MULTIPLY );
+
     }
 
 }
