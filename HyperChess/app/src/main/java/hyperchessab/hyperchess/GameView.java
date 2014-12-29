@@ -3,11 +3,14 @@ package hyperchessab.hyperchess;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 /**
  * Created by Perlwin on 29/12/2014.
@@ -17,9 +20,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     GameLoop gameLoop;
     Game game;
     Camera camera;
-    float currentX, currentY;
-    int mCurrentIndex, mNumOfPointers;
+    float currentX, currentY, startTouchX, startTouchY;
     float scaleFactor = 1.f;
+    boolean clicked = false;
 
     ScaleGestureDetector scaleGestureDetector;
 
@@ -30,8 +33,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this);
         getHolder().addCallback(this);
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
-
-
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener{
@@ -48,25 +49,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
-        int index = event.getActionIndex();
-
         scaleGestureDetector.onTouchEvent(event);
-
-        mCurrentIndex = index;
-
-        mNumOfPointers = event.getPointerCount();
         if(event.getPointerCount() < 2) {
             if(action == MotionEvent.ACTION_DOWN){
-                currentX = event.getX();
-                currentY = event.getY();
+                startTouchX = currentX = event.getX();
+                startTouchY = currentY = event.getY();
             }
             float dx = event.getX() - currentX;
             float dy = event.getY() - currentY;
 
-            dx /= scaleFactor;
-            dy /= scaleFactor;
-            camera.Translate(dx,dy);
 
+            float offsetX = event.getX() - startTouchX;
+            float offsetY = event.getY() - startTouchY;
+            if(Math.sqrt(offsetX*offsetX +offsetY*offsetY) < 60){
+                if(action == MotionEvent.ACTION_UP)
+                    clicked = true;
+            }
+            else {
+                dx /= scaleFactor;
+                dy /= scaleFactor;
+                camera.Translate(dx, dy);
+            }
             currentX = event.getX();
             currentY = event.getY();
         }
@@ -80,13 +83,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(Color.BLACK);
         canvas.drawText("currentX: " + currentX, 0,40, paint);
         canvas.drawText("currentY: " + currentY, 0,80, paint);
-        canvas.drawText("currentActionIndex: " + mCurrentIndex, 0,120, paint);
-        canvas.drawText("numOfPointers: " + mNumOfPointers, 0,160, paint);
-        canvas.drawText("scaleFactor: " + scaleFactor, 0, 200, paint);
+        canvas.drawText("scaleFactor: " + scaleFactor, 0, 120, paint);
+        canvas.drawText("Clicked: " + (clicked ? "yupp" : "nope"), 0, 160, paint);
     }
 
     public void Update(double dt){
+        if(clicked){
+            Matrix inverse = new Matrix();
+            camera.getTransform().invert(inverse);
+            float[] points = {currentX, currentY};
+            inverse.mapPoints(points);
+            InputData.ClickPoint = new Point((int)points[0], (int)points[1]);
+            InputData.Clicked = true;
+        }
         game.Update(dt);
+        InputData.Clear();
     }
 
     @Override
