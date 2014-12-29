@@ -26,15 +26,14 @@ public class Game {
         camera = new Camera();
     }
 
-    public void Update(double dt){
+    public void Update(double dt, float scale, int translationX, int translationY){
         //posX += dt*100.0;
         //icon.setBounds((int)posX,0,(int)posX + 200,200);
+        camera.setTranslation(translationX, translationY);
+        camera.setScale(scale);
     }
 
     public void Draw(Canvas c){
-
-        camera.setTranslation(50,50);
-        camera.setScale(2.0f);
         c.setMatrix(camera.getTransform());
 
         c.drawColor(Color.BLACK);

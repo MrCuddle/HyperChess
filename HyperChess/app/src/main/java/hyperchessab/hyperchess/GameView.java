@@ -71,9 +71,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void Update(double dt){
-        game.Update(dt);
-        currentX = 0;
-        currentY = 0;
+        game.Update(dt, scaleFactor, currentX, currentY);
     }
 
     @Override

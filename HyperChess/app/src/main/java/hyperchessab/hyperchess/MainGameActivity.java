@@ -78,7 +78,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onPlayPressed() {
-        Toast.makeText(this, "Play pressed", Toast.LENGTH_SHORT).show();
+        setFragment(new GameFragment(), true);
     }
 
     @Override
