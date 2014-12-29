@@ -1,9 +1,7 @@
 package hyperchessab.hyperchess;
 
 import android.content.Context;
-import android.graphics.AvoidXfermode;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 
