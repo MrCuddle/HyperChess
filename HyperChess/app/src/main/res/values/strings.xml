@@ -11,5 +11,6 @@
     <string name="game_name">HyperChess</string>
     <string name="apply">Apply</string>
     <string name="back">Back</string>
+    <string name="title_activity_designer">DesignerActivity</string>
 
 </resources>

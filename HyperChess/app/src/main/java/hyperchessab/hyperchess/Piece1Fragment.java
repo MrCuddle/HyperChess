@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 
 
@@ -18,7 +19,7 @@ import android.widget.GridLayout;
  * Use the {@link Piece1Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Piece1Fragment extends Fragment {
+public class Piece1Fragment extends Fragment implements Button.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,6 +28,8 @@ public class Piece1Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Button save, reset;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,6 +74,10 @@ public class Piece1Fragment extends Fragment {
         grid = (GridLayout)v.findViewById(R.id.Piece1Fragment_grid);
         View test = new View(getActivity());
         grid.addView(test);
+
+        save = (Button) v.findViewById(R.id.Piece1Fragment_savebtn);
+        reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
+
         return v;
     }
 
@@ -98,6 +105,11 @@ public class Piece1Fragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        mListener.onFragmentInteraction(null);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -112,5 +124,7 @@ public class Piece1Fragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+
 
 }

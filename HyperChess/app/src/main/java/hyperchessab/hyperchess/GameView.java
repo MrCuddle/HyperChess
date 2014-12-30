@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -28,6 +29,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public GameView(Context context){
         super(context);
+        Init(context);
+    }
+
+    public GameView(Context context, AttributeSet attr){
+        super(context, attr);
+        Init(context);
+    }
+
+    public GameView(Context context, AttributeSet attr, int defStyle){
+        super(context, attr, defStyle);
+        Init(context);
+    }
+
+    private void Init(Context context){
         camera = new Camera();
         game = new Game(context, camera);
         gameLoop = new GameLoop(this);

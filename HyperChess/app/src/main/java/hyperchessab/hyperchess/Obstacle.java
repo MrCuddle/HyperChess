@@ -11,10 +11,10 @@ public class Obstacle {
 
     Drawable shape;
 
-
-    public Obstacle(Context context, float x, float y){
+    public Obstacle(Context context, int x, int y){
         shape = context.getResources().getDrawable(R.drawable.obstacle_shape);
-        shape.setBounds((int)x, (int)y, (int)x + GameBoard.TileSize, (int)y + GameBoard.TileSize);
+        shape.setBounds(x*GameBoard.TileSize, y*GameBoard.TileSize,
+                x*GameBoard.TileSize + GameBoard.TileSize, y*GameBoard.TileSize + GameBoard.TileSize);
     }
 
     public void Draw(Canvas c){
