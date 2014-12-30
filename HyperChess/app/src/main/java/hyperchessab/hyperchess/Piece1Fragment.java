@@ -68,9 +68,7 @@ public class Piece1Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_piece1, container, false);
-        grid = (GridLayout)v.findViewById(R.id.Piece1Fragment_grid);
-        View test = new View(getActivity());
-        grid.addView(test);
+
         return v;
     }
 
