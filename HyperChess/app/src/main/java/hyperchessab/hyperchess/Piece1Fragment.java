@@ -71,9 +71,6 @@ public class Piece1Fragment extends Fragment implements Button.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_piece1, container, false);
-        grid = (GridLayout)v.findViewById(R.id.Piece1Fragment_grid);
-        View test = new View(getActivity());
-        grid.addView(test);
 
         save = (Button) v.findViewById(R.id.Piece1Fragment_savebtn);
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
