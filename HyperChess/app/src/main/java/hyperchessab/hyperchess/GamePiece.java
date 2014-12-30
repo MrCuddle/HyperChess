@@ -3,11 +3,14 @@ package hyperchessab.hyperchess;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Perlwin on 29/12/2014.
@@ -21,6 +24,8 @@ public class GamePiece {
     GameBoard board;
     List<MovePattern> patterns;
     List<MoveDestination> destinations;
+    LinkedList<Point> movePath;
+    boolean isMoving;
     Context context;
 
     public GamePiece(Context context, int x, int y, GameBoard board){
@@ -55,25 +60,51 @@ public class GamePiece {
         return patterns;
     }
 
+    public void SetPosition(int x, int y){
+        gridPosX = x;
+        gridPosY = y;
+        shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
+                gridPosX*GameBoard.TileSize + GameBoard.TileSize,
+                gridPosY*GameBoard.TileSize + GameBoard.TileSize);
+    }
+
     public void SetPatterns(List<MovePattern> patterns){
         this.patterns = patterns;
     }
 
+    private LinkedList<Point> GetMovePath(MovePattern pattern){
+        LinkedList<Point> path = new LinkedList<Point>();
+        int currentX = gridPosX * GameBoard.TileSize;
+        int currentY = gridPosX * GameBoard.TileSize;
+        for(int move : pattern.GetPattern()){
+            if(move == MovePattern.Direction.UP)
+                currentY -= GameBoard.TileSize;
+            else if(move == MovePattern.Direction.DOWN)
+                currentY += GameBoard.TileSize;
+            else if(move == MovePattern.Direction.LEFT)
+                currentX -= GameBoard.TileSize;
+            else if(move == MovePattern.Direction.RIGHT)
+                currentX += GameBoard.TileSize;
+            path.offer(new Point(currentX, currentY));
+        }
+        return path;
+    }
     public void Update(double dt){
 
         if(InputData.Clicked){
-            if(InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom){
-                shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
-                HighlightMoveable();
-
-                if(destinations != null){
-                    for(MoveDestination d : destinations){
-                        if(d.ClickedOn()){
-                            //GO THERE
-                            int x;
-                        }
+            if(destinations != null){
+                for(MoveDestination d : destinations){
+                    if(d.ClickedOn()){
+                        Point newPos = d.GetPosition();
+                        SetPosition(newPos.x, newPos.y);
+                        destinations = null;
+                        shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
                     }
                 }
+            }
+            else if(InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom){
+                shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
+                HighlightMoveable();
             } else {
                 shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
                 destinations = null;
@@ -128,6 +159,14 @@ public class GamePiece {
             shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
             SetPosition(x, y);
             this.pathTo = pathTo;
+        }
+
+        public MovePattern GetPath(){
+            return pathTo;
+        }
+
+        public Point GetPosition(){
+            return new Point(gridPosX,gridPosY);
         }
 
         public void SetPosition(int x, int y){
