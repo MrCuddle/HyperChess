@@ -14,7 +14,7 @@ public class Designer extends Game {
     Drawable[][] tiles;
     final int width = 3, height = 3;
     private static final int tileSize = 10;
-
+    Drawable test;
     public Designer(Context context, Camera camera){
         super(context, camera);
         this.camera = camera;
@@ -26,6 +26,8 @@ public class Designer extends Game {
                 tiles[x][y].setBounds(x * tileSize,y * tileSize,x + tileSize, y + tileSize);
             }
         }
+        test = context.getResources().getDrawable(R.drawable.tile_shape);
+        test.setBounds(0, 0, 50, 50);
     }
 
     @Override
@@ -47,5 +49,6 @@ public class Designer extends Game {
                 tiles[x][y].draw(c);
             }
         }
+        test.draw(c);
     }
 }
