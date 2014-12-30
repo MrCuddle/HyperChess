@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener {
+public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener, Piece1Fragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +82,19 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     }
 
     @Override
+    public void onDesignerPressed() {
+        setFragment(Piece1Fragment.newInstance(null, null), true);
+        Toast.makeText(this, "Designer Pressed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onOptionInteraction(Uri uri) {
         //placeholder
         int i = 3 +4;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        int i = 32;
     }
 }

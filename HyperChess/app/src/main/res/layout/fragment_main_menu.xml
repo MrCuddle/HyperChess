@@ -25,11 +25,18 @@
         android:layout_below="@+id/mainmenu_button_play"/>
 
     <Button
+        android:id="@+id/mainmenu_button_designer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DESIGNER Test"
+        android:layout_below="@+id/mainmenu_button_options"/>
+
+    <Button
         android:id="@+id/mainmenu_button_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/exit"
-        android:layout_below="@+id/mainmenu_button_options"/>
+        android:layout_below="@+id/mainmenu_button_designer"/>
 
 
 </RelativeLayout>

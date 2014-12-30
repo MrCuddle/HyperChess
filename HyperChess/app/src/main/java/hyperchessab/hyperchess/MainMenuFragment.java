@@ -48,6 +48,9 @@ public class MainMenuFragment extends Fragment {
         options.setOnClickListener(buttonListener);
         exit.setOnClickListener(buttonListener);
 
+        Button b = (Button)v.findViewById(R.id.mainmenu_button_designer);
+        b.setOnClickListener(buttonListener);
+
         return v;
     }
 
@@ -62,6 +65,9 @@ public class MainMenuFragment extends Fragment {
                     break;
                 case R.id.mainmenu_button_exit:
                     mListener.onExitPressed();
+                    break;
+                case R.id.mainmenu_button_designer:
+                    mListener.onDesignerPressed();
                     break;
             }
         }
@@ -88,6 +94,7 @@ public class MainMenuFragment extends Fragment {
         public void onExitPressed();
         public void onOptionsPressed();
         public void onPlayPressed();
+        public void onDesignerPressed();
     }
 
 }

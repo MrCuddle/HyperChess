@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 
 
 /**
@@ -28,6 +29,8 @@ public class Piece1Fragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private GridLayout grid;
 
     /**
      * Use this factory method to create a new instance of
@@ -64,7 +67,11 @@ public class Piece1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_piece1, container, false);
+        View v = inflater.inflate(R.layout.fragment_piece1, container, false);
+        grid = (GridLayout)v.findViewById(R.id.Piece1Fragment_grid);
+        View test = new View(getActivity());
+        grid.addView(test);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
