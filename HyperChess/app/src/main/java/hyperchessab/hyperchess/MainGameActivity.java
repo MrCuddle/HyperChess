@@ -2,6 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -83,7 +84,10 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onDesignerPressed() {
-        setFragment(Piece1Fragment.newInstance(null, null), true);
+        Intent getChatScreen = new Intent(this, DesignerActivity.class);
+
+        startActivity(getChatScreen);
+        finish();
         Toast.makeText(this, "Designer Pressed", Toast.LENGTH_SHORT).show();
     }
 

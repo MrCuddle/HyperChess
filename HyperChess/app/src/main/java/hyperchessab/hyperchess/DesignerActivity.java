@@ -1,17 +1,43 @@
 package hyperchessab.hyperchess;
 
-import android.support.v7.app.ActionBarActivity;
+
+
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 
-public class DesignerActivity extends ActionBarActivity {
+public class DesignerActivity extends Activity implements Piece1Fragment.OnFragmentInteractionListener{
+
+
+
+
+
+
+
+
+    FragmentManager fm = getFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
+        FragmentTransaction ft = fm.beginTransaction();
+        Piece1Fragment frag = Piece1Fragment.newInstance("","");
+        ft.replace(R.id.tabframe, frag, "piece");
+        ft.addToBackStack("piece");
+        ft.commit();
+
     }
 
 
@@ -36,4 +62,14 @@ public class DesignerActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+
 }
