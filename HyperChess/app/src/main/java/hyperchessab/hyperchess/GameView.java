@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 /**
  * Created by Perlwin on 29/12/2014.
@@ -23,6 +22,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     float currentX, currentY, startTouchX, startTouchY;
     float scaleFactor = 1.f;
     boolean clicked = false;
+    boolean stoppedZooming = false;
 
     ScaleGestureDetector scaleGestureDetector;
 
@@ -50,10 +50,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
         scaleGestureDetector.onTouchEvent(event);
+
+        //Check if the user has stopped pinching - if so, make a note so that the start position for panning can be reset
+        if(event.getPointerCount() == 2) {
+            if(action == MotionEvent.ACTION_POINTER_UP) {
+                stoppedZooming = true;
+                return true;
+            }
+        }
+
+        //Panning
         if(event.getPointerCount() < 2) {
+
             if(action == MotionEvent.ACTION_DOWN){
                 startTouchX = currentX = event.getX();
                 startTouchY = currentY = event.getY();
+
+            }
+            //Reset the current position if the user just stopped pinching
+            if(stoppedZooming){
+                currentX = event.getX();
+                currentY = event.getY();
+                stoppedZooming = false;
             }
             float dx = event.getX() - currentX;
             float dy = event.getY() - currentY;
@@ -98,6 +116,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         game.Update(dt);
         InputData.Clear();
+        clicked = false;
     }
 
     @Override
