@@ -121,7 +121,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        gameLoop.start();
+        StartGameLoop();
     }
 
     @Override
@@ -129,10 +129,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-
-
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        StopGameLoop();
+    }
+
+    public void StartGameLoop(){
+        if(gameLoop.running)
+            return;
+        gameLoop = new GameLoop(this);
+        gameLoop.start();
+    }
+
+    public void StopGameLoop(){
+        if(!gameLoop.running)
+            return;
         boolean retry = true;
         gameLoop.Stop();
         while (retry) {

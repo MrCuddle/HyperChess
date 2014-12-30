@@ -20,6 +20,7 @@ public class GamePiece {
     }
 
     public void Update(double dt){
+
         if(InputData.Clicked){
             if(InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom){
                 shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);

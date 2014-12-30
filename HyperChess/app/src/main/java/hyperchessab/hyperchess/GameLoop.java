@@ -8,11 +8,13 @@ import android.graphics.Canvas;
 public class GameLoop extends Thread{
 
     boolean stop;
+    public boolean running;
     GameView view;
 
     public GameLoop(GameView view){
         this.view = view;
         stop = false;
+        running = false;
     }
 
     public void Stop(){
@@ -22,6 +24,7 @@ public class GameLoop extends Thread{
     @Override
     public void run() {
         stop = false;
+        running = true;
 
         long ticksPS = 1000 / 60;
         long startTime = System.currentTimeMillis();
@@ -58,5 +61,7 @@ public class GameLoop extends Thread{
 
             }
         }
+
+        running = false;
     }
 }
