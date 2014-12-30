@@ -25,9 +25,17 @@ public class DesignerView extends GameView {
         game = new Designer(context, camera);
     }
 
+    int test = 0;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
+        if(action == MotionEvent.ACTION_DOWN){
+            currentX = event.getX();
+            currentY = event.getY();
+            clicked = true;
+            test++;
+        }
+
         return false;
     }
 
@@ -36,5 +44,8 @@ public class DesignerView extends GameView {
         game.Draw(canvas);
     }
 
-
+    @Override
+    public void Update(double dt) {
+        super.Update(dt);
+    }
 }
