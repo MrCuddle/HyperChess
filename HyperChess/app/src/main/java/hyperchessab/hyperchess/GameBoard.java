@@ -11,10 +11,16 @@ public class GameBoard {
     Tile[][] tiles;
     GamePiece testPiece;
     Obstacle testObstacle;
+    Game game;
+
+    public Game getGame(){
+        return game;
+    }
 
     public static final int TileSize = 200;
 
-    public GameBoard(Context context){
+    public GameBoard(Context context, Game game){
+        this.game = game;
         tiles = new Tile[10][10];
 
         for(int i = 0; i < 10; i++)

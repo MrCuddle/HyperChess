@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Game {
 
     public enum GameState { Moving, Attacking }
-    GameState currentGameState = GameState.Moving;
+    public GameState currentGameState = GameState.Moving;
 
     ArrayList<Player> players = new ArrayList<Player>();
     int currentPlayer;
@@ -21,7 +21,7 @@ public class Game {
     Camera camera;
 
     public Game(Context context, Camera camera){
-        board = new GameBoard(context);
+        board = new GameBoard(context,this);
         this.camera = camera;
 
         players.add(new Player());
