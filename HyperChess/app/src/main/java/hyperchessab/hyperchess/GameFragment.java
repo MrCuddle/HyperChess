@@ -39,7 +39,7 @@ public class GameFragment extends Fragment {
 
     @Override
     public void onResume() {
-        //gameView.StartGameLoop();
+        gameView.StartGameLoop();
         super.onResume();
 
     }
