@@ -30,6 +30,7 @@ public class GamePiece {
     boolean isMoving;
     Context context;
 
+
     public GamePiece(Context context, int x, int y, GameBoard board){
         this.context = context;
         gridPosX = x;
@@ -213,10 +214,13 @@ public class GamePiece {
 
         public MoveDestination(){
             shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+            shape.setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC);
+
         }
 
         public MoveDestination(int x, int y, MovePattern pathTo){
             shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+            shape.setColorFilter(Color.YELLOW, PorterDuff.Mode.ADD);
             SetPosition(x, y);
             this.pathTo = pathTo;
         }
