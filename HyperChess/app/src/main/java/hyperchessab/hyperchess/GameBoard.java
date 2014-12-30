@@ -21,8 +21,22 @@ public class GameBoard {
             for(int j = 0; j < 10; j++)
                 tiles[i][j] = new Tile(context, i*TileSize, j*TileSize);
 
-        testPiece = new GamePiece(context, 3*TileSize, 3*TileSize);
-        testObstacle = new Obstacle(context, 2*TileSize, 2*TileSize);
+        testPiece = new GamePiece(context, 3, 3, this);
+        testObstacle = new Obstacle(context, 2, 2);
+    }
+
+    public GameBoard(Context context, int width, int height){
+        tiles = new Tile[width][height];
+        for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+                tiles[i][j] = new Tile(context, i*TileSize, j*TileSize);
+    }
+
+    public Tile GetTile(int x, int y){
+        if(x > 9 || x < 1 || y > 9 || y < 1)
+            return null;
+        else
+            return tiles[x][y];
     }
 
     public void Update(double dt){
