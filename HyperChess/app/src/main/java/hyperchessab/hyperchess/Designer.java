@@ -9,7 +9,7 @@ public class Designer extends Game {
 
     public Designer(Context context, Camera camera){
         super(context, camera);
-        board = new GameBoard(context);
+        board = new GameBoard(context,this);
         this.camera = camera;
     }
 
