@@ -87,7 +87,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         Intent getChatScreen = new Intent(this, DesignerActivity.class);
 
         startActivity(getChatScreen);
-        finish();
+        //finish();
         Toast.makeText(this, "Designer Pressed", Toast.LENGTH_SHORT).show();
     }
 

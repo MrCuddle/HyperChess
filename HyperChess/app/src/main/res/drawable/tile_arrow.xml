@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<inset
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <rotate
-        android:fromDegrees="45"
-        android:toDegrees="45"
-        android:pivotX="-40%"
-        android:pivotY="87%">
-        <shape
-            android:shape="rectangle" >
-            <solid
-                android:color="#0000FF" />
-            <stroke
-                android:width="0dp" />
-        </shape>
-    </rotate>
-</inset>
+<rotate
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetBottom="5px"
+    android:insetLeft="5px"
+    android:insetRight="5px"
+    android:insetTop="5px">
+    <!--<rotate-->
+
+    <shape
+    android:shape="rectangle" >
+    <!--<size-->
+    <!--android:width="14dp"-->
+    <!--android:height="10dp" />-->
+    <padding
+    android:left="2dp"
+    android:top="2dp"
+    android:right="2dp"
+    android:bottom="2dp" />
+    <solid
+    android:color="#0000FF" />
+    <stroke
+    android:width="0dp" />
+    </shape>
+    <bitmap android:src="@drawable/ic_launcher"></bitmap>
+    <!--</rotate>-->
+</rotate>

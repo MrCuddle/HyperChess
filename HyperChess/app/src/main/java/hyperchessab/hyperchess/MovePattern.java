@@ -9,7 +9,7 @@ import java.util.List;
 public class MovePattern {
 
     public static class Direction{
-        public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
+        public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, NODIRECTION = -1;
     }
 
     private List<Integer> pattern;
