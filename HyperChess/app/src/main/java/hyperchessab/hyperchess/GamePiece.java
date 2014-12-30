@@ -1,4 +1,4 @@
-﻿package hyperchessab.hyperchess;
+package hyperchessab.hyperchess;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,8 +17,6 @@ import java.util.List;
 public class GamePiece {
 
     Drawable shape;
-    boolean selected = false;
-    int gridPosX, gridPosY;
     float posX, posY;
     boolean selected;
     int gridPosX;
@@ -247,7 +245,7 @@ public class GamePiece {
 
         public boolean ClickedOn(){
             return InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right &&
-                   InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom;
+                    InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom;
         }
 
 
