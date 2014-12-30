@@ -20,8 +20,11 @@ public class GamePiece {
     int gridPosY;
     GameBoard board;
     List<MovePattern> patterns;
+    List<MoveDestination> destinations;
+    Context context;
 
     public GamePiece(Context context, int x, int y, GameBoard board){
+        this.context = context;
         gridPosX = x;
         gridPosY = y;
         shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
@@ -62,16 +65,30 @@ public class GamePiece {
             if(InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom){
                 shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
                 HighlightMoveable();
+
+                if(destinations != null){
+                    for(MoveDestination d : destinations){
+                        if(d.ClickedOn()){
+                            //GO THERE
+                            int x;
+                        }
+                    }
+                }
             } else {
                 shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
+                destinations = null;
             }
         }
     }
 
     private void HighlightMoveable(){
+
+        destinations = new ArrayList<MoveDestination>();
         for(int i = 0; i < patterns.size(); i++){
             int x = gridPosX;
             int y = gridPosY;
+            MoveDestination destination = new MoveDestination();
+            //Om en destination här inne inte går att nå så sätt referensen över till null
             for(int j = 0; j < patterns.get(i).GetPattern().size(); j++){
                 if(patterns.get(i).GetPattern().get(j) == MovePattern.Direction.UP)
                     y--;
@@ -82,15 +99,20 @@ public class GamePiece {
                 if(patterns.get(i).GetPattern().get(j) == MovePattern.Direction.RIGHT)
                     x++;
             }
-            Tile toHighlight = board.GetTile(x,y);
-
-            if(toHighlight != null)
-                toHighlight.Highlight();
+            if(destination != null){
+                destination.SetPosition(x,y);
+                destination.SetPathTo(patterns.get(i));
+                destinations.add(destination);
+            }
         }
     }
 
     public void Draw(Canvas c){
         shape.draw(c);
+        if(destinations != null) {
+            for (MoveDestination d : destinations)
+                d.Draw(c);
+        }
     }
 
     private class MoveDestination{
@@ -98,11 +120,33 @@ public class GamePiece {
         MovePattern pathTo;
         Drawable shape;
 
+        public MoveDestination(){
+            shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+        }
+
         public MoveDestination(int x, int y, MovePattern pathTo){
-            gridPosX = x;
-            gridPosY = y;
+            shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+            SetPosition(x, y);
             this.pathTo = pathTo;
         }
+
+        public void SetPosition(int x, int y){
+            gridPosX = x;
+            gridPosY = y;
+            shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
+                    gridPosX*GameBoard.TileSize + GameBoard.TileSize,
+                    gridPosY*GameBoard.TileSize + GameBoard.TileSize);
+        }
+
+        public void SetPathTo(MovePattern pattern){
+            pathTo = pattern;
+        }
+
+        public boolean ClickedOn(){
+            return InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right &&
+                   InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom;
+        }
+
 
         public void Draw(Canvas c){
             shape.draw(c);
