@@ -1,4 +1,4 @@
-package hyperchessab.hyperchess;
+﻿package hyperchessab.hyperchess;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Created by Perlwin on 29/12/2014.
@@ -21,6 +20,9 @@ public class GamePiece {
     boolean selected = false;
     int gridPosX, gridPosY;
     float posX, posY;
+    boolean selected;
+    int gridPosX;
+    int gridPosY;
     GameBoard board;
     List<MovePattern> patterns;
     List<MoveDestination> destinations;
@@ -41,6 +43,7 @@ public class GamePiece {
         this.board = board;
 
         patterns = PatternTest();
+        selected = false;
     }
 
     //I högsta grad oviktig test metod.
@@ -55,9 +58,21 @@ public class GamePiece {
         pattern2.AddDirection(MovePattern.Direction.RIGHT);
         pattern2.AddDirection(MovePattern.Direction.DOWN);
 
+        MovePattern pattern3 = new MovePattern();
+        pattern3.AddDirection(MovePattern.Direction.DOWN);
+        pattern3.AddDirection(MovePattern.Direction.DOWN);
+        pattern3.AddDirection(MovePattern.Direction.LEFT);
+
+        MovePattern pattern4 = new MovePattern();
+        pattern4.AddDirection(MovePattern.Direction.LEFT);
+        pattern4.AddDirection(MovePattern.Direction.LEFT);
+        pattern4.AddDirection(MovePattern.Direction.UP);
+
         ArrayList<MovePattern> patterns = new ArrayList<MovePattern>();
         patterns.add(pattern1);
         patterns.add(pattern2);
+        patterns.add(pattern3);
+        patterns.add(pattern4);
 
         return patterns;
     }
@@ -121,6 +136,7 @@ public class GamePiece {
         if(isMoving)
             Animate();
         if(InputData.Clicked){
+            boolean moved = false;
             if(destinations != null){
                 for(MoveDestination d : destinations){
                     if(d.ClickedOn()){
@@ -132,15 +148,21 @@ public class GamePiece {
                         gridPosY = newPos.y;
                         destinations = null;
                         shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
+                        moved = true;
                     }
                 }
             }
-            else if(InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom){
-                shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
-                HighlightMoveable();
-            } else {
-                shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
-                destinations = null;
+
+            if(!moved) {
+                if (InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom) {
+                    shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
+                    HighlightMoveable();
+                    selected = true;
+                } else {
+                    shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
+                    destinations = null;
+                    selected = false;
+                }
             }
         }
     }
@@ -162,6 +184,11 @@ public class GamePiece {
                     x--;
                 if(patterns.get(i).GetPattern().get(j) == MovePattern.Direction.RIGHT)
                     x++;
+
+                if(board.GetTile(x,y) == null || board.GetTile(x,y).occupied){
+                    destination = null;
+                    break;
+                }
             }
             if(destination != null){
                 destination.SetPosition(x,y);
