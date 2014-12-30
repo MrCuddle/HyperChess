@@ -19,8 +19,8 @@ public class GamePiece {
 
     Drawable shape;
     boolean selected = false;
-    int gridPosX;
-    int gridPosY;
+    int gridPosX, gridPosY;
+    float posX, posY;
     GameBoard board;
     List<MovePattern> patterns;
     List<MoveDestination> destinations;
@@ -32,6 +32,8 @@ public class GamePiece {
         this.context = context;
         gridPosX = x;
         gridPosY = y;
+        posX = gridPosX * GameBoard.TileSize;
+        posY = gridPosY * GameBoard.TileSize;
         shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
         shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
                 gridPosX*GameBoard.TileSize + GameBoard.TileSize,
@@ -63,6 +65,8 @@ public class GamePiece {
     public void SetPosition(int x, int y){
         gridPosX = x;
         gridPosY = y;
+        posX = gridPosX * GameBoard.TileSize;
+        posY = gridPosY * GameBoard.TileSize;
         shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
                 gridPosX*GameBoard.TileSize + GameBoard.TileSize,
                 gridPosY*GameBoard.TileSize + GameBoard.TileSize);
@@ -75,7 +79,7 @@ public class GamePiece {
     private LinkedList<Point> GetMovePath(MovePattern pattern){
         LinkedList<Point> path = new LinkedList<Point>();
         int currentX = gridPosX * GameBoard.TileSize;
-        int currentY = gridPosX * GameBoard.TileSize;
+        int currentY = gridPosY * GameBoard.TileSize;
         for(int move : pattern.GetPattern()){
             if(move == MovePattern.Direction.UP)
                 currentY -= GameBoard.TileSize;
@@ -89,14 +93,43 @@ public class GamePiece {
         }
         return path;
     }
-    public void Update(double dt){
 
+    private void Animate(){
+        Point targetPos = movePath.peek();
+        if(targetPos == null) {
+            isMoving = false;
+            movePath = null;
+        }
+        else{
+            if(targetPos.x < posX)
+                posX -= 4;
+            else if(targetPos.x > posX)
+                posX += 4;
+            if(targetPos.y < posY)
+                posY -= 4;
+            else if(targetPos.y > posY)
+                posY += 4;
+            shape.setBounds((int)posX, (int)posY, (int)posX+GameBoard.TileSize, (int)posY+GameBoard.TileSize);
+            if(Math.sqrt(Math.pow(targetPos.x - posX, 2) + Math.pow(targetPos.y - posY, 2)) < 2) {
+                posX = targetPos.x;
+                posY = targetPos.y;
+                movePath.poll();
+            }
+        }
+    }
+    public void Update(double dt){
+        if(isMoving)
+            Animate();
         if(InputData.Clicked){
             if(destinations != null){
                 for(MoveDestination d : destinations){
                     if(d.ClickedOn()){
+                        //SetPosition(newPos.x, newPos.y);
+                        movePath = GetMovePath(d.GetPath());
+                        isMoving = true;
                         Point newPos = d.GetPosition();
-                        SetPosition(newPos.x, newPos.y);
+                        gridPosX = newPos.x;
+                        gridPosY = newPos.y;
                         destinations = null;
                         shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
                     }
