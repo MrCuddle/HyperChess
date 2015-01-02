@@ -11,7 +11,9 @@ import android.graphics.drawable.Drawable;
 public class Tile {
 
     Drawable shape;
-    public boolean occupied = false;
+    //public boolean occupied = false;
+    public GameObject occupier;
+
 
     public Tile(){}
 

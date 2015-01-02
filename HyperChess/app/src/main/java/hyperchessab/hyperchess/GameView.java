@@ -54,7 +54,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         @Override
         public boolean onScale(ScaleGestureDetector detector){
             scaleFactor *= detector.getScaleFactor();
-            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.f));
+            scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 2.f));
             camera.setScale(scaleFactor);
             invalidate();
             return true;

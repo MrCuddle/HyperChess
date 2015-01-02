@@ -14,18 +14,18 @@ public class Game {
     public enum GameState { Moving, Attacking }
     public GameState currentGameState = GameState.Moving;
 
-    ArrayList<Player> players = new ArrayList<Player>();
+    //Flyttas till PlayerManager senare
+    public ArrayList<Player> players = new ArrayList<Player>();
     int currentPlayer;
 
     GameBoard board;
     Camera camera;
 
     public Game(Context context, Camera camera){
+        players.add(new Player());
+        players.add(new Player());
         board = new GameBoard(context,this);
         this.camera = camera;
-
-        players.add(new Player());
-        players.add(new Player());
         currentPlayer = 0;
     }
 
@@ -39,6 +39,10 @@ public class Game {
                 break;
         }
 
+    }
+
+    public void IncrementCurrentPlayer(){
+        currentPlayer = (currentPlayer + 1) % 2;
     }
 
     public void Draw(Canvas c){

@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Created by Perlwin on 29/12/2014.
  */
-public class Obstacle {
+public class Obstacle extends GameObject {
 
     Drawable shape;
 

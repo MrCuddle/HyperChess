@@ -14,16 +14,20 @@ import java.util.List;
 /**
  * Created by Perlwin on 29/12/2014.
  */
-public class GamePiece {
+public class GamePiece extends GameObject {
 
     Drawable shape;
+    Player owner;
+    Flag flag;
     float posX, posY;
     boolean selected;
     int gridPosX;
     int gridPosY;
+    int attackRange;
     GameBoard board;
     List<MovePattern> patterns;
-    List<MoveDestination> destinations;
+    List<MoveDestination> moveDestinations;
+    List<AttackDestination> attackDestinations;
     LinkedList<Point> movePath;
     boolean isMoving;
     Context context;
@@ -45,27 +49,40 @@ public class GamePiece {
         selected = false;
     }
 
+    public void SetOwner(Player owner){
+        this.owner = owner;
+    }
+
+    public Player GetOwner(){
+        return owner;
+    }
+
+    public void SetAttackRange(int range){
+        this.attackRange = range;
+    }
+
     //I högsta grad oviktig test metod.
     private ArrayList<MovePattern> PatternTest(){
         MovePattern pattern1 = new MovePattern();
         pattern1.AddDirection(MovePattern.Direction.UP);
-        pattern1.AddDirection(MovePattern.Direction.UP);
-        pattern1.AddDirection(MovePattern.Direction.RIGHT);
+//        pattern1.AddDirection(MovePattern.Direction.UP);
+//        pattern1.AddDirection(MovePattern.Direction.RIGHT);
 
         MovePattern pattern2 = new MovePattern();
-        pattern2.AddDirection(MovePattern.Direction.RIGHT);
-        pattern2.AddDirection(MovePattern.Direction.RIGHT);
+//        pattern2.AddDirection(MovePattern.Direction.RIGHT);
+//        pattern2.AddDirection(MovePattern.Direction.RIGHT);
         pattern2.AddDirection(MovePattern.Direction.DOWN);
 
         MovePattern pattern3 = new MovePattern();
-        pattern3.AddDirection(MovePattern.Direction.DOWN);
-        pattern3.AddDirection(MovePattern.Direction.DOWN);
+//        pattern3.AddDirection(MovePattern.Direction.DOWN);
+//        pattern3.AddDirection(MovePattern.Direction.DOWN);
         pattern3.AddDirection(MovePattern.Direction.LEFT);
 
         MovePattern pattern4 = new MovePattern();
-        pattern4.AddDirection(MovePattern.Direction.LEFT);
-        pattern4.AddDirection(MovePattern.Direction.LEFT);
-        pattern4.AddDirection(MovePattern.Direction.UP);
+        pattern4.AddDirection(MovePattern.Direction.RIGHT);
+//        pattern4.AddDirection(MovePattern.Direction.LEFT);
+//        pattern4.AddDirection(MovePattern.Direction.LEFT);
+//        pattern4.AddDirection(MovePattern.Direction.UP);
 
         ArrayList<MovePattern> patterns = new ArrayList<MovePattern>();
         patterns.add(pattern1);
@@ -113,16 +130,26 @@ public class GamePiece {
         if(targetPos == null) {
             isMoving = false;
             movePath = null;
+            board.getGame().currentGameState = Game.GameState.Attacking;
+            Select();
+            HighlightAttackable();
+            if(flag == null && board.IsOnFlag(gridPosX, gridPosY)) {
+                flag = board.GetFlag();
+                flag.SetHolder(this);
+            }
+            if(flag != null){
+                flag.SetGridPosition(gridPosX, gridPosY);
+            }
         }
         else{
             if(targetPos.x < posX)
-                posX -= 4;
+                posX -= 20;
             else if(targetPos.x > posX)
-                posX += 4;
+                posX += 20;
             if(targetPos.y < posY)
-                posY -= 4;
+                posY -= 20;
             else if(targetPos.y > posY)
-                posY += 4;
+                posY += 20;
             shape.setBounds((int)posX, (int)posY, (int)posX+GameBoard.TileSize, (int)posY+GameBoard.TileSize);
             if(Math.sqrt(Math.pow(targetPos.x - posX, 2) + Math.pow(targetPos.y - posY, 2)) < 2) {
                 posX = targetPos.x;
@@ -131,44 +158,117 @@ public class GamePiece {
             }
         }
     }
+
+    public Point GetPosition(){
+        return new Point(shape.getBounds().left, shape.getBounds().top);
+    }
     public void Update(double dt){
-        if(isMoving)
+        switch(board.getGame().currentGameState) {
+            case Moving:
+                Move();
+                break;
+            case Attacking:
+                Attack();
+                break;
+        }
+    }
+
+    private void DropFlag(){
+        flag.OnFlagDropped();
+    }
+
+    private void Move(){
+        if (isMoving)
             Animate();
-        if(InputData.Clicked){
+        if(owner != board.getGame().players.get(board.getGame().currentPlayer))
+            return;
+        if (InputData.Clicked) {
             boolean moved = false;
-            if(destinations != null){
-                for(MoveDestination d : destinations){
-                    if(d.ClickedOn()){
+            if (moveDestinations != null) {
+                for (MoveDestination d : moveDestinations) {
+                    if (d.ClickedOn()) {
                         //SetPosition(newPos.x, newPos.y);
                         movePath = GetMovePath(d.GetPath());
                         isMoving = true;
                         Point newPos = d.GetPosition();
+                        board.GetTile(gridPosX, gridPosY).occupier = null;
                         gridPosX = newPos.x;
                         gridPosY = newPos.y;
-                        destinations = null;
+                        board.GetTile(gridPosX, gridPosY).occupier = this;
+                        moveDestinations = null;
                         shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
                         moved = true;
                     }
                 }
             }
 
-            if(!moved) {
+            if (!moved) {
                 if (InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom) {
-                    shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
+                    Select();
                     HighlightMoveable();
-                    selected = true;
                 } else {
-                    shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
-                    destinations = null;
-                    selected = false;
+                    Deselect();
                 }
             }
         }
     }
 
+    private void Attack(){
+        if(selected){
+            if(attackDestinations.size() == 0) {
+                board.getGame().currentGameState = Game.GameState.Moving;
+                board.getGame().IncrementCurrentPlayer();
+                Deselect();
+            }
+            if(InputData.Clicked) {
+                int x = (int)(InputData.ClickPoint.x / GameBoard.TileSize);
+                if(InputData.ClickPoint.x < 0) x = -1;
+                int y = (int)(InputData.ClickPoint.y / GameBoard.TileSize);
+                if(InputData.ClickPoint.y < 0) y = -1;
+                Tile t = board.GetTile(x,y);
+                if(t != null && t.occupier instanceof GamePiece && ((GamePiece) t.occupier).GetOwner() != this.owner){
+                    if(Math.abs(gridPosX - x) > 0 && Math.abs(gridPosX - x) <= attackRange && Math.abs(gridPosY - y) == 0
+                            || Math.abs(gridPosY - y) > 0 && Math.abs(gridPosY - y) <= attackRange && Math.abs(gridPosX - x) == 0){
+                        ((GamePiece) t.occupier).DropFlag();
+                        board.pieces.remove(t.occupier);
+                        t.occupier = null;
+                        attackDestinations = null;
+                        board.getGame().currentGameState = Game.GameState.Moving;
+                        board.getGame().IncrementCurrentPlayer();
+                        Deselect();
+                    }
+                }
+            }
+        }
+    }
+
+    public void Select(){
+        shape.setColorFilter(Color.WHITE, PorterDuff.Mode.ADD);
+        selected = true;
+        board.Select(this);
+    }
+
+    public void Deselect(){
+        shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
+        moveDestinations = null;
+        selected = false;
+    }
+
+    private void HighlightAttackable(){
+        attackDestinations = new ArrayList<AttackDestination>();
+        for(int i = -attackRange; i <= attackRange; i++){
+            Tile t = board.GetTile(gridPosX + i, gridPosY);
+            if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+                attackDestinations.add(new AttackDestination(gridPosX+i, gridPosY));
+            t = board.GetTile(gridPosX, gridPosY + i);
+            if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+                attackDestinations.add(new AttackDestination(gridPosX, gridPosY + i));
+        }
+    }
+
     private void HighlightMoveable(){
 
-        destinations = new ArrayList<MoveDestination>();
+        moveDestinations = new ArrayList<MoveDestination>();
         for(int i = 0; i < patterns.size(); i++){
             int x = gridPosX;
             int y = gridPosY;
@@ -184,7 +284,7 @@ public class GamePiece {
                 if(patterns.get(i).GetPattern().get(j) == MovePattern.Direction.RIGHT)
                     x++;
 
-                if(board.GetTile(x,y) == null || board.GetTile(x,y).occupied){
+                if(board.GetTile(x,y) == null || board.GetTile(x,y).occupier != null){
                     destination = null;
                     break;
                 }
@@ -192,26 +292,45 @@ public class GamePiece {
             if(destination != null){
                 destination.SetPosition(x,y);
                 destination.SetPathTo(patterns.get(i));
-                destinations.add(destination);
+                moveDestinations.add(destination);
             }
         }
     }
 
     public void Draw(Canvas c){
         shape.draw(c);
-        if(destinations != null) {
-            for (MoveDestination d : destinations)
+        if(moveDestinations != null) {
+            for (MoveDestination d : moveDestinations)
+                d.Draw(c);
+        }
+        if(attackDestinations != null){
+            for(AttackDestination d : attackDestinations)
                 d.Draw(c);
         }
     }
 
+    private class AttackDestination{
+        Drawable shape;
+        public AttackDestination(int gridX, int gridY){
+            shape = context.getResources().getDrawable(R.drawable.highlight_shape);
+            shape.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC);
+            shape.setBounds(gridX * GameBoard.TileSize, gridY * GameBoard.TileSize,
+                    gridX * GameBoard.TileSize + GameBoard.TileSize, gridY * GameBoard.TileSize + GameBoard.TileSize);
+
+        }
+
+
+        public void Draw(Canvas c){
+            shape.draw(c);
+        }
+    }
     private class MoveDestination{
         int gridPosX, gridPosY;
         MovePattern pathTo;
         Drawable shape;
 
         public MoveDestination(){
-            shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+            shape = context.getResources().getDrawable(R.drawable.highlight_shape);
             shape.setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC);
 
         }
