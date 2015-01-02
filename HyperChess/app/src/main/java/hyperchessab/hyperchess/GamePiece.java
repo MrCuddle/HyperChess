@@ -140,6 +140,10 @@ public class GamePiece extends GameObject {
             }
             if(flag != null){
                 flag.SetGridPosition(gridPosX, gridPosY);
+                if(board.GetTile(gridPosX, gridPosY) instanceof GoalTile){
+                    flag.ResetPosition();
+                    flag = null;
+                }
             }
         }
         else{
@@ -175,7 +179,10 @@ public class GamePiece extends GameObject {
     }
 
     private void DropFlag(){
-        flag.OnFlagDropped();
+        if(flag != null) {
+            flag.OnFlagDropped();
+        }
+        flag = null;
     }
 
     private void Move(){

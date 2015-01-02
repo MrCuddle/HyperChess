@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
         */
 public class Tile {
 
-    Drawable shape;
+    protected Drawable shape;
     //public boolean occupied = false;
     public GameObject occupier;
 

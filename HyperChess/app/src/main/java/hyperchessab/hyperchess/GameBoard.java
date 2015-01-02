@@ -21,8 +21,8 @@ public class GameBoard {
     }
 
     public static final int TileSize = 200;
-    int Width = 10;
-    int Height = 10;
+    int Width = 11;
+    int Height = 15;
 
     public GameBoard(Context context, Game game){
         this.game = game;
@@ -51,11 +51,67 @@ public class GameBoard {
         tiles[4][4].occupier = gp;
 
 
-        Obstacle o = new Obstacle(context, 3, 1);
+        Obstacle o = new Obstacle(context, 3, 7);
         obstacles.add(o);
-        tiles[3][1].occupier = o;
+        tiles[3][7].occupier = o;
+        o = new Obstacle(context, 3, 6);
+        obstacles.add(o);
+        tiles[3][6].occupier = o;
+        o = new Obstacle(context, 4, 5);
+        obstacles.add(o);
+        tiles[4][5].occupier = o;
+        o = new Obstacle(context, 5, 5);
+        obstacles.add(o);
+        tiles[5][5].occupier = o;
 
-        flag = new Flag(context,6,6);
+        o = new Obstacle(context, 7, 7);
+        obstacles.add(o);
+        tiles[7][7].occupier = o;
+        o = new Obstacle(context, 7, 8);
+        obstacles.add(o);
+        tiles[7][8].occupier = o;
+        o = new Obstacle(context, 6, 9);
+        obstacles.add(o);
+        tiles[6][9].occupier = o;
+        o = new Obstacle(context, 5, 9);
+        obstacles.add(o);
+        tiles[5][9].occupier = o;
+
+        o = new Obstacle(context, 5, 2);
+        obstacles.add(o);
+        tiles[5][2].occupier = o;
+        o = new Obstacle(context, 6, 2);
+        obstacles.add(o);
+        tiles[6][2].occupier = o;
+        o = new Obstacle(context, 7, 2);
+        obstacles.add(o);
+        tiles[7][2].occupier = o;
+        o = new Obstacle(context, 8, 2);
+        obstacles.add(o);
+        tiles[8][2].occupier = o;
+
+        o = new Obstacle(context, 5, 12);
+        obstacles.add(o);
+        tiles[5][12].occupier = o;
+        o = new Obstacle(context, 4, 12);
+        obstacles.add(o);
+        tiles[4][12].occupier = o;
+        o = new Obstacle(context, 3, 12);
+        obstacles.add(o);
+        tiles[3][12].occupier = o;
+        o = new Obstacle(context, 2, 12);
+        obstacles.add(o);
+        tiles[2][12].occupier = o;
+
+        tiles[5][0] = new GoalTile(context, 5 * TileSize, 0, game.players.get(0));
+        tiles[4][0] = new GoalTile(context, 4 * TileSize, 0, game.players.get(0));
+        tiles[6][0] = new GoalTile(context, 6 * TileSize, 0, game.players.get(0));
+
+        tiles[5][Height-1] = new GoalTile(context, 5 * TileSize, (Height-1) * TileSize, game.players.get(1));
+        tiles[4][Height-1] = new GoalTile(context, 4 * TileSize, (Height-1) * TileSize, game.players.get(1));
+        tiles[6][Height-1] = new GoalTile(context, 6 * TileSize, (Height-1) * TileSize, game.players.get(1));
+
+        flag = new Flag(context,5,7);
     }
 
     public boolean IsOnFlag(int posX, int posY){

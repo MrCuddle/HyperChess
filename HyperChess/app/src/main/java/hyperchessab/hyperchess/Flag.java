@@ -12,11 +12,12 @@ public class Flag {
     Drawable shape;
     GamePiece holder;
     public int gridPosX, gridPosY;
+    int initialPosX, initialPosY;
 
     public Flag(Context context, int x, int y){
         shape = context.getResources().getDrawable(R.drawable.flag_shape);
-        gridPosX = x;
-        gridPosY = y;
+        initialPosX = gridPosX = x;
+        initialPosY = gridPosY = y;
         shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
                 gridPosX*GameBoard.TileSize + GameBoard.TileSize, gridPosY*GameBoard.TileSize + GameBoard.TileSize);
     }
@@ -45,6 +46,12 @@ public class Flag {
     public void Draw(Canvas c){
         shape.draw(c);
 
+    }
+
+    public void ResetPosition(){
+        shape.setBounds(initialPosX*GameBoard.TileSize, initialPosY*GameBoard.TileSize,
+                initialPosX*GameBoard.TileSize + GameBoard.TileSize, initialPosY*GameBoard.TileSize + GameBoard.TileSize);
+        holder = null;
     }
 
 }

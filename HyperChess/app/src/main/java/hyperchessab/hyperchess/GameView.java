@@ -2,9 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -112,12 +110,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     protected void onDraw(Canvas canvas) {
         game.Draw(canvas);
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        canvas.drawText("currentX: " + currentX, 0,40, paint);
-        canvas.drawText("currentY: " + currentY, 0,80, paint);
-        canvas.drawText("scaleFactor: " + scaleFactor, 0, 120, paint);
-        canvas.drawText("Clicked: " + (clicked ? "yupp" : "nope"), 0, 160, paint);
+//        Paint paint = new Paint();
+//        paint.setColor(Color.BLACK);
+//        canvas.drawText("currentX: " + currentX, 0,40, paint);
+//        canvas.drawText("currentY: " + currentY, 0,80, paint);
+//        canvas.drawText("scaleFactor: " + scaleFactor, 0, 120, paint);
+//        canvas.drawText("Clicked: " + (clicked ? "yupp" : "nope"), 0, 160, paint);
     }
 
     public void Update(double dt){
