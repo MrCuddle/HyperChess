@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener, Piece1Fragment.OnFragmentInteractionListener {
+public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +97,4 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         int i = 3 +4;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        int i = 32;
-    }
 }

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 
 
-public class DesignerActivity extends ActionBarActivity implements Piece1Fragment.OnFragmentInteractionListener{
+public class DesignerActivity extends ActionBarActivity{
 
     FragmentManager fm = getFragmentManager();
 
@@ -50,8 +50,4 @@ public class DesignerActivity extends ActionBarActivity implements Piece1Fragmen
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

@@ -18,16 +18,18 @@ import java.util.ArrayList;
  * Created by jespe_000 on 2014-12-30.
  */
 public class Designer extends Game {
+    DesignerListener listener;
 
     Drawable[][] tiles;
     int[][] directions;
-    static final int ARRAYWIDTH = 5, ARRAYHEIGHT = 5;
+    static final int ARRAYWIDTH = Settings.designerWidth, ARRAYHEIGHT = Settings.designerHeight;
     static final Point STARTPOINT = new Point(0, ARRAYHEIGHT - 1);
     int tileSize = 200;
     PorterDuffColorFilter highlightFilter = new PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC);
     MovePattern pattern = new MovePattern();
     ArrayList<Drawable> arrowList = new ArrayList<Drawable>();
     Drawable arrowPrefab;
+    Drawable pieceStart;
     Point lastPlacement = new Point(-1, -1);
 
     public Designer(Context context, Camera camera){
@@ -53,8 +55,28 @@ public class Designer extends Game {
             }
         }
 
+        pieceStart = context.getResources().getDrawable(R.drawable.piece_shape_1);
+        pieceStart.setBounds(STARTPOINT.x * tileSize, STARTPOINT.y*tileSize,
+                STARTPOINT.x * tileSize + tileSize,
+                STARTPOINT.y * tileSize + tileSize);
+
         AddToPattern(tiles[STARTPOINT.x][STARTPOINT.y], STARTPOINT.x, STARTPOINT.y);
         HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
+    }
+
+    public void Reset(){
+
+        directions = new int[ARRAYWIDTH][ARRAYHEIGHT + 1];
+        pattern.Clear();
+        arrowList.clear();
+        ClearHighlights();
+
+        AddToPattern(tiles[STARTPOINT.x][STARTPOINT.y], STARTPOINT.x, STARTPOINT.y);
+        HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
+    }
+
+    public void SetListener(DesignerListener listener){
+        this.listener = listener;
     }
 
 
@@ -94,6 +116,8 @@ public class Designer extends Game {
             arrowList.get(i).draw(c);
         }
 
+        pieceStart.draw(c);
+
     }
 
     private void AddToPattern(Drawable d, int indexX, int indexY){
@@ -128,14 +152,22 @@ public class Designer extends Game {
         }
         arrowList.add(clone);
         pattern.AddDirection(dir);
+
+        if(listener != null){
+            listener.OnDesignerInteraction();
+        }
     }
 
-    private void HighlightAdjacent(int indexX, int indexY){
+    private void ClearHighlights(){
         for (int x = 0; x < ARRAYWIDTH; x++) {
             for (int y = 0; y < ARRAYHEIGHT; y++) {
                 tiles[x][y].clearColorFilter();
             }
         }
+    }
+
+    private void HighlightAdjacent(int indexX, int indexY){
+        ClearHighlights();
         int left, right, up, down;
         left = indexX - 1; right = indexX + 1; up = indexY - 1; down = indexY + 1;
         if(ValidPlacement(left, indexY)){
@@ -187,6 +219,10 @@ public class Designer extends Game {
     public void Clear(){
         pattern = new MovePattern();
         arrowList.clear();
+    }
+
+    public interface DesignerListener{
+        public void OnDesignerInteraction();
     }
 
 }

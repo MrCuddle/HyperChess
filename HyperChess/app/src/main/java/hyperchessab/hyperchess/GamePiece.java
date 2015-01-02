@@ -31,6 +31,7 @@ public class GamePiece extends GameObject {
     LinkedList<Point> movePath;
     boolean isMoving;
     Context context;
+    String name = Settings.defaultPieceName;
 
 
     public GamePiece(Context context, int x, int y, GameBoard board){

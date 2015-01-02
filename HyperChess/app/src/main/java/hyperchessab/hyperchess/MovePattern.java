@@ -62,4 +62,7 @@ public class MovePattern {
     private boolean InBounds(int arrayWidth, int arrayHeight, int x, int y) {
         return x >= 0 && y >= 0 && x < arrayWidth && y < arrayHeight;
     }
+    public void Clear(){
+        pattern.clear();
+    }
 }

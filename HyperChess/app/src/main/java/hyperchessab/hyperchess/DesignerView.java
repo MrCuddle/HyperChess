@@ -10,18 +10,23 @@ import android.view.SurfaceView;
  * Created by jespe_000 on 2014-12-30.
  */
 public class DesignerView extends GameView {
+    private Context context;
+
     public DesignerView(Context context) {
         super(context);
+        this.context = context;
         game = new Designer(context, camera);
     }
 
     public DesignerView(Context context, AttributeSet attr) {
         super(context, attr);
+        this.context = context;
         game = new Designer(context, camera);
     }
 
     public DesignerView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
+        this.context = context;
         game = new Designer(context, camera);
     }
 
@@ -47,5 +52,13 @@ public class DesignerView extends GameView {
     @Override
     public void Update(double dt) {
         super.Update(dt);
+    }
+
+    public Designer GetDesigner(){
+        return (Designer)game;
+    }
+
+    public void ResetDesigner(){
+        game = new Designer(context, camera);
     }
 }

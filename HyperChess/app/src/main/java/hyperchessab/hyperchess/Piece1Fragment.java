@@ -1,25 +1,25 @@
 package hyperchessab.hyperchess;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridLayout;
+import android.widget.Spinner;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Piece1Fragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link Piece1Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Piece1Fragment extends Fragment implements Button.OnClickListener{
+public class Piece1Fragment extends Fragment implements Designer.DesignerListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,12 +28,24 @@ public class Piece1Fragment extends Fragment implements Button.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    int healthspinnerpoints;
+    int rangespinnerpoints;
 
-    Button save, reset;
+    Button reset;
+    Spinner healthspinner;
+    Spinner rangespinner;
 
-    private OnFragmentInteractionListener mListener;
 
-    private GridLayout grid;
+    Player player;
+    Designer designer;
+    DesignerView designerView;
+
+    private View.OnClickListener buttonListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            onButtonPressed(v.getId());
+        }
+    };
 
     /**
      * Use this factory method to create a new instance of
@@ -50,6 +62,7 @@ public class Piece1Fragment extends Fragment implements Button.OnClickListener{
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        fragment.player = GameManager.GetUser();
         return fragment;
     }
 
@@ -72,56 +85,111 @@ public class Piece1Fragment extends Fragment implements Button.OnClickListener{
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_piece1, container, false);
 
-        save = (Button) v.findViewById(R.id.Piece1Fragment_savebtn);
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
+        reset.setOnClickListener(buttonListener);
 
+
+        healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
+        Integer[] healthitems = new Integer[]{1,2,3};
+        ArrayAdapter<Integer> healthadapter = new ArrayAdapter<Integer>(getActivity() , android.R.layout.simple_expandable_list_item_1 , healthitems);
+        healthspinner.setAdapter(healthadapter);
+
+        rangespinner = (Spinner) v.findViewById(R.id.Piece1Fragment_rangeSpinner);
+        Integer[] rangeitems = new Integer[]{1,2,3};
+        ArrayAdapter<Integer> rangeadapter = new ArrayAdapter<Integer>(getActivity() , android.R.layout.simple_expandable_list_item_1 , rangeitems);
+        rangespinner.setAdapter(rangeadapter);
+
+        rangespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int temp = position;
+                if(rangespinnerpoints != temp){
+                   temp -= rangespinnerpoints;
+                   rangespinnerpoints = temp;
+                   UpdateRangePoints();
+                   rangespinnerpoints = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        healthspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int temp = position;
+                if(healthspinnerpoints != temp){
+                    temp -= healthspinnerpoints;
+                    healthspinnerpoints = temp;
+                    UpdateHealthPoints();
+                    healthspinnerpoints = position;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        designerView = (DesignerView)v.findViewById(R.id.Piece1Fragment_designerview);
+        designer = designerView.GetDesigner();
+        designer.SetListener(this);
+        UpdateActionBarTitle();
         return v;
     }
 
+    private void UpdateRangePoints()
+    {
+        player.points -= rangespinnerpoints;
+        UpdateActionBarTitle();
+    }
+
+    private void UpdateHealthPoints(){
+        player.points -= healthspinnerpoints;
+        UpdateActionBarTitle();
+    }
+
+    private void UpdateActionBarTitle(){
+        getActivity().setTitle(player.name + "                              Points left: " + player.points);
+        healthspinner.setSelection(0);
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    public void onButtonPressed(int id) {
+        switch (id) {
+            case R.id.Piece1Fragment_resetbtn:
+                designerView.ResetDesigner();
+                UpdateActionBarTitle();
+                break;
         }
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
+
 
     @Override
-    public void onClick(View v) {
-        mListener.onFragmentInteraction(null);
+    public void OnDesignerInteraction() {
+        player.points--;
+
+        Handler refresh = new Handler(Looper.getMainLooper());
+        refresh.post(new Runnable(){
+            @Override
+            public void run() {
+                UpdateActionBarTitle();
+            }
+        });
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
-
-
 }
