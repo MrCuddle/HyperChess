@@ -3,10 +3,9 @@ package hyperchessab.hyperchess;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RotateDrawable;
 import android.util.DisplayMetrics;
@@ -25,17 +24,20 @@ public class Designer extends Game {
     static final int ARRAYWIDTH = Settings.designerWidth, ARRAYHEIGHT = Settings.designerHeight;
     static final Point STARTPOINT = new Point(0, ARRAYHEIGHT - 1);
     int tileSize = 200;
-    PorterDuffColorFilter highlightFilter = new PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC);
+    Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     MovePattern pattern = new MovePattern();
-    ArrayList<Drawable> arrowList = new ArrayList<Drawable>();
-    Drawable arrowPrefab;
+    ArrayList<Drawable> highlights = new ArrayList<Drawable>();
+    Drawable highlightPrefab;
+    Drawable arrow;
     Drawable pieceStart;
-    Point lastPlacement = new Point(-1, -1);
+    Path drawPath = new Path();
+    Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
 
     public Designer(Context context, Camera camera){
         super(context, camera);
         this.camera = camera;
-        arrowPrefab = context.getResources().getDrawable(R.drawable.tile_arrow);
+        arrow = context.getResources().getDrawable(R.drawable.tile_arrow);
+        highlightPrefab = context.getResources().getDrawable(R.drawable.highlight_shape);
 
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
@@ -55,30 +57,32 @@ public class Designer extends Game {
             }
         }
 
+        linePaint.setStrokeWidth(10);
+        linePaint.setColor(Color.RED);
+        linePaint.setStyle(Paint.Style.STROKE);
+
         pieceStart = context.getResources().getDrawable(R.drawable.piece_shape_1);
         pieceStart.setBounds(STARTPOINT.x * tileSize, STARTPOINT.y*tileSize,
                 STARTPOINT.x * tileSize + tileSize,
                 STARTPOINT.y * tileSize + tileSize);
 
-        AddToPattern(tiles[STARTPOINT.x][STARTPOINT.y], STARTPOINT.x, STARTPOINT.y);
+        SetStart(STARTPOINT.x, STARTPOINT.y);
         HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
+
     }
 
     public void Reset(){
-
         directions = new int[ARRAYWIDTH][ARRAYHEIGHT + 1];
         pattern.Clear();
-        arrowList.clear();
         ClearHighlights();
 
-        AddToPattern(tiles[STARTPOINT.x][STARTPOINT.y], STARTPOINT.x, STARTPOINT.y);
+        SetStart(STARTPOINT.x, STARTPOINT.y);
         HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
     }
 
     public void SetListener(DesignerListener listener){
         this.listener = listener;
     }
-
 
     @Override
     public void Update(double dt) {
@@ -92,7 +96,6 @@ public class Designer extends Game {
                             HighlightAdjacent(x, y);
                             break;
                         } else {
-                            RemoveFromPattern(x, y);
                             break;
                         }
                     }
@@ -112,28 +115,45 @@ public class Designer extends Game {
             }
         }
 
-        for (int i = 0; i < arrowList.size(); i++) {
-            arrowList.get(i).draw(c);
+        for (int i = 0; i < highlights.size(); i++) {
+            highlights.get(i).draw(c);
         }
 
+        c.drawPath(drawPath, linePaint);
+        if(arrow != null){
+            arrow.draw(c);
+        }
         pieceStart.draw(c);
 
+
+
+    }
+
+    private void SetStart(int indexX, int indexY){
+        int x = tiles[indexX][indexY].getBounds().centerX();
+        int y = tiles[indexX][indexY].getBounds().centerY();
+        lastPosition.set(x, y);
+        lastPlacement.set(indexX, indexY);
+        int dir = GetDirection(indexX, indexY);
+        directions[indexX][indexY] = dir;
+        drawPath.setLastPoint(x, y);
     }
 
     private void AddToPattern(Drawable d, int indexX, int indexY){
         int dir = GetDirection(indexX, indexY);
         directions[indexX][indexY] = dir;
-        lastPlacement.set(indexX, indexY);
 
-        Drawable clone = (RotateDrawable)arrowPrefab.getConstantState().newDrawable();
+        Drawable clone = (RotateDrawable)arrow.getConstantState().newDrawable();
         int x, y, w, h;
         x = d.getBounds().centerX();
         y = d.getBounds().centerY();
         w = d.getBounds().right - (tileSize / 4);
         h = d.getBounds().bottom - (tileSize / 4);
 
-        clone.setBounds(x, y, w, h);
+        drawPath.lineTo(x, y);
 
+        clone.setBounds(x, y, w, h);
+        lastPosition.set(x, y);
         RotateDrawable rotationDrawable = (RotateDrawable)clone;
 
         switch (dir){
@@ -150,8 +170,11 @@ public class Designer extends Game {
                 rotationDrawable.setLevel(7500);
                 break;
         }
-        arrowList.add(clone);
+        //arrowList.add(clone);
+        arrow = clone;
+
         pattern.AddDirection(dir);
+        lastPlacement.set(indexX, indexY);
 
         if(listener != null){
             listener.OnDesignerInteraction();
@@ -159,11 +182,7 @@ public class Designer extends Game {
     }
 
     private void ClearHighlights(){
-        for (int x = 0; x < ARRAYWIDTH; x++) {
-            for (int y = 0; y < ARRAYHEIGHT; y++) {
-                tiles[x][y].clearColorFilter();
-            }
-        }
+        highlights.clear();
     }
 
     private void HighlightAdjacent(int indexX, int indexY){
@@ -171,22 +190,27 @@ public class Designer extends Game {
         int left, right, up, down;
         left = indexX - 1; right = indexX + 1; up = indexY - 1; down = indexY + 1;
         if(ValidPlacement(left, indexY)){
-            tiles[left][indexY].setColorFilter(highlightFilter);
+            Drawable d = highlightPrefab.getConstantState().newDrawable();
+            d.setBounds(tiles[left][indexY].getBounds());
+            highlights.add(d);
         }
         if(ValidPlacement(right, indexY)){
-            tiles[right][indexY].setColorFilter(highlightFilter);
+            Drawable d = highlightPrefab.getConstantState().newDrawable();
+            d.setBounds(tiles[right][indexY].getBounds());
+            highlights.add(d);
         }
         if(ValidPlacement(indexX, up)){
-            tiles[indexX][up].setColorFilter(highlightFilter);
+            Drawable d = highlightPrefab.getConstantState().newDrawable();
+            d.setBounds(tiles[indexX][up].getBounds());
+            highlights.add(d);
         }
         if(ValidPlacement(indexX, down)){
-            tiles[indexX][down].setColorFilter(highlightFilter);
+            Drawable d = highlightPrefab.getConstantState().newDrawable();
+            d.setBounds(tiles[indexX][down].getBounds());
+            highlights.add(d);
         }
     }
 
-    private void RemoveFromPattern(int indexX, int indexY){
-
-    }
 
     private boolean ValidPlacement(int x, int y){
         if(x < 0 || y < 0) { return false; }
@@ -218,7 +242,6 @@ public class Designer extends Game {
 
     public void Clear(){
         pattern = new MovePattern();
-        arrowList.clear();
     }
 
     public interface DesignerListener{
