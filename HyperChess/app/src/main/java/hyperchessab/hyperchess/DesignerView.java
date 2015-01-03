@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 
 /**
  * Created by jespe_000 on 2014-12-30.
@@ -52,6 +51,28 @@ public class DesignerView extends GameView {
     @Override
     public void Update(double dt) {
         super.Update(dt);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int height, desiredHeight;
+        desiredHeight = GetDesigner().GetHeight();
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        switch (heightMode){
+            case MeasureSpec.EXACTLY:
+                height = heightSize;
+                break;
+            case MeasureSpec.AT_MOST:
+                height = Math.min(desiredHeight, heightSize);
+                break;
+            default:
+                height = desiredHeight;
+                break;
+        }
+        setMeasuredDimension(widthSize, height);
     }
 
     public Designer GetDesigner(){

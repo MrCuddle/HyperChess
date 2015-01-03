@@ -2,7 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -20,14 +20,7 @@ import android.widget.Spinner;
  * create an instance of this fragment.
  */
 public class Piece1Fragment extends Fragment implements Designer.DesignerListener{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     int healthspinnerpoints;
     int rangespinnerpoints;
 
@@ -51,17 +44,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment Piece1Fragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static Piece1Fragment newInstance(String param1, String param2) {
+    public static Piece1Fragment newInstance() {
         Piece1Fragment fragment = new Piece1Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         fragment.player = GameManager.GetUser();
         return fragment;
     }
@@ -70,14 +56,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,12 +69,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
         healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
         Integer[] healthitems = new Integer[]{1,2,3};
-        ArrayAdapter<Integer> healthadapter = new ArrayAdapter<Integer>(getActivity() , android.R.layout.simple_expandable_list_item_1 , healthitems);
+        ArrayAdapter<Integer> healthadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , healthitems);
         healthspinner.setAdapter(healthadapter);
 
         rangespinner = (Spinner) v.findViewById(R.id.Piece1Fragment_rangeSpinner);
         Integer[] rangeitems = new Integer[]{1,2,3};
-        ArrayAdapter<Integer> rangeadapter = new ArrayAdapter<Integer>(getActivity() , android.R.layout.simple_expandable_list_item_1 , rangeitems);
+        ArrayAdapter<Integer> rangeadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , rangeitems);
         rangespinner.setAdapter(rangeadapter);
 
         rangespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -155,10 +133,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     private void UpdateActionBarTitle(){
         getActivity().setTitle(player.name + "                              Points left: " + player.points);
-        healthspinner.setSelection(0);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
@@ -168,17 +144,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         }
 
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 
     @Override
     public void OnDesignerInteraction() {

@@ -12,7 +12,9 @@
     <string name="apply">Apply</string>
     <string name="back">Back</string>
     <string name="title_activity_designer">DesignerActivity</string>
-    <string name="defaultPlayerName">Rickard</string>
     <string name="piece_name_hint">Piece Name...</string>
+    <string name="health">Health</string>
+    <string name="range">Range</string>
+    <string name="reset">Reset</string>
 
 </resources>

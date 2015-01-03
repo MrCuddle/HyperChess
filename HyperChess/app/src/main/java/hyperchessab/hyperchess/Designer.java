@@ -23,13 +23,13 @@ public class Designer extends Game {
     int[][] directions;
     static final int ARRAYWIDTH = Settings.designerWidth, ARRAYHEIGHT = Settings.designerHeight;
     static final Point STARTPOINT = new Point(0, ARRAYHEIGHT - 1);
-    int tileSize = 200;
-    Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    static int tileSize = 200;
+    static final Paint linePaint = new Paint();
     MovePattern pattern = new MovePattern();
-    ArrayList<Drawable> highlights = new ArrayList<Drawable>();
-    Drawable highlightPrefab;
+    ArrayList<Drawable> highlights = new ArrayList<>();
+    final Drawable highlightPrefab;
+    final Drawable pieceStart;
     Drawable arrow;
-    Drawable pieceStart;
     Path drawPath = new Path();
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
 
@@ -71,15 +71,6 @@ public class Designer extends Game {
 
     }
 
-    public void Reset(){
-        directions = new int[ARRAYWIDTH][ARRAYHEIGHT + 1];
-        pattern.Clear();
-        ClearHighlights();
-
-        SetStart(STARTPOINT.x, STARTPOINT.y);
-        HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
-    }
-
     public void SetListener(DesignerListener listener){
         this.listener = listener;
     }
@@ -95,8 +86,6 @@ public class Designer extends Game {
                             AddToPattern(tiles[x][y], x, y);
                             HighlightAdjacent(x, y);
                             break;
-                        } else {
-                            break;
                         }
                     }
                 }
@@ -107,7 +96,7 @@ public class Designer extends Game {
     @Override
     public void Draw(Canvas c) {
         c.setMatrix(camera.getTransform());
-        c.drawColor(Color.WHITE);
+        c.drawColor(Color.BLACK);
 
         for (int x = 0; x < ARRAYWIDTH; x++) {
             for (int y = 0; y < ARRAYHEIGHT; y++) {
@@ -125,8 +114,6 @@ public class Designer extends Game {
         }
         pieceStart.draw(c);
 
-
-
     }
 
     private void SetStart(int indexX, int indexY){
@@ -143,7 +130,7 @@ public class Designer extends Game {
         int dir = GetDirection(indexX, indexY);
         directions[indexX][indexY] = dir;
 
-        Drawable clone = (RotateDrawable)arrow.getConstantState().newDrawable();
+        Drawable clone = arrow.getConstantState().newDrawable();
         int x, y, w, h;
         x = d.getBounds().centerX();
         y = d.getBounds().centerY();
@@ -170,7 +157,7 @@ public class Designer extends Game {
                 rotationDrawable.setLevel(7500);
                 break;
         }
-        //arrowList.add(clone);
+
         arrow = clone;
 
         pattern.AddDirection(dir);
@@ -211,7 +198,6 @@ public class Designer extends Game {
         }
     }
 
-
     private boolean ValidPlacement(int x, int y){
         if(x < 0 || y < 0) { return false; }
         if(x >= ARRAYWIDTH || y >= ARRAYHEIGHT ) { return false; }
@@ -223,7 +209,7 @@ public class Designer extends Game {
     }
 
     private int GetDirection(int indexX, int indexY){
-        int res = 0;
+        int res;
         //if last placement.x < 0, this is the first time this method is called
         if(lastPlacement.x < 0){
           return MovePattern.Direction.UP;
@@ -236,12 +222,16 @@ public class Designer extends Game {
         return res;
     }
 
-    public MovePattern GetPattern(){
-        return pattern;
+    public static int GetHeight(){
+        return ARRAYHEIGHT * tileSize;
     }
 
-    public void Clear(){
-        pattern = new MovePattern();
+    public static int GetWidth(){
+        return ARRAYWIDTH * tileSize;
+    }
+
+    public MovePattern GetPattern(){
+        return pattern;
     }
 
     public interface DesignerListener{

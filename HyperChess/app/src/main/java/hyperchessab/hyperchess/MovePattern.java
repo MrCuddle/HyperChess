@@ -14,7 +14,7 @@ public class MovePattern {
 
     private List<Integer> pattern;
 
-    public MovePattern(){ pattern = new ArrayList<Integer>();}
+    public MovePattern(){ pattern = new ArrayList<>();}
     public MovePattern(List<Integer> pattern) {this.pattern = pattern;}
 
     public List<Integer> GetPattern() {
@@ -54,7 +54,7 @@ public class MovePattern {
 
                 if(InBounds(arrayWidth, arrayHeight, x, y)){
                     tiles[x][y].Highlight();
-                };
+                }
             }
         }
     }

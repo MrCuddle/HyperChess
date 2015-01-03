@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Debug;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
-
+//        Debug.startMethodTracing("trace");
         //getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
         setFragment(new MainMenuFragment(), false);
     }
@@ -68,6 +69,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     @Override
     public void onExitPressed() {
         Toast.makeText(this, "Exit Pressed", Toast.LENGTH_SHORT).show();
+//        Debug.stopMethodTracing();
         finish();
     }
 
@@ -84,11 +86,12 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onDesignerPressed() {
+        Toast.makeText(this, "Designer Pressed", Toast.LENGTH_SHORT).show();
         Intent getChatScreen = new Intent(this, DesignerActivity.class);
 
         startActivity(getChatScreen);
         //finish();
-        Toast.makeText(this, "Designer Pressed", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

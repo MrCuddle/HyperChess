@@ -10,7 +10,8 @@ public class Settings {
     public static final int attackRangeCost = 1;
     public static final int healthCost = 1;
 
-
+    public static final int differentPieces = 4;
+//    public static final int numberOfPieces = 8;
 
     public static final String defaultPlayerName = "RICKARD";
     public static final String defaultPieceName = "Ola-Konny";

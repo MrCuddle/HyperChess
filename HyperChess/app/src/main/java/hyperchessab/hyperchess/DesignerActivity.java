@@ -1,30 +1,39 @@
 package hyperchessab.hyperchess;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.support.v4.app.FragmentManager;
+
+import java.util.ArrayList;
 
 
+public class DesignerActivity extends FragmentActivity{
 
-public class DesignerActivity extends ActionBarActivity{
-
-    FragmentManager fm = getFragmentManager();
+    ViewPager viewPager;
+    Piece1FragmentAdapter adapter;
+    ArrayList<String> types = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
-        setContentView(R.layout.activity_designer);
-        FragmentTransaction ft = fm.beginTransaction();
-        Piece1Fragment frag = Piece1Fragment.newInstance("","");
-        ft.replace(R.id.tabframe, frag, "piece1");
-        ft.addToBackStack("piece1");
-        ft.commit();
-
+//        setContentView(R.layout.activity_designer);
+//        FragmentTransaction ft = fm.beginTransaction();
+//        Piece1Fragment frag = Piece1Fragment.newInstance();
+//        ft.replace(R.id.tabframe, frag, "piece1");
+//        ft.addToBackStack("piece1");
+//        ft.commit();
+        for (int i = 0; i < Settings.differentPieces; i++) {
+            types.add("Name" + i);
+        }
+        adapter = new Piece1FragmentAdapter(getSupportFragmentManager(), types);
+        viewPager = (ViewPager)findViewById(R.id.designer_pager);
+        viewPager.setAdapter(adapter);
     }
 
 
@@ -48,6 +57,32 @@ public class DesignerActivity extends ActionBarActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
+        ArrayList<String> types;
+        public Piece1FragmentAdapter(FragmentManager fm, ArrayList<String> types){
+            super(fm);
+            this.types = types;
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return Piece1Fragment.newInstance();
+        }
+
+
+        @Override
+        public int getCount() {
+            return Settings.differentPieces;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return types.get(position);
+        }
+
     }
 
 }
