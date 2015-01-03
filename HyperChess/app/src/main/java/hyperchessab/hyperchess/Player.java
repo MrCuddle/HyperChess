@@ -1,5 +1,7 @@
 package hyperchessab.hyperchess;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 /**
@@ -9,6 +11,7 @@ public class Player {
         private ArrayList<GamePiece> gamePieces;
         public int points;
         public String name;
+        int teamColor;
 
         public Player(int points, String name){
             this.points = points;
@@ -20,4 +23,11 @@ public class Player {
             this.name = Settings.defaultPlayerName;
         }
 
+        public void SetTeamColor(int color){
+            teamColor = color;
+        }
+
+        public int GetTeamColor(){
+            return teamColor;
+        }
 }

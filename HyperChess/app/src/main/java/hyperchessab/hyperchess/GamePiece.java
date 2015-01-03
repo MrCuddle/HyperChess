@@ -33,6 +33,8 @@ public class GamePiece extends GameObject {
     Context context;
     String name = Settings.defaultPieceName;
 
+    int teamColor;
+
 
     public GamePiece(Context context, int x, int y, GameBoard board){
         this.context = context;
@@ -52,6 +54,8 @@ public class GamePiece extends GameObject {
 
     public void SetOwner(Player owner){
         this.owner = owner;
+        this.teamColor = owner.GetTeamColor();
+        shape.setColorFilter(teamColor, PorterDuff.Mode.SRC);
     }
 
     public Player GetOwner(){
@@ -204,7 +208,7 @@ public class GamePiece extends GameObject {
                         gridPosY = newPos.y;
                         board.GetTile(gridPosX, gridPosY).occupier = this;
                         moveDestinations = null;
-                        shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
+                        shape.setColorFilter(teamColor, PorterDuff.Mode.SRC);
                         moved = true;
                     }
                 }
@@ -257,7 +261,7 @@ public class GamePiece extends GameObject {
     }
 
     public void Deselect(){
-        shape.setColorFilter(Color.BLUE, PorterDuff.Mode.ADD);
+        shape.setColorFilter(teamColor, PorterDuff.Mode.SRC);
         moveDestinations = null;
         selected = false;
     }

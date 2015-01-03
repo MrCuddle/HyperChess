@@ -24,6 +24,8 @@ public class Game {
     public Game(Context context, Camera camera){
         players.add(new Player());
         players.add(new Player());
+        players.get(0).SetTeamColor(Color.RED);
+        players.get(1).SetTeamColor(Color.BLUE);
         board = new GameBoard(context,this);
         this.camera = camera;
         currentPlayer = 0;
