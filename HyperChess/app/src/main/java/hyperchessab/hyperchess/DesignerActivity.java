@@ -1,97 +1,112 @@
 package hyperchessab.hyperchess;
 
-
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 
+public class DesignerActivity extends ActionBarActivity implements ActionBar.TabListener, Piece1Fragment.Piece1Listener{
 
-public class DesignerActivity extends ActionBarActivity {
-
-    ViewPager viewPager;
-    Piece1FragmentAdapter adapter;
-    ArrayList<String> types = new ArrayList<>();
+//    ViewPager viewPager;
+//    Piece1FragmentAdapter adapter;
+//    ArrayList<String> types = new ArrayList<>();
+    ArrayList<GameManager.SavePiece> pieces;
+    Piece1Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
-//        setContentView(R.layout.activity_designer);
-//        FragmentTransaction ft = fm.beginTransaction();
-//        Piece1Fragment frag = Piece1Fragment.newInstance();
-//        ft.replace(R.id.tabframe, frag, "piece1");
-//        ft.addToBackStack("piece1");
-//        ft.commit();
-        for (int i = 0; i < Settings.differentPieces; i++) {
-            types.add("Name" + i);
-        }
-        adapter = new Piece1FragmentAdapter(getSupportFragmentManager(), types);
-        viewPager = (ViewPager)findViewById(R.id.designer_pager);
-        viewPager.setAdapter(adapter);
+
+//        for (int i = 0; i < Settings.differentPieces; i++) {
+//            types.add("Name" + i);
+//        }
+//        adapter = new Piece1FragmentAdapter(getSupportFragmentManager(), types);
+//        viewPager = (ViewPager)findViewById(R.id.designer_pager);
+//        viewPager.setAdapter(adapter);
+
+        pieces = GameManager.GetUserSavePieces();
 
         ActionBar a = getSupportActionBar();
         if(a != null){
+            a.setDisplayShowHomeEnabled(false);
+            a.setDisplayShowTitleEnabled(false);
             a.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            for (int i = 0; i < Settings.differentPieces; i++) {
+                ActionBar.Tab tab = a.newTab();
+                tab.setText(pieces.get(i).name);
+                tab.setTabListener(this);
+                a.addTab(tab);
+            }
+
         }
+        fragment = Piece1Fragment.newInstance(0, this);
+        setFragment(fragment, false);
 
     }
 
+    private void setFragment(Fragment f, boolean addToBackStack){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(addToBackStack){
+            ft.replace(R.id.designer_fragmentContainer,f, f.getTag()).addToBackStack(null);
+        } else {
+            ft.replace(R.id.designer_fragmentContainer, f, f.getTag());
+        }
+        ft.commit();
+    }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_designer, menu);
-        return true;
+    public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+        if(fragment != null){
+            fragment.ChangeCurrentPiece(tab.getPosition());
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+        int i  = 34;
+        i++;
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+        int i  = 34;
+        i++;
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    public void OnPieceNameChange(int index, String name) {
+
     }
 
 
-    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
-        ArrayList<String> types;
-        public Piece1FragmentAdapter(FragmentManager fm, ArrayList<String> types){
-            super(fm);
-            this.types = types;
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return Piece1Fragment.newInstance(i);
-        }
-
-
-        @Override
-        public int getCount() {
-            return Settings.differentPieces;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return types.get(position);
-        }
-
-    }
+//    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
+//        ArrayList<String> types;
+//        public Piece1FragmentAdapter(FragmentManager fm, ArrayList<String> types){
+//            super(fm);
+//            this.types = types;
+//        }
+//
+//        @Override
+//        public Fragment getItem(int i) {
+//            return Piece1Fragment.newInstance(i, this);
+//        }
+//
+//
+//        @Override
+//        public int getCount() {
+//            return Settings.differentPieces;
+//        }
+//
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            return types.get(position);
+//        }
+//
+//    }
 
 }

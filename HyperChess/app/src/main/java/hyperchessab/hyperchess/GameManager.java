@@ -23,9 +23,9 @@ public final class GameManager {
         public MovePattern pattern = new MovePattern();
     }
 
-    static ArrayList<SavePiece> playerPieces = new ArrayList<>();
-    static Context context;
-    static Player playerUser, playerOpponent;
+    private static ArrayList<SavePiece> playerPieces = new ArrayList<>();
+    private static Context context;
+    private static Player playerUser, playerOpponent;
 
     public static Player GetUser(){
         if(playerUser == null){
@@ -49,13 +49,12 @@ public final class GameManager {
         }
     }
 
-    private static GamePiece ConvertSavePiece(SavePiece s){
-        GamePiece res = null;
-        return res;
-    }
-
     public static SavePiece GetSavePiece(int index){
         return playerPieces.get(index);
+    }
+
+    public static ArrayList<SavePiece> GetUserSavePieces(){
+        return playerPieces;
     }
 
 

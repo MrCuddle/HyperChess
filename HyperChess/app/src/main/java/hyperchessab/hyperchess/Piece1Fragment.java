@@ -1,6 +1,5 @@
 package hyperchessab.hyperchess;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
@@ -17,13 +16,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Piece1Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class Piece1Fragment extends Fragment implements Designer.DesignerListener{
+
+    Piece1Listener listener;
 
     int healthspinnerpoints;
     int rangespinnerpoints;
@@ -32,12 +32,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     Spinner healthspinner;
     Spinner rangespinner;
 
-
     Player player;
     Designer designer;
     DesignerView designerView;
 
-    GameManager.SavePiece savePiece;
+    GameManager.SavePiece currentPiece;
+    int currentPieceIndex;
 
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
@@ -52,11 +52,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
      *
      * @return A new instance of fragment Piece1Fragment.
      */
-    public static Piece1Fragment newInstance(int id) {
+    public static Piece1Fragment newInstance(int startPieceIndex, Piece1Listener listener) {
         Piece1Fragment fragment = new Piece1Fragment();
         fragment.player = GameManager.GetUser();
-        fragment.savePiece = GameManager.GetSavePiece(id);
-
+        fragment.currentPiece = GameManager.GetSavePiece(startPieceIndex);
+        fragment.listener = listener;
+        fragment.currentPieceIndex = startPieceIndex;
         return fragment;
     }
 
@@ -135,7 +136,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         designerView = (DesignerView)v.findViewById(R.id.Piece1Fragment_designerview);
         designer = designerView.GetDesigner();
         designer.SetListener(this);
-        designer.SetPattern(savePiece.pattern);
+        designer.SetPattern(currentPiece.pattern);
         UpdateActionBarTitle();
         return v;
     }
@@ -143,22 +144,23 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     private void UpdateRangePoints()
     {
         player.points -= rangespinnerpoints;
-        savePiece.cost += rangespinnerpoints;
+        currentPiece.cost += rangespinnerpoints;
         UpdateActionBarTitle();
     }
 
     private void UpdateHealthPoints(){
         player.points -= healthspinnerpoints;
-        savePiece.cost += healthspinnerpoints;
+        currentPiece.cost += healthspinnerpoints;
         UpdateActionBarTitle();
     }
 
     private void UpdateActionBarTitle(){
-        getActivity().setTitle(player.name + savePiece.name + "                              Points left: " + player.points);
+        getActivity().setTitle(player.name + currentPiece.name + "                              Points left: " + player.points);
     }
 
     private void onEditPieceName(TextView v){
-        savePiece.name = v.getText().toString();
+        currentPiece.name = v.getText().toString();
+        listener.OnPieceNameChange(currentPieceIndex, v.getText().toString());
     }
 
     public void onButtonPressed(int id) {
@@ -171,11 +173,19 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     }
 
+    public void ChangeCurrentPiece(int index){
+        if (index < Settings.differentPieces && index >= 0){
+            currentPiece = GameManager.GetSavePiece(index);
+            currentPieceIndex = index;
+            designer.SetPattern(currentPiece.pattern);
+        }
+    }
+
     @Override
     public void OnDesignerInteraction() {
         player.points--;
-        savePiece.cost++;
-        savePiece.pattern = designer.GetPattern();
+        currentPiece.cost++;
+        currentPiece.pattern = designer.GetPattern();
         Handler refresh = new Handler(Looper.getMainLooper());
         refresh.post(new Runnable(){
             @Override
@@ -183,5 +193,14 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 UpdateActionBarTitle();
             }
         });
+    }
+
+    @Override
+    public void OnChangedPattern() {
+        designerView.invalidate();
+    }
+
+    public interface Piece1Listener{
+        public void OnPieceNameChange(int index, String name);
     }
 }

@@ -18,7 +18,6 @@ import java.util.ArrayList;
  */
 public class Designer extends Game {
     DesignerListener listener;
-
     Drawable[][] tiles;
     int[][] directions;
     static final int ARRAYWIDTH = Settings.designerWidth, ARRAYHEIGHT = Settings.designerHeight;
@@ -116,16 +115,6 @@ public class Designer extends Game {
 
     }
 
-    private void SetStart(int indexX, int indexY){
-        int x = tiles[indexX][indexY].getBounds().centerX();
-        int y = tiles[indexX][indexY].getBounds().centerY();
-        lastPosition.set(x, y);
-        lastPlacement.set(indexX, indexY);
-        int dir = GetDirection(indexX, indexY);
-        directions[indexX][indexY] = dir;
-        drawPath.setLastPoint(x, y);
-    }
-
     private void AddToPattern(Drawable d, int indexX, int indexY){
         int dir = GetDirection(indexX, indexY);
         directions[indexX][indexY] = dir;
@@ -208,6 +197,21 @@ public class Designer extends Game {
         return directions[x][y] == MovePattern.Direction.NODIRECTION && resX <= 1 && resY <= 1 && resX != resY;
     }
 
+    private void SetStart(int indexX, int indexY){
+        int x = tiles[indexX][indexY].getBounds().centerX();
+        int y = tiles[indexX][indexY].getBounds().centerY();
+        lastPosition.set(x, y);
+        lastPlacement.set(indexX, indexY);
+        int dir = GetDirection(indexX, indexY);
+        directions[indexX][indexY] = dir;
+        drawPath.setLastPoint(x, y);
+
+        int w, h;
+        w = tiles[indexX][indexY].getBounds().right - (tileSize / 4);
+        h = tiles[indexX][indexY].getBounds().bottom - (tileSize / 4);
+        arrow.setBounds(x, y, w, h);
+    }
+
     private int GetDirection(int indexX, int indexY){
         int res;
         //if last placement.x < 0, this is the first time this method is called
@@ -235,46 +239,47 @@ public class Designer extends Game {
     }
 
     public void SetPattern(MovePattern p){
-        if(p.Size() > 0){
-            for (int x = 0; x < ARRAYWIDTH; x++) {
-                for (int y = 0; y < ARRAYHEIGHT; y++) {
-                    directions[x][y] = MovePattern.Direction.NODIRECTION;
+
+        int x = STARTPOINT.x, y = STARTPOINT.y;
+
+        if(pattern.Size() > 0){
+            for (int i = 0; i < ARRAYWIDTH; i++) {
+                for (int j = 0; j < ARRAYHEIGHT; j++) {
+                    directions[i][j] = MovePattern.Direction.NODIRECTION;
                 }
             }
-
-            int x = STARTPOINT.x, y = STARTPOINT.y;
             pattern = new MovePattern();
             drawPath.reset();
             ClearHighlights();
             SetStart(STARTPOINT.x, STARTPOINT.y);
             HighlightAdjacent(x, y);
-
-            for (int i = 0; i < p.Size(); i++) {
-                int dir = p.Get(i);
-                switch (dir){
-                    case MovePattern.Direction.UP:
-                        y--;
-                        break;
-                    case MovePattern.Direction.RIGHT:
-                        x++;
-                        break;
-                    case MovePattern.Direction.DOWN:
-                        y++;
-                        break;
-                    case MovePattern.Direction.LEFT:
-                        x--;
-                        break;
-                }
-                AddToPattern(tiles[x][y], x, y);
-            }
-            HighlightAdjacent(x, y);
         }
 
+        for (int i = 0; i < p.Size(); i++) {
+            int dir = p.Get(i);
+            switch (dir){
+                case MovePattern.Direction.UP:
+                    y--;
+                    break;
+                case MovePattern.Direction.RIGHT:
+                    x++;
+                    break;
+                case MovePattern.Direction.DOWN:
+                    y++;
+                    break;
+                case MovePattern.Direction.LEFT:
+                    x--;
+                    break;
+            }
+            AddToPattern(tiles[x][y], x, y);
+        }
+        HighlightAdjacent(x, y);
 
     }
 
     public interface DesignerListener{
         public void OnDesignerInteraction();
+        public void OnChangedPattern();
     }
 
 }
