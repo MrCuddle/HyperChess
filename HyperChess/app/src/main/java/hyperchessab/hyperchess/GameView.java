@@ -118,6 +118,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     protected void onDraw(Canvas canvas) {
         canvasWidth = canvas.getWidth();
+        camera.setCanvasSize(canvas.getWidth(),canvas.getHeight());
         game.Draw(canvas);
 //        Paint paint = new Paint();
 //        paint.setColor(Color.BLACK);

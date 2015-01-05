@@ -28,6 +28,7 @@ public class Game {
         players.get(1).SetTeamColor(Color.BLUE);
         board = new GameBoard(context,this);
         this.camera = camera;
+        camera.setBounds(board.Width * GameBoard.TileSize, board.Height * GameBoard.TileSize);
         currentPlayer = 0;
     }
 
