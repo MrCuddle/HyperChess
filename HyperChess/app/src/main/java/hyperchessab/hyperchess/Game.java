@@ -50,6 +50,7 @@ public class Game {
 
     public void IncrementCurrentPlayer(){
         currentPlayer = (currentPlayer + 1) % 2;
+        hud.SetCurrentPlayer(currentPlayer);
     }
 
     public void Draw(Canvas c){

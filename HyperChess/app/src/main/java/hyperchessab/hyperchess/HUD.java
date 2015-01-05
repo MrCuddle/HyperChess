@@ -12,17 +12,26 @@ public class HUD {
     Paint p;
     Rect scoreBounds;
     String currentScore;
+    int currentPlayer;
     public HUD(){
         p = new Paint();
         p.setColor(Color.BLACK);
-        p.setTextSize(200);
+        p.setTextSize(150);
         scoreBounds = new Rect();
         currentScore = "0 - 0";
+        currentPlayer = 0;
         p.getTextBounds(currentScore, 0, currentScore.length(), scoreBounds);
     }
 
+    public void SetCurrentPlayer(int playerId){
+        currentPlayer = playerId;
+    }
+
     public void Update(){
-        currentScore = GameData.teamOneScore + " - " + GameData.teamTwoScore;
+        if(currentPlayer == 0)
+            currentScore = "[" + GameData.teamOneScore + "]" + " - " + GameData.teamTwoScore;
+        else
+            currentScore = GameData.teamOneScore + " - " + "[" + GameData.teamTwoScore+ "]";
         p.getTextBounds(currentScore, 0, currentScore.length(), scoreBounds);
     }
 
