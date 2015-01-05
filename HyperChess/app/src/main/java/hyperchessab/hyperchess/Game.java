@@ -3,6 +3,7 @@ package hyperchessab.hyperchess;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 
 import java.util.ArrayList;
 
@@ -20,16 +21,18 @@ public class Game {
 
     GameBoard board;
     Camera camera;
+    HUD hud;
 
     public Game(Context context, Camera camera){
-        players.add(new Player());
-        players.add(new Player());
+        players.add(new Player(0));
+        players.add(new Player(1));
         players.get(0).SetTeamColor(Color.RED);
         players.get(1).SetTeamColor(Color.BLUE);
         board = new GameBoard(context,this);
         this.camera = camera;
         camera.setBounds(board.Width * GameBoard.TileSize, board.Height * GameBoard.TileSize);
         currentPlayer = 0;
+        hud = new HUD();
     }
 
     public void Update(double dt){
@@ -42,6 +45,7 @@ public class Game {
                 break;
         }
 
+        hud.Update();
     }
 
     public void IncrementCurrentPlayer(){
@@ -52,6 +56,8 @@ public class Game {
         c.setMatrix(camera.getTransform());
         c.drawColor(Color.BLACK);
         board.Draw(c);
+        c.setMatrix(new Matrix());
+        hud.Draw(c);
     }
 
 }

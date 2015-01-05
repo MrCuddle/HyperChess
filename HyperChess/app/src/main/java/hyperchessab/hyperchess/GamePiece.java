@@ -147,6 +147,7 @@ public class GamePiece extends GameObject {
                 if(board.GetTile(gridPosX, gridPosY) instanceof GoalTile){
                     flag.ResetPosition();
                     flag = null;
+                    GameData.IncrementScore(owner.GetTeamId());
                 }
             }
         }
