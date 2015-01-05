@@ -40,4 +40,8 @@ public class Player {
         public int GetTeamColor(){
             return teamColor;
         }
+
+        public void SetPieces(ArrayList<GamePiece> pieces){
+            this.gamePieces = pieces;
+        }
 }

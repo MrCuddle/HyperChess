@@ -65,4 +65,12 @@ public class MovePattern {
     public void Clear(){
         pattern.clear();
     }
+
+    public int Size(){
+        return pattern.size();
+    }
+
+    public int Get(int index){
+        return pattern.get(index);
+    }
 }

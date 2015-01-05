@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 
 /**
@@ -33,6 +37,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     Designer designer;
     DesignerView designerView;
 
+    GameManager.SavePiece savePiece;
+
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
@@ -46,9 +52,11 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
      *
      * @return A new instance of fragment Piece1Fragment.
      */
-    public static Piece1Fragment newInstance() {
+    public static Piece1Fragment newInstance(int id) {
         Piece1Fragment fragment = new Piece1Fragment();
         fragment.player = GameManager.GetUser();
+        fragment.savePiece = GameManager.GetSavePiece(id);
+
         return fragment;
     }
 
@@ -66,6 +74,17 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
         reset.setOnClickListener(buttonListener);
 
+        EditText et = (EditText)v.findViewById(R.id.Piece1Fragment_pieceName);
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    onEditPieceName(v);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
         Integer[] healthitems = new Integer[]{1,2,3};
@@ -116,6 +135,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         designerView = (DesignerView)v.findViewById(R.id.Piece1Fragment_designerview);
         designer = designerView.GetDesigner();
         designer.SetListener(this);
+        designer.SetPattern(savePiece.pattern);
         UpdateActionBarTitle();
         return v;
     }
@@ -123,16 +143,22 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     private void UpdateRangePoints()
     {
         player.points -= rangespinnerpoints;
+        savePiece.cost += rangespinnerpoints;
         UpdateActionBarTitle();
     }
 
     private void UpdateHealthPoints(){
         player.points -= healthspinnerpoints;
+        savePiece.cost += healthspinnerpoints;
         UpdateActionBarTitle();
     }
 
     private void UpdateActionBarTitle(){
-        getActivity().setTitle(player.name + "                              Points left: " + player.points);
+        getActivity().setTitle(player.name + savePiece.name + "                              Points left: " + player.points);
+    }
+
+    private void onEditPieceName(TextView v){
+        savePiece.name = v.getText().toString();
     }
 
     public void onButtonPressed(int id) {
@@ -148,7 +174,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     @Override
     public void OnDesignerInteraction() {
         player.points--;
-
+        savePiece.cost++;
+        savePiece.pattern = designer.GetPattern();
         Handler refresh = new Handler(Looper.getMainLooper());
         refresh.post(new Runnable(){
             @Override

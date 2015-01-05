@@ -1,10 +1,13 @@
 package hyperchessab.hyperchess;
 
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +15,7 @@ import android.support.v4.app.FragmentManager;
 import java.util.ArrayList;
 
 
-public class DesignerActivity extends FragmentActivity{
+public class DesignerActivity extends ActionBarActivity {
 
     ViewPager viewPager;
     Piece1FragmentAdapter adapter;
@@ -34,6 +37,12 @@ public class DesignerActivity extends FragmentActivity{
         adapter = new Piece1FragmentAdapter(getSupportFragmentManager(), types);
         viewPager = (ViewPager)findViewById(R.id.designer_pager);
         viewPager.setAdapter(adapter);
+
+        ActionBar a = getSupportActionBar();
+        if(a != null){
+            a.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        }
+
     }
 
 
@@ -69,7 +78,7 @@ public class DesignerActivity extends FragmentActivity{
 
         @Override
         public Fragment getItem(int i) {
-            return Piece1Fragment.newInstance();
+            return Piece1Fragment.newInstance(i);
         }
 
 

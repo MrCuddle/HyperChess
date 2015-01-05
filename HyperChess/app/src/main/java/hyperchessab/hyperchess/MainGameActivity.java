@@ -21,6 +21,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 //        Debug.startMethodTracing("trace");
         //getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
         setFragment(new MainMenuFragment(), false);
+        GameManager.Load(this);
     }
 
 

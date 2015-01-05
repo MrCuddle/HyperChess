@@ -9,6 +9,9 @@ public class Settings {
     public static final int moveCost = 1;
     public static final int attackRangeCost = 1;
     public static final int healthCost = 1;
+    public static final int defaultRange = 1;
+    public static final int defaultHealth = 1;
+    public static final int defaultCost = 0;
 
     public static final int differentPieces = 4;
 //    public static final int numberOfPieces = 8;

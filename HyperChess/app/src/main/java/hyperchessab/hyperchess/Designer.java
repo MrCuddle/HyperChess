@@ -234,6 +234,45 @@ public class Designer extends Game {
         return pattern;
     }
 
+    public void SetPattern(MovePattern p){
+        if(p.Size() > 0){
+            for (int x = 0; x < ARRAYWIDTH; x++) {
+                for (int y = 0; y < ARRAYHEIGHT; y++) {
+                    directions[x][y] = MovePattern.Direction.NODIRECTION;
+                }
+            }
+
+            int x = STARTPOINT.x, y = STARTPOINT.y;
+            pattern = new MovePattern();
+            drawPath.reset();
+            ClearHighlights();
+            SetStart(STARTPOINT.x, STARTPOINT.y);
+            HighlightAdjacent(x, y);
+
+            for (int i = 0; i < p.Size(); i++) {
+                int dir = p.Get(i);
+                switch (dir){
+                    case MovePattern.Direction.UP:
+                        y--;
+                        break;
+                    case MovePattern.Direction.RIGHT:
+                        x++;
+                        break;
+                    case MovePattern.Direction.DOWN:
+                        y++;
+                        break;
+                    case MovePattern.Direction.LEFT:
+                        x--;
+                        break;
+                }
+                AddToPattern(tiles[x][y], x, y);
+            }
+            HighlightAdjacent(x, y);
+        }
+
+
+    }
+
     public interface DesignerListener{
         public void OnDesignerInteraction();
     }
