@@ -1,5 +1,6 @@
 package hyperchessab.hyperchess;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,7 +44,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-            onButtonPressed(v.getId());
+            OnButtonPressed(v.getId());
         }
     };
 
@@ -80,7 +82,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_DONE){
-                    onEditPieceName(v);
+                    OnEditPieceName(v);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    v.setText("");
                     return true;
                 }
                 return false;
@@ -158,12 +163,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         getActivity().setTitle(player.name + currentPiece.name + "                              Points left: " + player.points);
     }
 
-    private void onEditPieceName(TextView v){
+    private void OnEditPieceName(TextView v){
         currentPiece.name = v.getText().toString();
         listener.OnPieceNameChange(currentPieceIndex, v.getText().toString());
     }
 
-    public void onButtonPressed(int id) {
+    public void OnButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
                 designerView.ResetDesigner();

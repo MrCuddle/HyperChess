@@ -15,6 +15,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 //    ArrayList<String> types = new ArrayList<>();
     ArrayList<GameManager.SavePiece> pieces;
     Piece1Fragment fragment;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +31,17 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
         pieces = GameManager.GetUserSavePieces();
 
-        ActionBar a = getSupportActionBar();
-        if(a != null){
-            a.setDisplayShowHomeEnabled(false);
-            a.setDisplayShowTitleEnabled(false);
-            a.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
             for (int i = 0; i < Settings.differentPieces; i++) {
-                ActionBar.Tab tab = a.newTab();
+                ActionBar.Tab tab = actionBar.newTab();
                 tab.setText(pieces.get(i).name);
                 tab.setTabListener(this);
-                a.addTab(tab);
+                actionBar.addTab(tab);
             }
 
         }
@@ -80,7 +81,9 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
     @Override
     public void OnPieceNameChange(int index, String name) {
-
+        if(actionBar != null){
+            actionBar.getTabAt(index).setText(name);
+        }
     }
 
 
