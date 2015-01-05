@@ -1,6 +1,7 @@
 package hyperchessab.hyperchess;
 
 import android.graphics.Matrix;
+import android.graphics.Point;
 
 /**
  * Created by Perlwin on 29/12/2014.
@@ -8,6 +9,7 @@ import android.graphics.Matrix;
 public class Camera {
 
     float scale;
+    Point scaleOrigin;
     float dx;
     float dy;
     Matrix transform;
@@ -19,8 +21,9 @@ public class Camera {
     public Matrix getTransform(){
         transform = new Matrix();
 
-        transform.setScale(scale,scale);
-        transform.preTranslate(dx,dy);
+
+        transform.setScale(scale, scale, scaleOrigin.x, scaleOrigin.y);
+        transform.preTranslate(dx, dy);
 
         //Log.d("DX", ""+dx);
         return transform;
@@ -31,6 +34,7 @@ public class Camera {
         dx = 0;
         dy = 0;
         scale = 1;
+        scaleOrigin = new Point(0,0);
         transform = new Matrix();
     }
 
@@ -44,8 +48,9 @@ public class Camera {
         this.canvasHeight = canvasHeight;
     }
 
-    public void setScale(float scaleFactor){
+    public void setScale(float scaleFactor, Point scaleOrigin){
         scale = scaleFactor;
+        this.scaleOrigin = scaleOrigin;
         LimitBounds();
     }
 
@@ -57,10 +62,44 @@ public class Camera {
     }
 
     private void LimitBounds(){
-        if(dx > 0) dx = 0;
-        if(dy > 0) dy = 0;
+        Matrix s = new Matrix();
+        s.setScale(scale, scale, scaleOrigin.x, scaleOrigin.y);
 
-        if(maxWidth > canvasWidth && -dx*scale + canvasWidth > maxWidth*scale){
+        Matrix si = new Matrix();
+        s.invert(si);
+        float[] zero = {0,0};
+        si.mapPoints(zero);
+
+        float[] dxdy = {dx,dy};
+        s.mapPoints(dxdy);
+
+        if(dxdy[0] > 0) dx = zero[0];
+        if(dxdy[1] > 0) dy = zero[1];
+
+
+        if(-dxdy[0] + canvasWidth > maxWidth*scale){
+            if(maxWidth * scale <= canvasWidth) {
+                dx = zero[0];
+            } else {
+                float[] test = {canvasWidth - maxWidth * scale, 0};
+                si.mapPoints(test);
+
+                dx = test[0];
+            }
+        }
+
+        if(-dxdy[1] + canvasHeight > maxHeight*scale){
+            if(maxHeight * scale <= canvasHeight) {
+                dy = zero[1];
+            } else {
+                float[] test = {0, canvasHeight - maxHeight * scale};
+                si.mapPoints(test);
+
+                dy = test[1];
+            }
+        }
+
+        /*if(maxWidth > canvasWidth && -dx*scale + canvasWidth > maxWidth*scale){
             if(maxHeight * scale <= canvasHeight)
                 dx = 0;
             else
@@ -72,7 +111,7 @@ public class Camera {
                 dy = 0;
             else
                 dy = canvasHeight / scale - maxHeight;
-        }
+        }*/
     }
 
 }

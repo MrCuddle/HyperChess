@@ -23,6 +23,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     boolean clicked = false;
     boolean stoppedZooming = false;
     float canvasWidth = 100.0f;
+    Point scaleOrigin;
 
     ScaleGestureDetector scaleGestureDetector;
 
@@ -53,6 +54,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         @Override
         public boolean onScale(ScaleGestureDetector detector){
             scaleFactor *= detector.getScaleFactor();
+            scaleOrigin = new Point((int)detector.getFocusX(),(int)detector.getFocusY());
 
             //Calculate appropriate max/min zoom based on the canvas size:
             float boardWidth = game.board.Width * GameBoard.TileSize;
@@ -61,7 +63,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             scaleFactor = Math.max(minScale, Math.min(scaleFactor, maxScale));
 
-            camera.setScale(scaleFactor);
+            camera.setScale(scaleFactor, scaleOrigin);
             invalidate();
             return true;
         }
