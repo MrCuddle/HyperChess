@@ -52,6 +52,8 @@ public class Flag {
         shape.setBounds(initialPosX*GameBoard.TileSize, initialPosY*GameBoard.TileSize,
                 initialPosX*GameBoard.TileSize + GameBoard.TileSize, initialPosY*GameBoard.TileSize + GameBoard.TileSize);
         holder = null;
+        gridPosX = initialPosX;
+        gridPosY = initialPosY;
     }
 
 }
