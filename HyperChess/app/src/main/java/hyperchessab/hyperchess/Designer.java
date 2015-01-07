@@ -22,7 +22,7 @@ public class Designer extends Game {
     int[][] directions;
     static final int ARRAYWIDTH = Settings.designerWidth, ARRAYHEIGHT = Settings.designerHeight;
     static final Point STARTPOINT = new Point(0, ARRAYHEIGHT - 1);
-    static int tileSize = 200;
+    static int tileSize = 200, arrowRadius;
     static final Paint linePaint = new Paint();
     MovePattern pattern = new MovePattern();
     ArrayList<Drawable> highlights = new ArrayList<>();
@@ -44,6 +44,7 @@ public class Designer extends Game {
         int screenWidth = dm.widthPixels;
         int screenHeight = dm.heightPixels;
         tileSize = screenWidth / ARRAYWIDTH;
+        arrowRadius = tileSize / 10;
 
         tiles = new Drawable[ARRAYWIDTH][ARRAYHEIGHT];
         directions = new int[ARRAYWIDTH][ARRAYHEIGHT + 1];
@@ -57,7 +58,7 @@ public class Designer extends Game {
         }
 
         linePaint.setStrokeWidth(10);
-        linePaint.setColor(Color.RED);
+        linePaint.setColor(Color.BLUE);
         linePaint.setStyle(Paint.Style.STROKE);
 
         pieceStart = context.getResources().getDrawable(R.drawable.piece_shape_1);
@@ -128,7 +129,7 @@ public class Designer extends Game {
 
         drawPath.lineTo(x, y);
 
-        clone.setBounds(x, y, w, h);
+        clone.setBounds(x - arrowRadius, y - arrowRadius, x + arrowRadius, y + arrowRadius);
         lastPosition.set(x, y);
         RotateDrawable rotationDrawable = (RotateDrawable)clone;
 
