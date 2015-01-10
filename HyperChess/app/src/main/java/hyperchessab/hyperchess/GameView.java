@@ -18,12 +18,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     GameLoop gameLoop;
     Game game;
     Camera camera;
-    float currentX, currentY, startTouchX, startTouchY;
+    float currentX, currentY, startTouchX, startTouchY, avgDX, avgDY;
+    double glideSpeed = 0;
+    double lastTime, currentTime;
     float scaleFactor = 1.0f;
     boolean clicked = false;
     boolean stoppedZooming = false;
     float canvasWidth = 100.0f;
     Point scaleOrigin;
+    boolean firstFrame = true;
 
     ScaleGestureDetector scaleGestureDetector;
 
@@ -45,6 +48,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void Init(Context context){
         camera = new Camera();
         game = new Game(context, camera);
+
+
         gameLoop = new GameLoop(this);
         getHolder().addCallback(this);
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
@@ -82,13 +87,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
+
         //Panning
         if(event.getPointerCount() < 2) {
 
+
+
+            if(action == MotionEvent.ACTION_UP){
+                glideSpeed = 0.1*Math.sqrt(avgDX*avgDX + avgDY*avgDY)/(currentTime - lastTime);
+            }
+
             if(action == MotionEvent.ACTION_DOWN){
+                avgDX = 0;
+                avgDY = 0;
+                glideSpeed = 0;
                 startTouchX = currentX = event.getX();
                 startTouchY = currentY = event.getY();
-
             }
             //Reset the current position if the user just stopped pinching
             if(stoppedZooming){
@@ -109,6 +123,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             else {
                 dx /= scaleFactor;
                 dy /= scaleFactor;
+                if(Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+                    avgDX = (avgDX + dx)/2.0f;
+                    avgDY = (avgDY + dy)/2.0f;
+                    lastTime = currentTime;
+                    currentTime = System.currentTimeMillis();
+                }
                 camera.Translate(dx, dy);
             }
             currentX = event.getX();
@@ -121,6 +141,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     protected void onDraw(Canvas canvas) {
         canvasWidth = canvas.getWidth();
         camera.setCanvasSize(canvas.getWidth(),canvas.getHeight());
+
+        if(firstFrame){
+            firstFrame = false;
+            //Start the camera zoomed out
+            float boardWidth = game.board.Width * GameBoard.TileSize;
+            float minScale = canvasWidth/boardWidth;
+            scaleFactor = minScale;
+            camera.setScale(minScale, new Point(0,0));
+        }
+
         game.Draw(canvas);
 //        Paint paint = new Paint();
 //        paint.setColor(Color.BLACK);
@@ -131,6 +161,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void Update(double dt){
+        //Continuing moving the camera after a pan finishes....
+        if(glideSpeed > 0){
+            glideSpeed *= 0.9;
+            if(glideSpeed < 0.01)
+                glideSpeed = 0;
+            //Log.d("Glide speed", "" + glideSpeed);
+            camera.Translate((float)glideSpeed*avgDX, (float)glideSpeed*avgDY);
+        }
+
         if(clicked){
             Matrix inverse = new Matrix();
             camera.getTransform().invert(inverse);
