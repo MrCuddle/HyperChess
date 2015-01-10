@@ -1,42 +1,91 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="hyperchessab.hyperchess.MainMenuFragment">
+    android:layout_height="match_parent" tools:context="hyperchessab.hyperchess.MainMenuFragment"
+    android:background="#B2EBF2"
+    android:paddingBottom="@dimen/menu_layout_padding_bottom"
+    android:paddingTop="@dimen/menu_layout_padding_top"
+    android:paddingLeft="@dimen/menu_layout_padding_sides"
+    android:paddingRight="@dimen/menu_layout_padding_sides">
 
     <TextView
         android:id="@+id/mainmenu_text_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/game_name"
+        android:textSize="@dimen/menu_fontsize_gametitle"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:clickable="false"
         android:gravity="center"
-        android:textSize="@dimen/abc_text_size_headline_material"/>
+        android:paddingBottom="10dp"
+        android:textColor="#006064"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/mainmenu_text_header"
+        android:layout_above="@+id/mainmenu_button_play"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp">
+
+        <ImageView
+            android:id="@+id/mainmenu_drawable_piece1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/tile_shape"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/mainmenu_drawable_piece2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/piece_shape_1"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/mainmenu_drawable_piece3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/obstacle_shape"
+            android:layout_weight="1"/>
+
+        </LinearLayout>
 
     <Button
         android:id="@+id/mainmenu_button_play"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/play"
-        android:layout_below="@+id/mainmenu_text_header"/>
+        android:layout_above="@+id/mainmenu_button_options"
+        android:background="@drawable/menu_button_shape"
+        android:layout_marginBottom="@dimen/menu_margin_buttons"/>
 
     <Button
         android:id="@+id/mainmenu_button_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/options"
-        android:layout_below="@+id/mainmenu_button_play"/>
+        android:layout_above="@+id/mainmenu_button_designer"
+        android:background="@drawable/menu_button_shape"
+        android:layout_marginBottom="@dimen/menu_margin_buttons"
+        />
 
     <Button
         android:id="@+id/mainmenu_button_designer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DESIGNER Test"
-        android:layout_below="@+id/mainmenu_button_options"/>
+        android:layout_above="@+id/mainmenu_button_exit"
+        android:background="@drawable/menu_button_shape"
+        android:layout_marginBottom="@dimen/menu_margin_buttons"/>
 
     <Button
         android:id="@+id/mainmenu_button_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/exit"
-        android:layout_below="@+id/mainmenu_button_designer"/>
+        android:background="@drawable/menu_button_shape"
+        android:layout_marginBottom="@dimen/menu_margin_buttons"
+        android:layout_alignParentBottom="true"/>
 
 
 </RelativeLayout>
