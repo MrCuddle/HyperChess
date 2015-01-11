@@ -16,7 +16,7 @@ import android.widget.Button;
  */
 public class MainMenuFragment extends Fragment {
 
-    Button play, options, exit;
+    Button play, options, exit, create, join;
 
     private OnMainMenuInteractionListener mListener;
 
@@ -42,10 +42,14 @@ public class MainMenuFragment extends Fragment {
         play = (Button)v.findViewById(R.id.mainmenu_button_play);
         options = (Button)v.findViewById(R.id.mainmenu_button_options);
         exit = (Button)v.findViewById(R.id.mainmenu_button_exit);
+        create = (Button)v.findViewById(R.id.mainmenu_button_create);
+        join = (Button)v.findViewById(R.id.mainmenu_button_join);
 
         play.setOnClickListener(buttonListener);
         options.setOnClickListener(buttonListener);
         exit.setOnClickListener(buttonListener);
+        create.setOnClickListener(buttonListener);
+        join.setOnClickListener(buttonListener);
 
         Button b = (Button)v.findViewById(R.id.mainmenu_button_designer);
         b.setOnClickListener(buttonListener);
@@ -67,6 +71,12 @@ public class MainMenuFragment extends Fragment {
                     break;
                 case R.id.mainmenu_button_designer:
                     mListener.onDesignerPressed();
+                    break;
+                case R.id.mainmenu_button_create:
+                    mListener.onCreatePressed();
+                    break;
+                case R.id.mainmenu_button_join:
+                    mListener.onJoinPressed();
                     break;
             }
         }
@@ -94,6 +104,8 @@ public class MainMenuFragment extends Fragment {
         public void onOptionsPressed();
         public void onPlayPressed();
         public void onDesignerPressed();
+        public void onCreatePressed();
+        public void onJoinPressed();
     }
 
 }

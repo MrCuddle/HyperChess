@@ -16,5 +16,7 @@
     <string name="health">Health</string>
     <string name="range">Range</string>
     <string name="reset">Reset</string>
+    <string name="create_game">Create Game</string>
+    <string name="join_game">Join Game</string>
 
 </resources>

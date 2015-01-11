@@ -4,15 +4,17 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Debug;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
-public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener {
+
+public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener, LobbyFragment.LobbyFragmentListener, CreateGameFragment.CreateGameFragmentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,9 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         //getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
         setFragment(new MainMenuFragment(), false);
         GameManager.Load(this);
+
+        Firebase.setAndroidContext(this);
+        FirebaseLogin();
     }
 
 
@@ -79,10 +84,54 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     }
 
+    public void onCreatePressed(){
+        setFragment(new CreateGameFragment(), true);
+        Toast.makeText(this, "Create Game Pressed", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void onJoinPressed(){
+        setFragment(new LobbyFragment(), true);
+        Toast.makeText(this, "Join Game Pressed", Toast.LENGTH_SHORT).show();
+
+    }
+
     @Override
     public void onOptionInteraction(Uri uri) {
         //placeholder
         int i = 3 +4;
     }
 
+    @Override
+    public void onGameClicked(GameListing g) {
+        //Start the game here....
+    }
+
+    @Override
+    public void onCreateGame(GameListing g) {
+        //Switch to the game view...
+        int i = 1;
+    }
+
+    private void FirebaseLogin(){
+        Firebase firebase = new Firebase(DatabaseManager.URL);
+        firebase.authWithPassword("a@c.com","qwerty",new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+
+                Toast.makeText(MainGameActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+
+                switch(firebaseError.getCode()) {
+                    default:
+                        Toast.makeText(MainGameActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
 }

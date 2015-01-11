@@ -104,6 +104,24 @@
         android:layout_height="wrap_content"
         android:text="@string/exit"
         android:background="@drawable/menu_button_shape"
+        android:layout_above="@+id/mainmenu_button_join"
+        android:layout_marginBottom="@dimen/menu_margin_buttons"
+        />
+    <Button
+            android:id="@+id/mainmenu_button_join"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/join_game"
+            android:background="@drawable/menu_button_shape"
+            android:layout_above="@+id/mainmenu_button_create"
+            android:layout_marginBottom="@dimen/menu_margin_buttons"
+            />
+    <Button
+        android:id="@+id/mainmenu_button_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/create_game"
+        android:background="@drawable/menu_button_shape"
         android:layout_marginBottom="@dimen/menu_margin_buttons"
         android:layout_alignParentBottom="true"/>
     </RelativeLayout>
