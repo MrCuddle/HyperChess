@@ -1,7 +1,5 @@
 package hyperchessab.hyperchess;
 
-import android.graphics.Color;
-
 import java.util.ArrayList;
 
 /**
@@ -12,6 +10,7 @@ public class Player {
         public int points;
         public String name;
         int teamColor, teamId;
+        int primaryColor, secondaryColor, tertiaryColor;
 
         public Player(int points, String name){
             this.points = points;
@@ -23,25 +22,49 @@ public class Player {
         this.name = Settings.defaultPlayerName;
     }
 
-        public Player(int id){
-            this.points = Settings.playerPoints;
-            this.name = Settings.defaultPlayerName;
-            teamId = id;
-        }
+    public Player(int id){
+        this.points = Settings.playerPoints;
+        this.name = Settings.defaultPlayerName;
+        teamId = id;
+    }
 
-        public int GetTeamId(){
-            return teamId;
-        }
+    public int GetTeamId(){
+        return teamId;
+    }
 
-        public void SetTeamColor(int color){
-            teamColor = color;
-        }
+    public void SetTeamColor(int color){
+        teamColor = color;
+    }
 
-        public int GetTeamColor(){
-            return teamColor;
-        }
+    public void SetPrimaryColor(int color){
+        primaryColor = color;
+    }
 
-        public void SetPieces(ArrayList<GamePiece> pieces){
-            this.gamePieces = pieces;
-        }
+    public void SetSecondaryColor(int color){
+        secondaryColor = color;
+    }
+
+    public void SetTertiaryColor(int color){
+        tertiaryColor = color;
+    }
+
+    public int GetPrimaryColor(){
+        return primaryColor;
+    }
+
+    public int GetSecondaryColor(){
+        return secondaryColor;
+    }
+
+    public int GetTertiaryColor(){
+        return tertiaryColor;
+    }
+
+    public int GetTeamColor(){
+        return teamColor;
+    }
+
+    public void SetPieces(ArrayList<GamePiece> pieces){
+        this.gamePieces = pieces;
+    }
 }

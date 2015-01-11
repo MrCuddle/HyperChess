@@ -2,6 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.util.AttributeSet;
@@ -151,6 +152,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             camera.setScale(minScale, new Point(0,0));
         }
 
+        canvas.drawColor(Color.argb(255,163,194,205));
         game.Draw(canvas);
 //        Paint paint = new Paint();
 //        paint.setColor(Color.BLACK);

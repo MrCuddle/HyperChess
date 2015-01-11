@@ -18,8 +18,13 @@ public class Tile {
     public Tile(){}
 
     public Tile(Context context, int x, int y){
-        shape = context.getResources().getDrawable(R.drawable.tile_shape);
-        shape.setBounds(x,y,x + 200,y+200);
+
+        if(((x + y)/GameBoard.TileSize) % 2 == 1){
+            shape = context.getResources().getDrawable(R.drawable.tile_shape_dark);
+        } else {
+            shape = context.getResources().getDrawable(R.drawable.tile_shape);
+        }
+        shape.setBounds(x,y,x + GameBoard.TileSize,y+GameBoard.TileSize);
     }
 
     public void Draw(Canvas c){

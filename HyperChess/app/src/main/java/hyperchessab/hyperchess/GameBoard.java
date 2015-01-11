@@ -35,18 +35,21 @@ public class GameBoard {
         GamePiece gp = new GamePiece(context, 3, 3, this);
         gp.SetOwner(game.players.get(0));
         gp.SetAttackRange(1);
+        gp.SetHP(3);
         pieces.add(gp);
         tiles[3][3].occupier = gp;
 
         gp = new GamePiece(context, 7, 0, this);
         gp.SetAttackRange(1);
         gp.SetOwner(game.players.get(1));
+        gp.SetHP(1);
         pieces.add(gp);
         tiles[7][0].occupier = gp;
 
         gp = new GamePiece(context, 4, 4, this);
         gp.SetAttackRange(1);
         gp.SetOwner(game.players.get(0));
+        gp.SetHP(2);
         pieces.add(gp);
         tiles[4][4].occupier = gp;
 

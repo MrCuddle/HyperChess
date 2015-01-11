@@ -26,8 +26,12 @@ public class Game {
     public Game(Context context, Camera camera){
         players.add(new Player(0));
         players.add(new Player(1));
-        players.get(0).SetTeamColor(Color.RED);
-        players.get(1).SetTeamColor(Color.BLUE);
+        players.get(0).SetPrimaryColor(Color.argb(255,147,79,236));
+        players.get(0).SetSecondaryColor(Color.argb(255,156,93,238));
+        players.get(0).SetTertiaryColor(Color.argb(255,179,131,242));
+        players.get(1).SetPrimaryColor(Color.argb(255,228,21,21));
+        players.get(1).SetSecondaryColor(Color.argb(255,234,39,39));
+        players.get(1).SetTertiaryColor(Color.argb(255,239,90,90));
         board = new GameBoard(context,this);
         this.camera = camera;
         camera.setBounds(board.Width * GameBoard.TileSize, board.Height * GameBoard.TileSize);
@@ -55,7 +59,7 @@ public class Game {
 
     public void Draw(Canvas c){
         c.setMatrix(camera.getTransform());
-        c.drawColor(Color.BLACK);
+        //c.drawColor(Color.BLACK);
         board.Draw(c);
         c.setMatrix(new Matrix());
         hud.Draw(c);

@@ -15,7 +15,7 @@ public class Flag {
     int initialPosX, initialPosY;
 
     public Flag(Context context, int x, int y){
-        shape = context.getResources().getDrawable(R.drawable.flag_shape);
+        shape = new FlagDrawable();
         initialPosX = gridPosX = x;
         initialPosY = gridPosY = y;
         shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,

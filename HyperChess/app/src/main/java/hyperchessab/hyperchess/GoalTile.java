@@ -10,9 +10,9 @@ import android.graphics.PorterDuff;
 public class GoalTile extends Tile{
     Player owner;
     public GoalTile(Context context, int x, int y, Player player){
-        shape = context.getResources().getDrawable(R.drawable.flag_shape);
-        shape.setColorFilter(Color.DKGRAY, PorterDuff.Mode.MULTIPLY);
-        shape.setBounds(x, y, x + 200, y + 200);
+        shape = context.getResources().getDrawable(R.drawable.tile_shape_goal);
+        shape.setColorFilter(Color.argb(255,0,0,255), PorterDuff.Mode.SRC);
+        shape.setBounds(x, y, x + GameBoard.TileSize, y + GameBoard.TileSize);
         owner = player;
     }
 }

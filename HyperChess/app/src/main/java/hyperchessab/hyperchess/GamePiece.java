@@ -24,6 +24,7 @@ public class GamePiece extends GameObject {
     int gridPosX;
     int gridPosY;
     int attackRange;
+    int HP;
     GameBoard board;
     List<MovePattern> patterns;
     List<MoveDestination> moveDestinations;
@@ -42,7 +43,8 @@ public class GamePiece extends GameObject {
         gridPosY = y;
         posX = gridPosX * GameBoard.TileSize;
         posY = gridPosY * GameBoard.TileSize;
-        shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+        //shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
+        shape = new Piece1Drawable();
         shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
                 gridPosX*GameBoard.TileSize + GameBoard.TileSize,
                 gridPosY*GameBoard.TileSize + GameBoard.TileSize);
@@ -55,7 +57,8 @@ public class GamePiece extends GameObject {
     public void SetOwner(Player owner){
         this.owner = owner;
         this.teamColor = owner.GetTeamColor();
-        shape.setColorFilter(teamColor, PorterDuff.Mode.SRC);
+        //shape.setColorFilter(teamColor, PorterDuff.Mode.SRC);
+        ((HPDrawable)shape).setColor(owner.GetPrimaryColor(),owner.GetSecondaryColor(),owner.GetTertiaryColor());
     }
 
     public Player GetOwner(){
@@ -66,6 +69,14 @@ public class GamePiece extends GameObject {
         this.attackRange = range;
     }
 
+    public void SetHP(int hp){
+        HP = hp;
+        ((HPDrawable)shape).setHP(hp);
+    }
+
+    public int GetHP(){
+        return HP;
+    }
     //I högsta grad oviktig test metod.
     private ArrayList<MovePattern> PatternTest(){
         MovePattern pattern1 = new MovePattern();
