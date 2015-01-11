@@ -1,31 +1,43 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="hyperchessab.hyperchess.MainMenuFragment"
-    android:background="#B2EBF2"
+    android:background="@color/Main"
     android:paddingBottom="@dimen/menu_layout_padding_bottom"
     android:paddingTop="@dimen/menu_layout_padding_top"
     android:paddingLeft="@dimen/menu_layout_padding_sides"
-    android:paddingRight="@dimen/menu_layout_padding_sides">
+    android:paddingRight="@dimen/menu_layout_padding_sides"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_above="@+id/mainmenu_button_play"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:background="@color/MainLighter">
 
     <TextView
         android:id="@+id/mainmenu_text_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:text="@string/game_name"
         android:textSize="@dimen/menu_fontsize_gametitle"
         android:textAllCaps="false"
         android:textStyle="bold"
         android:clickable="false"
         android:gravity="center"
-        android:paddingBottom="10dp"
-        android:textColor="#006064"/>
+        android:paddingBottom="0dp"
+        android:textColor="@color/Accent"
+        android:layout_alignParentTop="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:layout_below="@+id/mainmenu_text_header"
-        android:layout_above="@+id/mainmenu_button_play"
         android:paddingTop="50dp"
         android:paddingBottom="50dp">
 
@@ -50,6 +62,14 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="25dp"
+        android:background="@drawable/menu_title_background">
     <Button
         android:id="@+id/mainmenu_button_play"
         android:layout_width="match_parent"
@@ -86,6 +106,7 @@
         android:background="@drawable/menu_button_shape"
         android:layout_marginBottom="@dimen/menu_margin_buttons"
         android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
