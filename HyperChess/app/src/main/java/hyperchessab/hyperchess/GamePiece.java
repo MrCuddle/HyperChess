@@ -155,7 +155,7 @@ public class GamePiece extends GameObject {
             }
             if(flag != null){
                 flag.SetGridPosition(gridPosX, gridPosY);
-                if(board.GetTile(gridPosX, gridPosY) instanceof GoalTile){
+                if(board.GetTile(gridPosX, gridPosY) instanceof GoalTile && ((GoalTile) board.GetTile(gridPosX, gridPosY)).owner == owner){
                     flag.ResetPosition();
                     flag = null;
                     GameData.IncrementScore(owner.GetTeamId());
