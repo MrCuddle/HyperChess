@@ -253,9 +253,12 @@ public class GamePiece extends GameObject {
                 if(t != null && t.occupier instanceof GamePiece && ((GamePiece) t.occupier).GetOwner() != this.owner){
                     if(Math.abs(gridPosX - x) > 0 && Math.abs(gridPosX - x) <= attackRange && Math.abs(gridPosY - y) == 0
                             || Math.abs(gridPosY - y) > 0 && Math.abs(gridPosY - y) <= attackRange && Math.abs(gridPosX - x) == 0){
-                        ((GamePiece) t.occupier).DropFlag();
-                        board.pieces.remove(t.occupier);
-                        t.occupier = null;
+                        ((GamePiece)t.occupier).Hit();
+                        if(((GamePiece) t.occupier).GetHP() <= 0) {
+                            ((GamePiece) t.occupier).DropFlag();
+                            board.pieces.remove(t.occupier);
+                            t.occupier = null;
+                        }
                         attackDestinations = null;
                         board.getGame().currentGameState = Game.GameState.Moving;
                         board.getGame().IncrementCurrentPlayer();
@@ -264,6 +267,11 @@ public class GamePiece extends GameObject {
                 }
             }
         }
+    }
+
+    public void Hit(){
+        HP--;
+        ((HPDrawable)shape).setHP(HP);
     }
 
     public void Select(){
