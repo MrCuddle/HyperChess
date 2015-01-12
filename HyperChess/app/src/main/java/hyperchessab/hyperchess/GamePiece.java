@@ -76,6 +76,7 @@ public class GamePiece extends GameObject {
         patterns = piece.patterns;
         selected = piece.selected;
         attackRange = piece.attackRange;
+        SetHP(piece.HP);
     }
 
     public GamePiece(Context context, PieceState state, GameBoard board){

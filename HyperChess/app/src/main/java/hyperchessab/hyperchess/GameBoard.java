@@ -98,7 +98,9 @@ public class GameBoard {
             p2.SetOwner(game.players.get(0));
 
             p1.SetPosition(teamOneStartPos.get(i).x,teamOneStartPos.get(i).y);
+            tiles[teamOneStartPos.get(i).x][teamOneStartPos.get(i).y].occupier = p1;
             p2.SetPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
+            tiles[teamOneStartPos.get(teamOneStartPos.size()-1- i).x][teamOneStartPos.get(teamOneStartPos.size()-1-i).y].occupier = p2;
 
             GamePiece p3 = new GamePiece(piecePrototypes.get(i));
             GamePiece p4 = new GamePiece(piecePrototypes.get(i));
@@ -106,7 +108,9 @@ public class GameBoard {
             p4.SetOwner(game.players.get(1));
 
             p3.SetPosition(teamTwoStartPos.get(i).x,teamTwoStartPos.get(i).y);
+            tiles[teamTwoStartPos.get(i).x][teamTwoStartPos.get(i).y].occupier = p3;
             p4.SetPosition(teamTwoStartPos.get(teamTwoStartPos.size()-1-i).x,teamTwoStartPos.get(teamTwoStartPos.size()-1-i).y);
+            tiles[teamTwoStartPos.get(teamTwoStartPos.size()-1-i).x][teamTwoStartPos.get(teamTwoStartPos.size()-1-i).y].occupier = p4;
 
             pieces.add(p1);
             pieces.add(p2);
