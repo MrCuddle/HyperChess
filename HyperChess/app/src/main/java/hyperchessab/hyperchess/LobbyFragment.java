@@ -51,6 +51,10 @@ public class LobbyFragment extends Fragment {
         games.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Update the number of players to 2
+                Firebase fb = new Firebase(DatabaseManager.URL).child("games").child(gamesList.get(i).getId()).child("players");
+                fb.setValue(2);
+                //Start the game
                 listener.onGameClicked(gamesList.get(i));
             }
         });
@@ -59,20 +63,36 @@ public class LobbyFragment extends Fragment {
         dbListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                String name = (String)snapshot.child("name").getValue();
-                String password = (String)snapshot.child("password").getValue();
-                String id = (String)snapshot.child("id").getValue();
-                GameListing g = new GameListing();
-                g.setId(id);
-                g.setPassword(password);
-                g.setName(name);
+                //Only show games which are waiting for a second player
+                int players = (int)((long)snapshot.child("players").getValue());
+                if(players == 1) {
+                    String name = (String) snapshot.child("name").getValue();
+                    String password = (String) snapshot.child("password").getValue();
+                    String id = (String) snapshot.child("id").getValue();
+                    GameListing g = new GameListing();
+                    g.setId(id);
+                    g.setPassword(password);
+                    g.setName(name);
 
-                gamesList.add(g);
-                ((LobbyAdapter)games.getAdapter()).notifyDataSetChanged();
+                    gamesList.add(g);
+                    ((LobbyAdapter) games.getAdapter()).notifyDataSetChanged();
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot snapshot, String s) {
+                //Remove a game from the list if it already has two players
+                int players = (int)((long)snapshot.child("players").getValue());
+                if(players == 2) {
+                    for(int i = 0; i < gamesList.size(); i++){
+                        String id = (String) snapshot.child("id").getValue();
+                        if(gamesList.get(i).getId() == id ) {
+                            gamesList.remove(i);
+                            ((LobbyAdapter) games.getAdapter()).notifyDataSetChanged();
+                            return;
+                        }
+                    }
+                }
             }
             @Override
             public void onChildRemoved(DataSnapshot snapshot) {

@@ -35,6 +35,10 @@ public class GamePiece extends GameObject {
     String name = Settings.defaultPieceName;
 
     int teamColor;
+    boolean attackQueued = false;
+    int attackX, attackY;
+
+
 
 
     public GamePiece(Context context, int x, int y, GameBoard board){
@@ -52,6 +56,8 @@ public class GamePiece extends GameObject {
 
         patterns = PatternTest();
         selected = false;
+
+
     }
 
     public void SetOwner(Player owner){
@@ -201,9 +207,42 @@ public class GamePiece extends GameObject {
         flag = null;
     }
 
+    public void SimulateMove(int endX, int endY, int attackX, int attackY){
+        InputData.Clicked = true;
+        InputData.ClickPoint = new Point((int)((endX + 0.5) * GameBoard.TileSize), (int)((endY + 0.5) * GameBoard.TileSize));
+        HighlightMoveable();
+        for (MoveDestination d : moveDestinations) {
+            if (d.ClickedOn()) {
+
+                movePath = GetMovePath(d.GetPath());
+                isMoving = true;
+                Point newPos = d.GetPosition();
+                board.GetTile(gridPosX, gridPosY).occupier = null;
+                gridPosX = newPos.x;
+                gridPosY = newPos.y;
+                board.GetTile(gridPosX, gridPosY).occupier = this;
+                moveDestinations = null;
+
+            }
+        }
+        InputData.Clear();
+        if(attackX != -1)
+            QueueAttack(attackX,attackY);
+    }
+
+    public void QueueAttack(int x, int y){
+        attackQueued = true;
+        attackX = x;
+        attackY = y;
+    }
+
     private void Move(){
         if (isMoving)
             Animate();
+
+        if(board.getGame().online && !board.getGame().MyTurn())
+            return;
+
         if(owner != board.getGame().players.get(board.getGame().currentPlayer))
             return;
         if (InputData.Clicked) {
@@ -211,10 +250,14 @@ public class GamePiece extends GameObject {
             if (moveDestinations != null) {
                 for (MoveDestination d : moveDestinations) {
                     if (d.ClickedOn()) {
-                        //SetPosition(newPos.x, newPos.y);
+
                         movePath = GetMovePath(d.GetPath());
                         isMoving = true;
                         Point newPos = d.GetPosition();
+
+                        //If we're online, record the move
+                        if(board.getGame().online) board.getGame().RecordMove(gridPosX, gridPosY, newPos.x, newPos.y);
+
                         board.GetTile(gridPosX, gridPosY).occupier = null;
                         gridPosX = newPos.x;
                         gridPosY = newPos.y;
@@ -239,11 +282,17 @@ public class GamePiece extends GameObject {
 
     private void Attack(){
         if(selected){
-            if(attackDestinations.size() == 0) {
+            if(!attackQueued && attackDestinations.size() == 0) {
                 board.getGame().currentGameState = Game.GameState.Moving;
                 board.getGame().IncrementCurrentPlayer();
                 Deselect();
             }
+            if(attackQueued){
+                InputData.Clicked = true;
+                InputData.ClickPoint = new Point((int)((attackX + 0.5) * GameBoard.TileSize), (int)((attackY + 0.5) * GameBoard.TileSize));
+                attackQueued = false;
+            }
+
             if(InputData.Clicked) {
                 int x = (int)(InputData.ClickPoint.x / GameBoard.TileSize);
                 if(InputData.ClickPoint.x < 0) x = -1;
@@ -260,6 +309,10 @@ public class GamePiece extends GameObject {
                             t.occupier = null;
                         }
                         attackDestinations = null;
+
+                        //if we're online, record the attack
+                        if(board.getGame().online) board.getGame().RecordAttack(x,y);
+
                         board.getGame().currentGameState = Game.GameState.Moving;
                         board.getGame().IncrementCurrentPlayer();
                         Deselect();

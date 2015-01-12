@@ -8,6 +8,7 @@ public class GameListing {
     String name;
     String id;
     String password;
+    int players;
 
     public String getName() {
         return name;
@@ -31,6 +32,14 @@ public class GameListing {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(int players) {
+        this.players = players;
     }
 
 

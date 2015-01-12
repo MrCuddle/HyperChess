@@ -71,7 +71,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onPlayPressed() {
-        setFragment(new GameFragment(), true);
+        setFragment(GameFragment.newInstance(false,0,""), true);
     }
 
     @Override
@@ -104,18 +104,19 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onGameClicked(GameListing g) {
-        //Start the game here....
+        //Start game as player 2
+        setFragment(GameFragment.newInstance(true,1, g.getId()), true);
     }
 
     @Override
     public void onCreateGame(GameListing g) {
-        //Switch to the game view...
-        int i = 1;
+        //Start game as player 1
+        setFragment(GameFragment.newInstance(true,0, g.getId()), true);
     }
 
     private void FirebaseLogin(){
         Firebase firebase = new Firebase(DatabaseManager.URL);
-        firebase.authWithPassword("a@c.com","qwerty",new Firebase.AuthResultHandler() {
+        firebase.authAnonymously(new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
 

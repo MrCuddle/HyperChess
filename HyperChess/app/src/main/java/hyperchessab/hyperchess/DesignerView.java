@@ -12,7 +12,7 @@ public class DesignerView extends GameView {
     private Context context;
 
     public DesignerView(Context context) {
-        super(context);
+        super(context,false, 0, "");
         this.context = context;
         game = new Designer(context, camera);
     }

@@ -13,21 +13,48 @@ import android.view.ViewGroup;
  */
 public class GameFragment extends Fragment {
 
+    int player;
+    boolean online;
+    String id;
 
     GameView gameView;
+
+    public static GameFragment newInstance(boolean online, int player, String id){
+        GameFragment fragment = new GameFragment();
+        Bundle args = new Bundle();
+        args.putInt("player", player);
+        args.putBoolean("online", online);
+        args.putString("id", id);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public GameFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null){
+            player = getArguments().getInt("player");
+            online = getArguments().getBoolean("online");
+            id = getArguments().getString("id");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_game, container, false);
-        gameView = new GameView(getActivity());
+        gameView = new GameView(getActivity(), online, player, id);
         return gameView;
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        gameView.game.RemoveListeners();
+        super.onDestroyView();
     }
 
     @Override

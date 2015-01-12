@@ -33,7 +33,7 @@ public class Designer extends Game {
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
 
     public Designer(Context context, Camera camera){
-        super(context, camera);
+        super(context, camera, false, 0, "");
         this.camera = camera;
         arrow = context.getResources().getDrawable(R.drawable.tile_arrow);
         highlightPrefab = context.getResources().getDrawable(R.drawable.highlight_shape);

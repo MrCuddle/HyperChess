@@ -28,11 +28,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     float canvasWidth = 100.0f;
     Point scaleOrigin;
     boolean firstFrame = true;
+    int player = 0;
+    boolean online = false;
+    String gameId = "";
 
     ScaleGestureDetector scaleGestureDetector;
 
-    public GameView(Context context){
+    public GameView(Context context, boolean online, int player, String id){
         super(context);
+        this.player = player;
+        this.online = online;
+        this.gameId = id;
         Init(context);
     }
 
@@ -48,7 +54,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void Init(Context context){
         camera = new Camera();
-        game = new Game(context, camera);
+        game = new Game(context, camera, online, player, gameId);
 
 
         gameLoop = new GameLoop(this);

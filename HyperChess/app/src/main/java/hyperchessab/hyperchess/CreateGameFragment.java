@@ -70,6 +70,7 @@ public class CreateGameFragment extends Fragment {
                 } else {
                     g.setPassword("");
                 }
+                g.setPlayers(1);
                 fb.setValue(g, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
