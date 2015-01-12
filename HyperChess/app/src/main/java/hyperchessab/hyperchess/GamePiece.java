@@ -59,9 +59,54 @@ public class GamePiece extends GameObject {
     }
 
     public GamePiece(Context context, PieceState state, GameBoard board){
+        this.context = context;
+        gridPosX = state.gridPosX;
+        gridPosY = state.gridPosY;
+        posX = gridPosX * GameBoard.TileSize;
+        posY = gridPosY * GameBoard.TileSize;
+        switch(state.shapeType){
+            case 0:
+                shape = new Piece1Drawable();
+                break;
+            case 1:
+                shape = new Piece2Drawable();
+                break;
+            case 2:
+                shape = new Piece3Drawable();
+                break;
+            case 3:
+                shape = new Piece4Drawable();
+                break;
+        }
+        shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
+                gridPosX*GameBoard.TileSize + GameBoard.TileSize,
+                gridPosY*GameBoard.TileSize + GameBoard.TileSize);
+        selected = state.selected;
+        if(selected){
+            switch(board.getGame().currentGameState){
+                case Moving:
+                    HighlightMoveable();
+                    break;
+                case Attacking:
+                    HighlightAttackable();
+                    break;
+            }
+        }
+        attackX = state.attackX;
+        attackY = state.attackY;
+        attackQueued = state.attackQueued;
+        if(state.hasFlag){
+            flag = board.GetFlag();
+            flag.SetHolder(this);
+        }
+        owner = board.getGame().players.get(state.owner);
+        patterns = state.movePatterns;
+        attackRange = state.attackRange;
+        HP = state.HP;
+        ((HPDrawable)shape).setHP(HP);
+        ((HPDrawable)shape).setColor(owner.GetPrimaryColor(),owner.GetSecondaryColor(), owner.GetTertiaryColor());
 
-        //Do something;
-
+        this.board = board;
     }
 
     public PieceState GetPieceState(){
@@ -76,6 +121,8 @@ public class GamePiece extends GameObject {
         ps.owner = (board.getGame().players.get(0) == owner ? 0 : 1);
         ps.shapeType = 0; //CHANGE THIS.
         ps.selected = selected;
+        ps.attackRange = attackRange;
+        ps.HP = HP;
         return ps;
     }
 

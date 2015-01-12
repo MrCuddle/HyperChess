@@ -12,6 +12,7 @@ public class GameStatePackage {
     public int currentPlayer;
     public int player1Points;
     public int player2Points;
+    public Game.GameState currentGameState;
 
     public ArrayList<PieceState> pieces;
 

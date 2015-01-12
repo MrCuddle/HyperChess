@@ -174,6 +174,7 @@ public class Game {
         gsp.player2Points = 575;
         gsp.playerNumber = localPlayerNumber;
         gsp.pieces = board.GetPieceStates();
+        gsp.currentGameState = currentGameState;
 
         Gson gson = new Gson();
         String json = gson.toJson(gsp);
@@ -190,5 +191,10 @@ public class Game {
         online = gsp.online;
         currentPlayer = gsp.currentPlayer;
         localPlayerNumber = gsp.playerNumber;
+        currentGameState = gsp.currentGameState;
+        board.AddObjects(gsp.pieces);
+
+        hud.SetCurrentPlayer(currentPlayer);
+
     }
 }

@@ -48,9 +48,14 @@ public class GameBoard {
 
     public void AddObjects(ArrayList<PieceState> pieces){
 
-        //Add the pieces here....
-
         AddStaticObjects();
+
+        for(int i = 0; i < pieces.size(); i++){
+            GamePiece gp = new GamePiece(context, pieces.get(i), this);
+            this.pieces.add(gp);
+            tiles[pieces.get(i).gridPosX][pieces.get(i).gridPosY].occupier = gp;
+        }
+
     }
 
     public void AddObjects(){

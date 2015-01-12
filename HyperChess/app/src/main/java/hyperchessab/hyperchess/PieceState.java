@@ -16,5 +16,7 @@ public class PieceState {
     public List<MovePattern> movePatterns;
     public boolean attackQueued;
     public int attackX, attackY;
+    public int attackRange;
+    public int HP;
 
 }
