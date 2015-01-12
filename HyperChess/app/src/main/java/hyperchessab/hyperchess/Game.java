@@ -65,8 +65,13 @@ public class Game {
             dbListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    boolean turnKey = dataSnapshot.getKey().equals("turn");
+                    boolean notMyTurn = !MyTurn();
+                    int playerNum = 0;
+                    if(turnKey) playerNum = (int)((long)dataSnapshot.child("player").getValue());
                     //If it's not the local player's turn and a new turn is added to the database - execute the other player's move!
-                    if(dataSnapshot.getKey() == "turn" && !MyTurn() && (int)((long)dataSnapshot.child("player").getValue()) != Game.this.localPlayerNumber){
+                    if(turnKey && notMyTurn && playerNum != Game.this.localPlayerNumber){
                         int startX = (int)((long)dataSnapshot.child("moveStartX").getValue());
                         int startY = (int)((long)dataSnapshot.child("moveStartY").getValue());
                         int endX = (int)((long)dataSnapshot.child("moveEndX").getValue());

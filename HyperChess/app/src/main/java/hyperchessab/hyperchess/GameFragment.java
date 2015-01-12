@@ -2,7 +2,10 @@ package hyperchessab.hyperchess;
 
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +57,14 @@ public class GameFragment extends Fragment {
     public void onDestroyView() {
 
         gameView.game.RemoveListeners();
+        Log.d("GAME", "DESTROYED");
+
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.put
+        editor.commit();
+
         super.onDestroyView();
     }
 
