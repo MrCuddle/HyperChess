@@ -16,6 +16,8 @@ public class GameBoard {
     Flag flag;
     Game game;
 
+    Context context;
+
     public Game getGame(){
         return game;
     }
@@ -26,12 +28,32 @@ public class GameBoard {
 
     public GameBoard(Context context, Game game){
         this.game = game;
+        this.context = context;
         tiles = new Tile[Width][Height];
 
         for(int i = 0; i < Width; i++)
             for(int j = 0; j < Height; j++)
                 tiles[i][j] = new Tile(context, i*TileSize, j*TileSize);
 
+
+    }
+
+    public ArrayList<PieceState> GetPieceStates(){
+        ArrayList<PieceState> states = new ArrayList<PieceState>();
+        for(int i = 0; i < pieces.size(); ++i){
+            states.add(pieces.get(i).GetPieceState());
+        }
+        return states;
+    }
+
+    public void AddObjects(ArrayList<PieceState> pieces){
+
+        //Add the pieces here....
+
+        AddStaticObjects();
+    }
+
+    public void AddObjects(){
         GamePiece gp = new GamePiece(context, 3, 3, this);
         gp.SetOwner(game.players.get(0));
         gp.SetAttackRange(1);
@@ -53,7 +75,11 @@ public class GameBoard {
         pieces.add(gp);
         tiles[4][4].occupier = gp;
 
+        AddStaticObjects();
 
+    }
+
+    public void AddStaticObjects(){
         Obstacle o = new Obstacle(context, 3, 7);
         obstacles.add(o);
         tiles[3][7].occupier = o;

@@ -12,7 +12,7 @@ public class MovePattern {
         public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, NODIRECTION = -1;
     }
 
-    private List<Integer> pattern;
+    public List<Integer> pattern;
 
     public MovePattern(){ pattern = new ArrayList<>();}
     public MovePattern(List<Integer> pattern) {this.pattern = pattern;}

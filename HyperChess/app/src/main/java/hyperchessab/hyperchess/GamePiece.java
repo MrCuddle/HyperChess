@@ -56,8 +56,27 @@ public class GamePiece extends GameObject {
 
         patterns = PatternTest();
         selected = false;
+    }
 
+    public GamePiece(Context context, PieceState state, GameBoard board){
 
+        //Do something;
+
+    }
+
+    public PieceState GetPieceState(){
+        PieceState ps = new PieceState();
+        ps.attackQueued = attackQueued;
+        ps.attackX = attackX;
+        ps.attackY = attackY;
+        ps.gridPosX = gridPosX;
+        ps.gridPosY = gridPosY;
+        ps.hasFlag = flag != null;
+        ps.movePatterns = patterns;
+        ps.owner = (board.getGame().players.get(0) == owner ? 0 : 1);
+        ps.shapeType = 0; //CHANGE THIS.
+        ps.selected = selected;
+        return ps;
     }
 
     public void SetOwner(Player owner){

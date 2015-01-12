@@ -9,6 +9,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -160,5 +161,34 @@ public class Game {
     public void RecordAttack(int x, int y){
         thisTurn.setAttackX(x);
         thisTurn.setAttackY(y);
+    }
+
+    public String GameStateToJSON(){
+
+
+
+        GameStatePackage gsp = new GameStatePackage();
+        gsp.currentPlayer = currentPlayer;
+        gsp.online = online;
+        gsp.player1Points = 899;
+        gsp.player2Points = 575;
+        gsp.playerNumber = localPlayerNumber;
+        gsp.pieces = board.GetPieceStates();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(gsp);
+
+        return json;
+
+    }
+
+    public void LoadGameStateFromJSON(String json){
+
+        Gson gson = new Gson();
+        GameStatePackage gsp = gson.fromJson(json,GameStatePackage.class);
+
+        online = gsp.online;
+        currentPlayer = gsp.currentPlayer;
+        localPlayerNumber = gsp.playerNumber;
     }
 }

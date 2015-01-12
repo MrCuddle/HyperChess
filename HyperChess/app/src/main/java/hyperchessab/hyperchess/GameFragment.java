@@ -50,6 +50,15 @@ public class GameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         gameView = new GameView(getActivity(), online, player, id);
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        //Load saved game state if one exists, otherwise, populate the game with the default starting layout
+        if(sharedPref.getBoolean("ingame",false)){
+            gameView.game.LoadGameStateFromJSON(sharedPref.getString("gamestate",""));
+        } else {
+            gameView.game.board.AddObjects();
+        }
+
         return gameView;
     }
 
@@ -62,8 +71,12 @@ public class GameFragment extends Fragment {
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.put
+        String state = gameView.game.GameStateToJSON();
+
+        editor.putBoolean("ingame", true);
+        editor.putString("gamestate",state);
         editor.commit();
+
 
         super.onDestroyView();
     }
