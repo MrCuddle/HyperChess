@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RotateDrawable;
 import android.util.DisplayMetrics;
@@ -27,7 +28,7 @@ public class Designer extends Game {
     MovePattern pattern = new MovePattern();
     ArrayList<Drawable> highlights = new ArrayList<>();
     final Drawable highlightPrefab;
-    final Drawable pieceStart;
+    public Drawable pieceStart;
     Drawable arrow;
     Path drawPath = new Path();
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
@@ -51,17 +52,21 @@ public class Designer extends Game {
         for (int x = 0; x < ARRAYWIDTH; x++) {
             for (int y = 0; y < ARRAYHEIGHT; y++) {
                 int posx = tileSize * x; int posy = tileSize * y;
-                tiles[x][y] = context.getResources().getDrawable(R.drawable.tile_shape);
+                if((x + y) % 2 == 1){
+                    tiles[x][y] = context.getResources().getDrawable(R.drawable.tile_shape_dark);
+                } else {
+                    tiles[x][y] = context.getResources().getDrawable(R.drawable.tile_shape);
+                }
                 tiles[x][y].setBounds(posx, posy, posx + tileSize, posy + tileSize);
                 directions[x][y] = MovePattern.Direction.NODIRECTION;
             }
         }
 
         linePaint.setStrokeWidth(10);
-        linePaint.setColor(Color.BLUE);
+        linePaint.setColor(Color.argb(255,50,50,255));
         linePaint.setStyle(Paint.Style.STROKE);
 
-        pieceStart = context.getResources().getDrawable(R.drawable.piece_shape_1);
+        pieceStart = new Piece1Drawable();
         pieceStart.setBounds(STARTPOINT.x * tileSize, STARTPOINT.y*tileSize,
                 STARTPOINT.x * tileSize + tileSize,
                 STARTPOINT.y * tileSize + tileSize);
@@ -69,6 +74,37 @@ public class Designer extends Game {
         SetStart(STARTPOINT.x, STARTPOINT.y);
         HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
 
+    }
+
+    public void SetpieceDrawableHP(int i)
+    {
+        ((HPDrawable) pieceStart).setHP(i);
+    }
+
+    public void ResetCurrentPiece(){
+
+    }
+
+    public void SetpieceDrawable(int i)
+    {
+        switch (i) {
+            case 0:
+                pieceStart = new Piece1Drawable();
+                break;
+            case 1:
+                pieceStart = new Piece2Drawable();
+                break;
+            case 2:
+                pieceStart = new Piece3Drawable();
+                break;
+            case 3:
+                pieceStart = new Piece4Drawable();
+                break;
+        }
+
+        pieceStart.setBounds(STARTPOINT.x * tileSize, STARTPOINT.y*tileSize,
+                STARTPOINT.x * tileSize + tileSize,
+                STARTPOINT.y * tileSize + tileSize);
     }
 
     public void SetListener(DesignerListener listener){
@@ -110,6 +146,7 @@ public class Designer extends Game {
 
         c.drawPath(drawPath, linePaint);
         if(arrow != null){
+            arrow.setColorFilter(Color.argb(255,50,50,255), PorterDuff.Mode.SRC);
             arrow.draw(c);
         }
         pieceStart.draw(c);
@@ -208,8 +245,8 @@ public class Designer extends Game {
         drawPath.setLastPoint(x, y);
 
         int w, h;
-        w = tiles[indexX][indexY].getBounds().right - (tileSize / 4);
-        h = tiles[indexX][indexY].getBounds().bottom - (tileSize / 4);
+        w = tiles[indexX][indexY].getBounds().right - (tileSize / 2);
+        h = tiles[indexX][indexY].getBounds().bottom - (tileSize / 2);
         arrow.setBounds(x, y, w, h);
     }
 
@@ -239,22 +276,22 @@ public class Designer extends Game {
         return pattern;
     }
 
-    public void SetPattern(MovePattern p){
+    public void SetPattern(MovePattern p, int index){
 
         int x = STARTPOINT.x, y = STARTPOINT.y;
 
-        if(pattern.Size() > 0){
-            for (int i = 0; i < ARRAYWIDTH; i++) {
-                for (int j = 0; j < ARRAYHEIGHT; j++) {
-                    directions[i][j] = MovePattern.Direction.NODIRECTION;
-                }
+        SetpieceDrawable(index);
+
+        for (int i = 0; i < ARRAYWIDTH; i++) {
+            for (int j = 0; j < ARRAYHEIGHT; j++) {
+                directions[i][j] = MovePattern.Direction.NODIRECTION;
             }
-            pattern = new MovePattern();
-            drawPath.reset();
-            ClearHighlights();
-            SetStart(STARTPOINT.x, STARTPOINT.y);
-            HighlightAdjacent(x, y);
         }
+        pattern = new MovePattern();
+        drawPath.reset();
+        ClearHighlights();
+        SetStart(STARTPOINT.x, STARTPOINT.y);
+        HighlightAdjacent(x, y);
 
         for (int i = 0; i < p.Size(); i++) {
             int dir = p.Get(i);

@@ -130,6 +130,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                     UpdateHealthPoints();
                     healthspinnerpoints = position;
                 }
+
+
+                designer.SetpieceDrawableHP(healthspinnerpoints + 1);
+
             }
 
             @Override
@@ -141,7 +145,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         designerView = (DesignerView)v.findViewById(R.id.Piece1Fragment_designerview);
         designer = designerView.GetDesigner();
         designer.SetListener(this);
-        designer.SetPattern(currentPiece.pattern);
+        designer.SetPattern(currentPiece.pattern, currentPieceIndex);
         UpdateActionBarTitle();
         return v;
     }
@@ -171,7 +175,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     public void OnButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
-                designerView.ResetDesigner();
+                currentPiece.pattern = new MovePattern();
+                designer.SetPattern(currentPiece.pattern, currentPieceIndex);
+                //designerView.ResetDesigner();
                 UpdateActionBarTitle();
                 break;
         }
@@ -182,7 +188,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         if (index < Settings.differentPieces && index >= 0){
             currentPiece = GameManager.GetSavePiece(index);
             currentPieceIndex = index;
-            designer.SetPattern(currentPiece.pattern);
+            designer.SetPattern(currentPiece.pattern, index);
         }
     }
 

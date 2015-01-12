@@ -79,7 +79,5 @@ public class DesignerView extends GameView {
         return (Designer)game;
     }
 
-    public void ResetDesigner(){
-        game = new Designer(context, camera);
-    }
+    public void ResetDesigner(){ GetDesigner().ResetCurrentPiece();}
 }

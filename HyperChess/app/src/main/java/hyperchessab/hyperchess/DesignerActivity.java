@@ -64,6 +64,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
         if(fragment != null){
             fragment.ChangeCurrentPiece(tab.getPosition());
+
         }
     }
 
