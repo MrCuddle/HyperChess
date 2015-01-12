@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">5dp</dimen>
     <dimen name="menu_layout_padding_sides">0dp</dimen>
     <dimen name="menu_layout_padding_top">0dp</dimen>
-    <dimen name="menu_layout_padding_bottom">5dp</dimen>
+    <dimen name="menu_layout_padding_bottom">0dp</dimen>
     <dimen name="menu_margin_buttons">2dp</dimen>
     <dimen name="menu_fontsize_gametitle">50dp</dimen>
 </resources>

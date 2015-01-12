@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="hyperchessab.hyperchess.MainMenuFragment"
     android:background="@color/Main"
@@ -8,39 +8,29 @@
     android:paddingRight="@dimen/menu_layout_padding_sides"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_above="@+id/mainmenu_button_play"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:background="@color/MainLighter">
-
     <TextView
         android:id="@+id/mainmenu_text_header"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
         android:text="@string/game_name"
         android:textSize="@dimen/menu_fontsize_gametitle"
         android:textAllCaps="false"
         android:textStyle="bold"
         android:clickable="false"
         android:gravity="center"
-        android:paddingBottom="0dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:textColor="@color/Accent"
         android:layout_alignParentTop="true"/>
 
-
-    </LinearLayout>
-
     <RelativeLayout
+        android:id="@+id/mainmenu_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="25dp"
-        android:background="@drawable/menu_title_background">
+        android:background="@drawable/menu_title_background"
+        android:layout_below="@+id/mainmenu_text_header">
     <Button
         android:id="@+id/mainmenu_button_play"
         android:layout_width="match_parent"
@@ -98,4 +88,4 @@
     </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>
