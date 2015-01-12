@@ -25,6 +25,7 @@ public class GamePiece extends GameObject {
     int gridPosY;
     int attackRange;
     int HP;
+    int shapeType;
     GameBoard board;
     List<MovePattern> patterns;
     List<MoveDestination> moveDestinations;
@@ -56,6 +57,25 @@ public class GamePiece extends GameObject {
 
         patterns = PatternTest();
         selected = false;
+    }
+
+    public GamePiece(Context context, GameBoard board, int shapeType){
+        this.context = context;
+        this.board = board;
+        shape = CreateShape(shapeType);
+        this.shapeType = shapeType;
+        patterns = PatternTest();
+        selected = false;
+    }
+
+    public GamePiece(GamePiece piece)
+    {
+        this.context = piece.context;
+        this.board = piece.board;
+        shape = CreateShape(piece.shapeType);
+        patterns = piece.patterns;
+        selected = piece.selected;
+        attackRange = piece.attackRange;
     }
 
     public GamePiece(Context context, PieceState state, GameBoard board){
@@ -107,6 +127,22 @@ public class GamePiece extends GameObject {
         ((HPDrawable)shape).setColor(owner.GetPrimaryColor(),owner.GetSecondaryColor(), owner.GetTertiaryColor());
 
         this.board = board;
+    }
+
+    public Drawable CreateShape(int type){
+        switch(type)
+        {
+            case 0:
+                return new Piece1Drawable();
+            case 1:
+                return new Piece2Drawable();
+            case 2:
+                return new Piece3Drawable();
+            case 3:
+                return new Piece4Drawable();
+            default:
+                return new Piece1Drawable();
+        }
     }
 
     public PieceState GetPieceState(){

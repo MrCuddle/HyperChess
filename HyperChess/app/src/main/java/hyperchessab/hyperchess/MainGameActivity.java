@@ -22,6 +22,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
+
 //        Debug.startMethodTracing("trace");
         //getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
         setFragment(new MainMenuFragment(), false);

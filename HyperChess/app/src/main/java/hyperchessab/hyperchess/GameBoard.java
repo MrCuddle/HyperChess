@@ -2,6 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Point;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,11 @@ public class GameBoard {
     Tile[][] tiles;
     ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
     ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+
+    //Start pos + Piece prototype test
+    ArrayList<Point> teamOneStartPos, teamTwoStartPos;
+    ArrayList<GamePiece> piecePrototypes;
+
     Flag flag;
     Game game;
 
@@ -31,11 +37,12 @@ public class GameBoard {
         this.context = context;
         tiles = new Tile[Width][Height];
 
+        teamOneStartPos = new ArrayList<Point>();
+        teamTwoStartPos = new ArrayList<Point>();
+
         for(int i = 0; i < Width; i++)
             for(int j = 0; j < Height; j++)
                 tiles[i][j] = new Tile(context, i*TileSize, j*TileSize);
-
-
     }
 
     public ArrayList<PieceState> GetPieceStates(){
@@ -59,29 +66,105 @@ public class GameBoard {
     }
 
     public void AddObjects(){
-        GamePiece gp = new GamePiece(context, 3, 3, this);
-        gp.SetOwner(game.players.get(0));
-        gp.SetAttackRange(1);
-        gp.SetHP(3);
-        pieces.add(gp);
-        tiles[3][3].occupier = gp;
+//        GamePiece gp = new GamePiece(context, 3, 3, this);
+//        gp.SetOwner(game.players.get(0));
+//        gp.SetAttackRange(1);
+//        gp.SetHP(3);
+//        pieces.add(gp);
+//        tiles[3][3].occupier = gp;
+//
+//        gp = new GamePiece(context, 7, 0, this);
+//        gp.SetAttackRange(1);
+//        gp.SetOwner(game.players.get(1));
+//        gp.SetHP(1);
+//        pieces.add(gp);
+//        tiles[7][0].occupier = gp;
+//
+//        gp = new GamePiece(context, 4, 4, this);
+//        gp.SetAttackRange(1);
+//        gp.SetOwner(game.players.get(0));
+//        gp.SetHP(2);
+//        pieces.add(gp);
+//        tiles[4][4].occupier = gp;
 
-        gp = new GamePiece(context, 7, 0, this);
-        gp.SetAttackRange(1);
-        gp.SetOwner(game.players.get(1));
-        gp.SetHP(1);
-        pieces.add(gp);
-        tiles[7][0].occupier = gp;
+        AddStartPositions();
+        AddPrototypes();
 
-        gp = new GamePiece(context, 4, 4, this);
-        gp.SetAttackRange(1);
-        gp.SetOwner(game.players.get(0));
-        gp.SetHP(2);
-        pieces.add(gp);
-        tiles[4][4].occupier = gp;
+        for(int i = 0; i < piecePrototypes.size(); i++)
+        {
+            GamePiece p1 = new GamePiece(piecePrototypes.get(i));
+            GamePiece p2 = new GamePiece(piecePrototypes.get(i));
+            p1.SetOwner(game.players.get(0));
+            p2.SetOwner(game.players.get(0));
+
+            p1.SetPosition(teamOneStartPos.get(i).x,teamOneStartPos.get(i).y);
+            p2.SetPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
+
+            GamePiece p3 = new GamePiece(piecePrototypes.get(i));
+            GamePiece p4 = new GamePiece(piecePrototypes.get(i));
+            p3.SetOwner(game.players.get(1));
+            p4.SetOwner(game.players.get(1));
+
+            p3.SetPosition(teamTwoStartPos.get(i).x,teamTwoStartPos.get(i).y);
+            p4.SetPosition(teamTwoStartPos.get(teamTwoStartPos.size()-1-i).x,teamTwoStartPos.get(teamTwoStartPos.size()-1-i).y);
+
+            pieces.add(p1);
+            pieces.add(p2);
+            pieces.add(p3);
+            pieces.add(p4);
+        }
 
         AddStaticObjects();
 
+    }
+
+    private void AddStartPositions(){
+        teamOneStartPos.add(new Point(0, 3));
+        teamOneStartPos.add(new Point(1, 4));
+        teamOneStartPos.add(new Point(2, 3));
+
+        teamOneStartPos.add(new Point(4, 3));
+        teamOneStartPos.add(new Point(6, 3));
+
+        teamOneStartPos.add(new Point(8, 3));
+        teamOneStartPos.add(new Point(9, 4));
+        teamOneStartPos.add(new Point(10, 3));
+
+        teamTwoStartPos.add(new Point(0, 11));
+        teamTwoStartPos.add(new Point(1, 10));
+        teamTwoStartPos.add(new Point(2, 11));
+
+        teamTwoStartPos.add(new Point(4, 11));
+        teamTwoStartPos.add(new Point(6, 11));
+
+        teamTwoStartPos.add(new Point(8, 11));
+        teamTwoStartPos.add(new Point(9, 10));
+        teamTwoStartPos.add(new Point(10, 11));
+    }
+
+    private void AddPrototypes(){
+        GamePiece prototype1 = new GamePiece(context, this, 0);
+        prototype1.SetHP(3);
+        prototype1.SetAttackRange(1);
+
+        GamePiece prototype2 = new GamePiece(context, this, 1);
+        prototype2.SetHP(2);
+        prototype2.SetAttackRange(2);
+
+        GamePiece prototype3 = new GamePiece(context, this, 2);
+        prototype3.SetHP(1);
+        prototype3.SetAttackRange(2);
+
+        GamePiece prototype4 = new GamePiece(context, this, 3);
+        prototype4.SetHP(2);
+        prototype4.SetAttackRange(4);
+
+        piecePrototypes = new ArrayList<GamePiece>();
+
+        piecePrototypes.add(prototype1);
+        piecePrototypes.add(prototype2);
+        piecePrototypes.add(prototype3);
+        piecePrototypes.add(prototype4);
     }
 
     public void AddStaticObjects(){
