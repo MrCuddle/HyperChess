@@ -28,7 +28,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         GameManager.Load(this);
 
         Firebase.setAndroidContext(this);
-        FirebaseLogin();
+
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -121,25 +121,5 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         setFragment(GameFragment.newInstance(true,0, g.getId()), true);
     }
 
-    private void FirebaseLogin(){
-        Firebase firebase = new Firebase(DatabaseManager.URL);
-        firebase.authAnonymously(new Firebase.AuthResultHandler() {
-            @Override
-            public void onAuthenticated(AuthData authData) {
 
-                Toast.makeText(MainGameActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-
-                switch(firebaseError.getCode()) {
-                    default:
-                        Toast.makeText(MainGameActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-    }
 }

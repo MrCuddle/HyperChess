@@ -7,6 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +50,10 @@ public class MainMenuFragment extends Fragment {
         create = (Button)v.findViewById(R.id.mainmenu_button_create);
         join = (Button)v.findViewById(R.id.mainmenu_button_join);
 
+        //Disable the online play buttons until we connect to firebase
+        create.setEnabled(false);
+        join.setEnabled(false);
+
         play.setOnClickListener(buttonListener);
         options.setOnClickListener(buttonListener);
         exit.setOnClickListener(buttonListener);
@@ -53,6 +62,8 @@ public class MainMenuFragment extends Fragment {
 
         Button b = (Button)v.findViewById(R.id.mainmenu_button_designer);
         b.setOnClickListener(buttonListener);
+
+        FirebaseLogin();
 
         return v;
     }
@@ -97,6 +108,30 @@ public class MainMenuFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void FirebaseLogin(){
+        Firebase firebase = new Firebase(DatabaseManager.URL);
+        firebase.getAuth()
+        firebase.authAnonymously(new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+
+                create.setEnabled(true);
+                join.setEnabled(true);
+
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+
+                switch(firebaseError.getCode()) {
+                    default:
+                        Toast.makeText(getActivity(), "Could not connect to internet", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
     public interface OnMainMenuInteractionListener {

@@ -31,14 +31,7 @@
         android:padding="25dp"
         android:background="@drawable/menu_title_background"
         android:layout_below="@+id/mainmenu_text_header">
-    <Button
-        android:id="@+id/mainmenu_button_play"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/play"
-        android:layout_above="@+id/mainmenu_button_options"
-        android:background="@drawable/menu_button_shape"
-        android:layout_marginBottom="@dimen/menu_margin_buttons"/>
+
 
     <Button
         android:id="@+id/mainmenu_button_options"
@@ -55,36 +48,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DESIGNER Test"
-        android:layout_above="@+id/mainmenu_button_exit"
+        android:layout_above="@+id/mainmenu_button_create"
         android:background="@drawable/menu_button_shape"
         android:layout_marginBottom="@dimen/menu_margin_buttons"/>
 
-    <Button
-        android:id="@+id/mainmenu_button_exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/exit"
-        android:background="@drawable/menu_button_shape"
-        android:layout_above="@+id/mainmenu_button_join"
-        android:layout_marginBottom="@dimen/menu_margin_buttons"
-        />
+        <Button
+            android:id="@+id/mainmenu_button_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_game"
+            android:background="@drawable/menu_button_shape"
+            android:layout_above="@+id/mainmenu_button_join"
+            android:layout_marginBottom="@dimen/menu_margin_buttons"
+            />
+
     <Button
             android:id="@+id/mainmenu_button_join"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/join_game"
             android:background="@drawable/menu_button_shape"
-            android:layout_above="@+id/mainmenu_button_create"
+            android:layout_above="@+id/mainmenu_button_play"
             android:layout_marginBottom="@dimen/menu_margin_buttons"
             />
-    <Button
-        android:id="@+id/mainmenu_button_create"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/create_game"
-        android:background="@drawable/menu_button_shape"
-        android:layout_marginBottom="@dimen/menu_margin_buttons"
-        android:layout_alignParentBottom="true"/>
+
+        <Button
+            android:id="@+id/mainmenu_button_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/play"
+            android:layout_above="@+id/mainmenu_button_exit"
+            android:background="@drawable/menu_button_shape"
+            android:layout_marginBottom="@dimen/menu_margin_buttons"/>
+        <Button
+            android:id="@+id/mainmenu_button_exit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exit"
+            android:background="@drawable/menu_button_shape"
+            android:layout_marginBottom="@dimen/menu_margin_buttons"
+            android:layout_alignParentBottom="true"
+            />
     </RelativeLayout>
 
 
