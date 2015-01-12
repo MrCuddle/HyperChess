@@ -489,9 +489,11 @@ public class GamePiece extends GameObject {
 
     public void Draw(Canvas c){
         shape.draw(c);
-        if(moveDestinations != null) {
-            for (MoveDestination d : moveDestinations)
-                d.Draw(c);
+        synchronized (board.getGame().sync) {
+            if (moveDestinations != null) {
+                for (MoveDestination d : moveDestinations)
+                    d.Draw(c);
+            }
         }
         if(attackDestinations != null){
             for(AttackDestination d : attackDestinations)
