@@ -35,6 +35,8 @@ public class Game {
     ChildEventListener dbListener;
     Firebase fb;
 
+    public Object sync = new Object();
+
     private Turn thisTurn;
 
     public Game(Context context, Camera camera, boolean online, int player, String gameId){

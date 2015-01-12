@@ -112,7 +112,6 @@ public class MainMenuFragment extends Fragment {
 
     private void FirebaseLogin(){
         Firebase firebase = new Firebase(DatabaseManager.URL);
-        firebase.getAuth();
         firebase.authAnonymously(new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {

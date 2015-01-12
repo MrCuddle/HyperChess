@@ -311,26 +311,28 @@ public class GamePiece extends GameObject {
     }
 
     public void SimulateMove(int endX, int endY, int attackX, int attackY){
-        InputData.Clicked = true;
-        InputData.ClickPoint = new Point((int)((endX + 0.5) * GameBoard.TileSize), (int)((endY + 0.5) * GameBoard.TileSize));
-        HighlightMoveable();
-        for (MoveDestination d : moveDestinations) {
-            if (d.ClickedOn()) {
+        synchronized (board.getGame().sync) {
+            InputData.Clicked = true;
+            InputData.ClickPoint = new Point((int) ((endX + 0.5) * GameBoard.TileSize), (int) ((endY + 0.5) * GameBoard.TileSize));
+            HighlightMoveable();
+            for (MoveDestination d : moveDestinations) {
+                if (d.ClickedOn()) {
 
-                movePath = GetMovePath(d.GetPath());
-                isMoving = true;
-                Point newPos = d.GetPosition();
-                board.GetTile(gridPosX, gridPosY).occupier = null;
-                gridPosX = newPos.x;
-                gridPosY = newPos.y;
-                board.GetTile(gridPosX, gridPosY).occupier = this;
-                moveDestinations = null;
+                    movePath = GetMovePath(d.GetPath());
+                    isMoving = true;
+                    Point newPos = d.GetPosition();
+                    board.GetTile(gridPosX, gridPosY).occupier = null;
+                    gridPosX = newPos.x;
+                    gridPosY = newPos.y;
+                    board.GetTile(gridPosX, gridPosY).occupier = this;
+                    moveDestinations = null;
 
+                }
             }
+            InputData.Clear();
+            if (attackX != -1)
+                QueueAttack(attackX, attackY);
         }
-        InputData.Clear();
-        if(attackX != -1)
-            QueueAttack(attackX,attackY);
     }
 
     public void QueueAttack(int x, int y){

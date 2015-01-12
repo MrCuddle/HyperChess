@@ -31,6 +31,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     int player = 0;
     boolean online = false;
     String gameId = "";
+    public Object sync = new Object();
 
     ScaleGestureDetector scaleGestureDetector;
 
@@ -178,13 +179,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             camera.Translate((float)glideSpeed*avgDX, (float)glideSpeed*avgDY);
         }
 
-        if(clicked){
-            Matrix inverse = new Matrix();
-            camera.getTransform().invert(inverse);
-            float[] points = {currentX, currentY};
-            inverse.mapPoints(points);
-            InputData.ClickPoint = new Point((int)points[0], (int)points[1]);
-            InputData.Clicked = true;
+        synchronized (game.sync) {
+            if (clicked) {
+                Matrix inverse = new Matrix();
+                camera.getTransform().invert(inverse);
+                float[] points = {currentX, currentY};
+                inverse.mapPoints(points);
+                InputData.ClickPoint = new Point((int) points[0], (int) points[1]);
+                InputData.Clicked = true;
+            }
         }
         game.Update(dt);
         InputData.Clear();
