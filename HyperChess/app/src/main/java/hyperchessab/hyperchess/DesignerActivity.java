@@ -57,7 +57,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
             }
 
         }
-        fragment = Piece1Fragment.newInstance(0, this);
+        fragment = Piece1Fragment.newInstance(this);
         setFragment(fragment, false);
 
     }
@@ -116,13 +116,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     @Override
     public void OnFinishedDesigning(PieceState[] resut) {
         PieceState[] pieces = resut;
-    }
-
-    @Override
-    public void OnPieceNameChange(int index, String name) {
-        if(actionBar != null){
-            actionBar.getTabAt(index).setText(name);
-        }
     }
 
 
