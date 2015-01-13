@@ -93,13 +93,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         rangespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int temp = position;
-                if(rangespinnerpoints != temp){
-                   temp -= rangespinnerpoints;
-                   rangespinnerpoints = temp;
-                   UpdateRangePoints();
-                   rangespinnerpoints = position;
-                }
+                UpdateRangePoints(position);
             }
 
             @Override
@@ -111,16 +105,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         healthspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int temp = position;
-                if(healthspinnerpoints != temp){
-                    temp -= healthspinnerpoints;
-                    healthspinnerpoints = temp;
-                    UpdateHealthPoints();
-                    healthspinnerpoints = position;
-                }
-
-
-                designer.SetpieceDrawableHP(healthspinnerpoints + 1);
+                UpdateHealthPoints(position);
 
             }
 
@@ -139,13 +124,27 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         return v;
     }
 
-    private void UpdateRangePoints()
+    private void UpdateRangePoints(int spinnerValue)
     {
-        playerPoints -= rangespinnerpoints;
+        int temp = spinnerValue;
+        if(rangespinnerpoints != temp){
+            temp -= rangespinnerpoints;
+            rangespinnerpoints = temp;
+            playerPoints -= rangespinnerpoints;
+            rangespinnerpoints = spinnerValue;
+        }
     }
 
-    private void UpdateHealthPoints(){
-        playerPoints -= healthspinnerpoints;
+    private void UpdateHealthPoints(int spinnerValue){
+        int temp = spinnerValue;
+        if(healthspinnerpoints != temp){
+            temp -= healthspinnerpoints;
+            healthspinnerpoints = temp;
+            playerPoints -= healthspinnerpoints;
+            healthspinnerpoints = spinnerValue;
+        }
+
+        designer.SetpieceDrawableHP(healthspinnerpoints + 1);
     }
 
     @Override
