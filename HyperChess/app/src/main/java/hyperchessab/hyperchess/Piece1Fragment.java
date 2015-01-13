@@ -185,7 +185,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 designer.SetPattern(currentPattern, currentPieceIndex);
                 break;
             case R.id.Piece1Fragment_finishbtn:
-                listener.OnFinishedDesigning(pieces);
+                if(AllPiecesDesigned()){
+                    listener.OnFinishedDesigning(pieces);
+                }
+
                 break;
         }
     }
@@ -254,6 +257,32 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
         piece.movePatterns = newPatterns;
         pieces[id] = piece;
+    }
+
+    private boolean AllPiecesDesigned(){
+        boolean allDesigned = true;
+        boolean allHaveMovement = true;
+        if(currentPiece != null){
+            SavePiece(designer.GetPattern(), currentPiece.HP, currentPiece.attackRange, currentPieceIndex);
+        }
+
+        for (int i = 0; i < pieces.length; i++) {
+            if(pieces[i] == null){
+                allDesigned = false;
+            }
+        }
+
+        if(allDesigned){
+            for (int i = 0; i < pieces.length; i++) {
+                if(pieces[i].movePatterns.get(0).Size() == 0){
+                    allHaveMovement = false;
+                }
+            }
+        } else {
+            return false;
+        }
+
+        return allDesigned && allHaveMovement;
     }
 
 }
