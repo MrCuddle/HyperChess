@@ -4,20 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
+
 import java.util.ArrayList;
 
 /**
@@ -37,14 +31,15 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     Spinner healthspinner;
     Spinner rangespinner;
 
-    Player player;
     Designer designer;
     DesignerView designerView;
 
-    GameManager.SavePiece currentPiece;
-    int currentPieceIndex;
+    PieceState currentPiece;
+    MovePattern currentPattern = new MovePattern();
+    int currentPieceIndex = 0;
+    int playerPoints = Settings.playerPoints;
 
-    private PieceState[] pieces = new PieceState[4];
+    private PieceState[] pieces = new PieceState[Settings.differentPieces];
 
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
@@ -59,12 +54,13 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
      *
      * @return A new instance of fragment Piece1Fragment.
      */
-    public static Piece1Fragment newInstance(int startPieceIndex, Piece1Listener listener) {
+    public static Piece1Fragment newInstance(Piece1Listener listener) {
         Piece1Fragment fragment = new Piece1Fragment();
-        fragment.player = GameManager.GetUser();
-        fragment.currentPiece = GameManager.GetSavePiece(startPieceIndex);
         fragment.listener = listener;
-        fragment.currentPieceIndex = startPieceIndex;
+
+        for (int i = 0; i < Settings.differentPieces; i++) {
+            fragment.pieces[i] = null;
+        }
         return fragment;
     }
 
@@ -84,21 +80,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
         reset.setOnClickListener(buttonListener);
-
-        EditText et = (EditText)v.findViewById(R.id.Piece1Fragment_pieceName);
-        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_DONE){
-                    OnEditPieceName(v);
-                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    v.setText("");
-                    return true;
-                }
-                return false;
-            }
-        });
 
         healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
         Integer[] healthitems = new Integer[]{1,2,3};
@@ -153,31 +134,19 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         designerView = (DesignerView)v.findViewById(R.id.Piece1Fragment_designerview);
         designer = designerView.GetDesigner();
         designer.SetListener(this);
-        designer.SetPattern(currentPiece.pattern, currentPieceIndex);
-        UpdateActionBarTitle();
+        designer.SetPattern(currentPattern, currentPieceIndex);
+
+
         return v;
     }
 
     private void UpdateRangePoints()
     {
-        player.points -= rangespinnerpoints;
-        currentPiece.cost += rangespinnerpoints;
-        UpdateActionBarTitle();
+        playerPoints -= rangespinnerpoints;
     }
 
     private void UpdateHealthPoints(){
-        player.points -= healthspinnerpoints;
-        currentPiece.cost += healthspinnerpoints;
-        UpdateActionBarTitle();
-    }
-
-    private void UpdateActionBarTitle(){
-        getActivity().setTitle(player.name + currentPiece.name + "                              Points left: " + player.points);
-    }
-
-    private void OnEditPieceName(TextView v){
-        currentPiece.name = v.getText().toString();
-        listener.OnPieceNameChange(currentPieceIndex, v.getText().toString());
+        playerPoints -= healthspinnerpoints;
     }
 
     @Override
@@ -201,39 +170,32 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     public void OnButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
-                currentPiece.pattern = new MovePattern();
-                designer.SetPattern(currentPiece.pattern, currentPieceIndex);
-                //designerView.ResetDesigner();
-                UpdateActionBarTitle();
+                currentPattern = new MovePattern();
+                designer.SetPattern(currentPattern, currentPieceIndex);
                 break;
             case R.id.Piece1Fragment_finishbtn:
                 listener.OnFinishedDesigning(pieces);
                 break;
         }
-
     }
 
     public void ChangeCurrentPiece(int index){
         if (index < Settings.differentPieces && index >= 0){
-            SavePiece(designer.GetPattern(), healthspinnerpoints, rangespinnerpoints, index);
-            currentPiece = GameManager.GetSavePiece(index);
+            SavePiece(designer.GetPattern(), healthspinnerpoints, rangespinnerpoints, currentPieceIndex);
+            currentPiece = pieces[index];
+            if(currentPiece != null){
+                designer.SetPattern(currentPiece.movePatterns.get(0), index);
+            } else {
+                designer.SetPattern(null, index);
+            }
             currentPieceIndex = index;
-            designer.SetPattern(currentPiece.pattern, index);
         }
     }
 
     @Override
     public void OnDesignerInteraction() {
-        player.points--;
-        currentPiece.cost++;
-        currentPiece.pattern = designer.GetPattern();
-        Handler refresh = new Handler(Looper.getMainLooper());
-        refresh.post(new Runnable(){
-            @Override
-            public void run() {
-                UpdateActionBarTitle();
-            }
-        });
+        playerPoints--;
+        currentPattern = designer.GetPattern();
     }
 
     @Override
@@ -243,7 +205,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     public interface Piece1Listener{
         public void OnFinishedDesigning(PieceState[] result);
-        public void OnPieceNameChange(int index, String name);
     }
 
     private void SavePiece(MovePattern pattern, int health, int range, int id){

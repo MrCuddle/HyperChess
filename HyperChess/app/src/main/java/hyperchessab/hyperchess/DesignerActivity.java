@@ -54,13 +54,13 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
             for (int i = 0; i < Settings.differentPieces; i++) {
                 ActionBar.Tab tab = actionBar.newTab();
-                tab.setText(pieces.get(i).name);
+                tab.setText("Piece " + Integer.toString(i + 1));
                 tab.setTabListener(this);
                 actionBar.addTab(tab);
             }
 
         }
-        fragment = Piece1Fragment.newInstance(0, this);
+        fragment = Piece1Fragment.newInstance(this);
         setFragment(fragment, false);
 
     }
@@ -153,6 +153,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     }
 
     public void SendPieceDefinitionsToFirebase(){
+
         ArrayList<PieceState> pieceStates;
 
         Firebase ref;

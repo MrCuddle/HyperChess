@@ -293,23 +293,25 @@ public class Designer extends Game {
         SetStart(STARTPOINT.x, STARTPOINT.y);
         HighlightAdjacent(x, y);
 
-        for (int i = 0; i < p.Size(); i++) {
-            int dir = p.Get(i);
-            switch (dir){
-                case MovePattern.Direction.UP:
-                    y--;
-                    break;
-                case MovePattern.Direction.RIGHT:
-                    x++;
-                    break;
-                case MovePattern.Direction.DOWN:
-                    y++;
-                    break;
-                case MovePattern.Direction.LEFT:
-                    x--;
-                    break;
+        if(p != null) {
+            for (int i = 0; i < p.Size(); i++) {
+                int dir = p.Get(i);
+                switch (dir) {
+                    case MovePattern.Direction.UP:
+                        y--;
+                        break;
+                    case MovePattern.Direction.RIGHT:
+                        x++;
+                        break;
+                    case MovePattern.Direction.DOWN:
+                        y++;
+                        break;
+                    case MovePattern.Direction.LEFT:
+                        x--;
+                        break;
+                }
+                AddToPattern(tiles[x][y], x, y);
             }
-            AddToPattern(tiles[x][y], x, y);
         }
         HighlightAdjacent(x, y);
 
