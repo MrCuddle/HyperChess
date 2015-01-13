@@ -77,6 +77,7 @@ public class GamePiece extends GameObject {
         selected = piece.selected;
         attackRange = piece.attackRange;
         SetHP(piece.HP);
+        shapeType = piece.shapeType;
     }
 
     public GamePiece(Context context, PieceState state, GameBoard board){
@@ -156,7 +157,7 @@ public class GamePiece extends GameObject {
         ps.hasFlag = flag != null;
         ps.movePatterns = patterns;
         ps.owner = (board.getGame().players.get(0) == owner ? 0 : 1);
-        ps.shapeType = 0; //CHANGE THIS.
+        ps.shapeType = shapeType;
         ps.selected = selected;
         ps.attackRange = attackRange;
         ps.HP = HP;
