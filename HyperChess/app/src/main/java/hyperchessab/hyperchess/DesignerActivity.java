@@ -213,6 +213,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
                             PieceState ps = new PieceState();
                             ps.HP = (int)((long)ds.child("HP").getValue());
+                            ps.initHP = ps.HP;
                             ps.attackRange = (int)((long)ds.child("attackRange").getValue());
                             ps.shapeType = (int)((long)ds.child("shapeType").getValue());
 
@@ -237,6 +238,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
                             PieceState ps = new PieceState();
                             ps.HP = (int)((long)ds.child("HP").getValue());
+                            ps.initHP = ps.HP;
                             ps.attackRange = (int)((long)ds.child("attackRange").getValue());
                             ps.shapeType = (int)((long)ds.child("shapeType").getValue());
 

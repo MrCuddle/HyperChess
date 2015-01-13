@@ -244,6 +244,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         PieceState piece = new PieceState();
         piece.attackRange = range;
         piece.HP = health;
+        piece.initHP = health;
         piece.shapeType = id;
         ArrayList<MovePattern> newPatterns = new ArrayList<>();
         //Init patternlist
