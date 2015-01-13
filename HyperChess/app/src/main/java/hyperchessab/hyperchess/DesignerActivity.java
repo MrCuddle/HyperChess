@@ -51,7 +51,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
             for (int i = 0; i < Settings.differentPieces; i++) {
                 ActionBar.Tab tab = actionBar.newTab();
-                tab.setText(pieces.get(i).name);
+                tab.setText("Piece " + Integer.toString(i + 1));
                 tab.setTabListener(this);
                 actionBar.addTab(tab);
             }
@@ -125,10 +125,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         }
     }
 
-    @Override
-    public void OnFinishedDesigning(PieceState[] result) {
-        
-    }
 
     //    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
 //        ArrayList<String> types;
