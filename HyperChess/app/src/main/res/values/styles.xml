@@ -3,7 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionBarTabStyle">@style/MyActionBarTab</item>
+
+        <!-- Support library compatibility -->
+
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionBarTabStyle">@style/MyActionBarTab</item>
+
     </style>
 
     <!-- ActionBar styles -->
@@ -13,6 +19,13 @@
 
         <!-- Support library compatibility -->
         <item name="background">@color/Main</item>
+    </style>
+
+    <style name="MyActionBarTab"
+        parent="android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_selector</item>
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/tab_selector</item>
     </style>
 
 

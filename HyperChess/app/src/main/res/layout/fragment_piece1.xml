@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:text="@string/reset"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/menu_button_designerbottomleft"/>
+        android:background="@drawable/menu_button_shape"/>
 
 
 
@@ -82,7 +82,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/Piece1Fragment_lifeSpinner"
-        android:background="@drawable/menu_button_designerbottomright"/>
+        android:background="@drawable/menu_button_shape"/>
 
 
 
