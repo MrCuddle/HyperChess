@@ -1,7 +1,6 @@
 package hyperchessab.hyperchess;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
@@ -18,9 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +42,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     GameManager.SavePiece currentPiece;
     int currentPieceIndex;
 
-    private ArrayList<PieceState> pieces = new ArrayList<>();
+    private PieceState[] pieces = new PieceState[4];
 
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
@@ -226,6 +223,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         PieceState piece = new PieceState();
         piece.attackRange = range;
         piece.HP = health;
+        piece.shapeType = id;
         ArrayList<MovePattern> newPatterns = new ArrayList<>();
         //Init patterlist
         for (int i = 0; i < 4; i++) {
@@ -241,7 +239,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         }
 
         piece.movePatterns = newPatterns;
-
+        pieces[id] = piece;
     }
 
 }
