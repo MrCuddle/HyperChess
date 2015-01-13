@@ -17,7 +17,8 @@ public class GameBoard {
 
     //Start pos + Piece prototype test
     ArrayList<Point> teamOneStartPos, teamTwoStartPos;
-    ArrayList<GamePiece> piecePrototypes;
+//    ArrayList<GamePiece> piecePrototypes1, piecePrototypes2;
+
 
     Flag flag;
     Game game;
@@ -65,46 +66,26 @@ public class GameBoard {
     }
 
     public void AddObjects(){
-//        GamePiece gp = new GamePiece(context, 3, 3, this);
-//        gp.SetOwner(game.players.get(0));
-//        gp.SetAttackRange(1);
-//        gp.SetHP(3);
-//        pieces.add(gp);
-//        tiles[3][3].occupier = gp;
-//
-//        gp = new GamePiece(context, 7, 0, this);
-//        gp.SetAttackRange(1);
-//        gp.SetOwner(game.players.get(1));
-//        gp.SetHP(1);
-//        pieces.add(gp);
-//        tiles[7][0].occupier = gp;
-//
-//        gp = new GamePiece(context, 4, 4, this);
-//        gp.SetAttackRange(1);
-//        gp.SetOwner(game.players.get(0));
-//        gp.SetHP(2);
-//        pieces.add(gp);
-//        tiles[4][4].occupier = gp;
 
+        AddStaticObjects();
         AddStartPositions();
-        AddPrototypes();
 
-        for(int i = 0; i < piecePrototypes.size(); i++)
+        for(int i = 0; i < 4; i++)
         {
-            GamePiece p1 = new GamePiece(piecePrototypes.get(i));
-            GamePiece p2 = new GamePiece(piecePrototypes.get(i));
+            GamePiece p1 = new GamePiece(context,GameManager.GetPlayer1Pieces().get(i),this);
+            GamePiece p2 = new GamePiece(context,GameManager.GetPlayer1Pieces().get(i),this);
             p1.SetOwner(game.players.get(0));
             p2.SetOwner(game.players.get(0));
 
-            p1.SetPosition(teamOneStartPos.get(i).x,teamOneStartPos.get(i).y);
-            p1.SetStartPosition(teamOneStartPos.get(i).x,teamOneStartPos.get(i).y);
+            p1.SetPosition(teamOneStartPos.get(i).x, teamOneStartPos.get(i).y);
+            p1.SetStartPosition(teamOneStartPos.get(i).x, teamOneStartPos.get(i).y);
             tiles[teamOneStartPos.get(i).x][teamOneStartPos.get(i).y].occupier = p1;
-            p2.SetPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
+            p2.SetPosition(teamOneStartPos.get(teamOneStartPos.size() - 1 - i).x, teamOneStartPos.get(teamOneStartPos.size() - 1 - i).y);
             p2.SetStartPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
             tiles[teamOneStartPos.get(teamOneStartPos.size()-1- i).x][teamOneStartPos.get(teamOneStartPos.size()-1-i).y].occupier = p2;
 
-            GamePiece p3 = new GamePiece(piecePrototypes.get(i));
-            GamePiece p4 = new GamePiece(piecePrototypes.get(i));
+            GamePiece p3 = new GamePiece(context,GameManager.GetPlayer1Pieces().get(i),this);
+            GamePiece p4 = new GamePiece(context,GameManager.GetPlayer1Pieces().get(i),this);
             p3.SetOwner(game.players.get(1));
             p4.SetOwner(game.players.get(1));
 
@@ -120,9 +101,6 @@ public class GameBoard {
             pieces.add(p3);
             pieces.add(p4);
         }
-
-        AddStaticObjects();
-
     }
 
     private void AddStartPositions(){
@@ -158,10 +136,14 @@ public class GameBoard {
             return null;
     }
 
-    private void AddPrototypes(){
+/*    private void AddPrototypes(){
+        ArrayList<PieceState> pieceDefs1 = GameManager.GetPlayer1Pieces();
+        ArrayList<PieceState> pieceDefs2 = GameManager.GetPlayer2Pieces();
+
         GamePiece prototype1 = new GamePiece(context, this, 0);
-        prototype1.SetHP(3);
-        prototype1.SetAttackRange(1);
+        prototype1.SetHP(pieceDefs1.get(0).HP);
+        prototype1.SetAttackRange(pieceDefs1.get(0).attackRange);
+        prototype1.patterns
 
         GamePiece prototype2 = new GamePiece(context, this, 1);
         prototype2.SetHP(2);
@@ -175,13 +157,13 @@ public class GameBoard {
         prototype4.SetHP(2);
         prototype4.SetAttackRange(4);
 
-        piecePrototypes = new ArrayList<GamePiece>();
+        piecePrototypes1 = new ArrayList<GamePiece>();
 
-        piecePrototypes.add(prototype1);
-        piecePrototypes.add(prototype2);
-        piecePrototypes.add(prototype3);
-        piecePrototypes.add(prototype4);
-    }
+        piecePrototypes1.add(prototype1);
+        piecePrototypes1.add(prototype2);
+        piecePrototypes1.add(prototype3);
+        piecePrototypes1.add(prototype4);
+    }*/
 
     public void AddStaticObjects(){
         Obstacle o = new Obstacle(context, 3, 7);

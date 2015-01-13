@@ -167,11 +167,11 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         }
         for (int i = 0; i < pieceStates.size(); i++) {
             if(player == 0) {
-                ref = fb.child("player1").push();
+                fb.child("player1").child("pieces").setValue(pieceStates);
             } else {
-                ref = fb.child("player2").push();
+                fb.child("player2").child("pieces").setValue(pieceStates);
             }
-            ref.child("piece").setValue(pieceStates.get(i));
+            //ref.child("piece").setValue(pieceStates.get(i));
 //            ref.child("HP").setValue(pieceStates.get(i).HP);
 //            ref.child("attackRange").setValue(pieceStates.get(i).attackRange);
 //            ref.child("shapeType").setValue(pieceStates.get(i).shapeType);
@@ -209,13 +209,22 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 if(otherPlayer){
                     if(player == 0){
                         ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()){
+                        for (DataSnapshot ds : dataSnapshot.child("pieces").getChildren()){
 
                             PieceState ps = new PieceState();
-                            ps.HP = (int)((long)ds.child("piece").child("HP").getValue());
-                            ps.attackRange = (int)((long)ds.child("piece").child("attackRange").getValue());
-                            ps.shapeType = (int)((long)ds.child("piece").child("shapeType").getValue());
-                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("piece").child("movePatterns").getValue();
+                            ps.HP = (int)((long)ds.child("HP").getValue());
+                            ps.attackRange = (int)((long)ds.child("attackRange").getValue());
+                            ps.shapeType = (int)((long)ds.child("shapeType").getValue());
+
+                            ArrayList<MovePattern> movePatterns = new ArrayList<MovePattern>();
+                            for(DataSnapshot ds2 : ds.child("movePatterns").getChildren()) {
+                                ArrayList<Integer> moves = new ArrayList<Integer>();
+                                for(DataSnapshot ds3 : ds2.child("pattern").getChildren()){
+                                    moves.add((int)((long)ds3.getValue()));
+                                }
+                                movePatterns.add(new MovePattern(moves));
+                            }
+                            ps.movePatterns = movePatterns;
                             pieceStates.add(ps);
                         }
                         GameManager.SetPlayer2Pieces(pieceStates);
@@ -224,13 +233,22 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                         }
                     } else {
                         ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()){
+                        for (DataSnapshot ds : dataSnapshot.child("pieces").getChildren()){
 
-                            PieceState ps = (PieceState)ds.child("piece").getValue();
-//                            ps.HP = (int)((long)ds.child("HP").getValue());
-//                            ps.attackRange = (int)((long)ds.child("attackRange").getValue());
-//                            ps.shapeType = (int)((long)ds.child("shapeType").getValue());
-//                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
+                            PieceState ps = new PieceState();
+                            ps.HP = (int)((long)ds.child("HP").getValue());
+                            ps.attackRange = (int)((long)ds.child("attackRange").getValue());
+                            ps.shapeType = (int)((long)ds.child("shapeType").getValue());
+
+                            ArrayList<MovePattern> movePatterns = new ArrayList<MovePattern>();
+                            for(DataSnapshot ds2 : ds.child("movePatterns").getChildren()) {
+                                ArrayList<Integer> moves = new ArrayList<Integer>();
+                                for(DataSnapshot ds3 : ds2.child("pattern").getChildren()){
+                                    moves.add((int)((long)ds3.getValue()));
+                                }
+                                movePatterns.add(new MovePattern(moves));
+                            }
+                            ps.movePatterns = movePatterns;
                             pieceStates.add(ps);
                         }
                         GameManager.SetPlayer1Pieces(pieceStates);
