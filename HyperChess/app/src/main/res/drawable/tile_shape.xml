@@ -6,7 +6,7 @@
         android:width="16dp"
         android:height="16dp" />
         <solid
-        android:color="#AAC3EC" />
+        android:color="@color/TileColor" />
         <stroke
         android:width="0dp" />
     </shape>

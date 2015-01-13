@@ -7,4 +7,7 @@
     <color name="White">#FFFFFF</color>
     <color name="Black">#000000</color>
 
+    <color name="TileColor">#AAC3EC</color>
+    <color name="TileColorDark">#93B2DD</color>
+
 </resources>

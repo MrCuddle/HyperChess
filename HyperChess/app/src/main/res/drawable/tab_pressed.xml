@@ -6,7 +6,8 @@
         android:color="@color/Main" />
     <stroke
         android:width="2.5dp"
-        android:color="@color/MainDarker"/>
+        android:color="@color/MainDarker"
+        />
 
     <!--<corners-->
         <!--android:radius="1dp"/>-->
