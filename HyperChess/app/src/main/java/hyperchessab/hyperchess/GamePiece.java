@@ -434,9 +434,8 @@ public class GamePiece extends GameObject {
                 int y = (int)(InputData.ClickPoint.y / GameBoard.TileSize);
                 if(InputData.ClickPoint.y < 0) y = -1;
                 Tile t = board.GetTile(x,y);
-                if(t != null && t.occupier instanceof GamePiece && ((GamePiece) t.occupier).GetOwner() != this.owner){
-                    if(Math.abs(gridPosX - x) > 0 && Math.abs(gridPosX - x) <= attackRange && Math.abs(gridPosY - y) == 0
-                            || Math.abs(gridPosY - y) > 0 && Math.abs(gridPosY - y) <= attackRange && Math.abs(gridPosX - x) == 0){
+                if(t != null && t.occupier instanceof GamePiece && ((GamePiece)
+                        t.occupier).GetOwner() != this.owner && CheckValidAttackDestination(x,y)){
                         ((GamePiece)t.occupier).Hit();
                         if(((GamePiece) t.occupier).GetHP() <= 0) {
                             ((GamePiece) t.occupier).DropFlag();
@@ -453,7 +452,6 @@ public class GamePiece extends GameObject {
                         board.getGame().currentGameState = Game.GameState.Moving;
                         board.getGame().IncrementCurrentPlayer();
                         Deselect();
-                    }
                 }
             }
         }
@@ -478,14 +476,59 @@ public class GamePiece extends GameObject {
 
     private void HighlightAttackable(){
         attackDestinations = new ArrayList<AttackDestination>();
-        for(int i = -attackRange; i <= attackRange; i++){
+        boolean keepSearching = true;
+        for(int i = 1; i <= attackRange; i++){
+            if(!keepSearching)
+                break;
             Tile t = board.GetTile(gridPosX + i, gridPosY);
-            if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+            if(t != null && t.occupier instanceof Obstacle)
+                keepSearching = false;
+            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
                 attackDestinations.add(new AttackDestination(gridPosX+i, gridPosY));
-            t = board.GetTile(gridPosX, gridPosY + i);
-            if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
-                attackDestinations.add(new AttackDestination(gridPosX, gridPosY + i));
         }
+
+        keepSearching = true;
+        for(int i = 1; i <= attackRange; i++){
+            if(!keepSearching)
+                break;
+            Tile t = board.GetTile(gridPosX - i, gridPosY);
+            if(t != null && t.occupier instanceof Obstacle)
+                keepSearching = false;
+            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+                attackDestinations.add(new AttackDestination(gridPosX-i, gridPosY));
+        }
+
+        keepSearching = true;
+        for(int i = 1; i <= attackRange; i++){
+            if(!keepSearching)
+                break;
+            Tile t = board.GetTile(gridPosX, gridPosY + i);
+            if(t != null && t.occupier instanceof Obstacle)
+                keepSearching = false;
+            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+                attackDestinations.add(new AttackDestination(gridPosX, gridPosY+i));
+        }
+
+        keepSearching = true;
+        for(int i = 1; i <= attackRange; i++){
+            if(!keepSearching)
+                break;
+            Tile t = board.GetTile(gridPosX, gridPosY - i);
+            if(t != null && t.occupier instanceof Obstacle)
+                keepSearching = false;
+            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+                attackDestinations.add(new AttackDestination(gridPosX, gridPosY-i));
+        }
+    }
+
+    private boolean CheckValidAttackDestination(int x, int y){
+        if(attackDestinations != null){
+            for(AttackDestination a : attackDestinations){
+                if(x == a.attackDestGridPosX && y == a.attackDestGridPosY)
+                    return true;
+            }
+        }
+        return false;
     }
 
     private void HighlightMoveable(){
@@ -535,7 +578,10 @@ public class GamePiece extends GameObject {
 
     private class AttackDestination{
         Drawable shape;
+        int attackDestGridPosX, attackDestGridPosY;
         public AttackDestination(int gridX, int gridY){
+            attackDestGridPosX = gridX;
+            attackDestGridPosY = gridY;
             shape = context.getResources().getDrawable(R.drawable.highlight_shape);
             shape.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC);
             shape.setBounds(gridX * GameBoard.TileSize, gridY * GameBoard.TileSize,
