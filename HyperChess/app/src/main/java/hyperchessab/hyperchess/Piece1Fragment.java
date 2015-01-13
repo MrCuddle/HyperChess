@@ -70,7 +70,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,7 +161,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         designer.SetpieceDrawableHP(healthspinnerpoints + 1);
     }
 
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -179,7 +177,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         super.onDetach();
         listener = null;
     }
-
 
     public void OnButtonPressed(int id) {
         switch (id) {
