@@ -96,8 +96,12 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         }
     }
 
+    @Override
+    public void OnFinishedDesigning(PieceState[] result) {
+        
+    }
 
-//    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
+    //    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
 //        ArrayList<String> types;
 //        public Piece1FragmentAdapter(FragmentManager fm, ArrayList<String> types){
 //            super(fm);
