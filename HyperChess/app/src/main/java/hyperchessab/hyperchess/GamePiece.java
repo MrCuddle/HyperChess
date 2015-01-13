@@ -24,7 +24,7 @@ public class GamePiece extends GameObject {
     int gridPosX, gridPosY, startPosX, startPosY;
 
     int attackRange;
-    int HP;
+    int HP, initHP;
     int shapeType;
     GameBoard board;
     List<MovePattern> patterns;
@@ -76,7 +76,7 @@ public class GamePiece extends GameObject {
         patterns = piece.patterns;
         selected = piece.selected;
         attackRange = piece.attackRange;
-        SetHP(piece.HP);
+        SetInitHP(piece.HP);
         shapeType = piece.shapeType;
     }
 
@@ -179,6 +179,10 @@ public class GamePiece extends GameObject {
         this.attackRange = range;
     }
 
+    public void SetInitHP(int hp){
+        initHP = HP = hp;
+        ((HPDrawable)shape).setHP(hp);
+    }
     public void SetHP(int hp){
         HP = hp;
         ((HPDrawable)shape).setHP(hp);
@@ -256,6 +260,7 @@ public class GamePiece extends GameObject {
                 }
             }
         }
+        SetHP(initHP);
     }
 
     public void SetPatterns(List<MovePattern> patterns){

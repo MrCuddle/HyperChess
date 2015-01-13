@@ -160,19 +160,19 @@ public class GameBoard {
 
     private void AddPrototypes(){
         GamePiece prototype1 = new GamePiece(context, this, 0);
-        prototype1.SetHP(3);
+        prototype1.SetInitHP(3);
         prototype1.SetAttackRange(1);
 
         GamePiece prototype2 = new GamePiece(context, this, 1);
-        prototype2.SetHP(2);
+        prototype2.SetInitHP(2);
         prototype2.SetAttackRange(2);
 
         GamePiece prototype3 = new GamePiece(context, this, 2);
-        prototype3.SetHP(1);
+        prototype3.SetInitHP(1);
         prototype3.SetAttackRange(2);
 
         GamePiece prototype4 = new GamePiece(context, this, 3);
-        prototype4.SetHP(2);
+        prototype4.SetInitHP(2);
         prototype4.SetAttackRange(4);
 
         piecePrototypes = new ArrayList<GamePiece>();
