@@ -136,34 +136,6 @@ public class GameBoard {
             return null;
     }
 
-/*    private void AddPrototypes(){
-        ArrayList<PieceState> pieceDefs1 = GameManager.GetPlayer1Pieces();
-        ArrayList<PieceState> pieceDefs2 = GameManager.GetPlayer2Pieces();
-
-        GamePiece prototype1 = new GamePiece(context, this, 0);
-        prototype1.SetHP(pieceDefs1.get(0).HP);
-        prototype1.SetAttackRange(pieceDefs1.get(0).attackRange);
-        prototype1.patterns
-
-        GamePiece prototype2 = new GamePiece(context, this, 1);
-        prototype2.SetHP(2);
-        prototype2.SetAttackRange(2);
-
-        GamePiece prototype3 = new GamePiece(context, this, 2);
-        prototype3.SetHP(1);
-        prototype3.SetAttackRange(2);
-
-        GamePiece prototype4 = new GamePiece(context, this, 3);
-        prototype4.SetHP(2);
-        prototype4.SetAttackRange(4);
-
-        piecePrototypes1 = new ArrayList<GamePiece>();
-
-        piecePrototypes1.add(prototype1);
-        piecePrototypes1.add(prototype2);
-        piecePrototypes1.add(prototype3);
-        piecePrototypes1.add(prototype4);
-    }*/
 
     public void AddStaticObjects(){
         Obstacle o = new Obstacle(context, 3, 7);

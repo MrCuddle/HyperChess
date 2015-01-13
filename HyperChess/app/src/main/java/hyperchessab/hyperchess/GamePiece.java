@@ -24,7 +24,7 @@ public class GamePiece extends GameObject {
     int gridPosX, gridPosY, startPosX, startPosY;
 
     int attackRange;
-    int HP;
+    int HP, initHP;
     int shapeType;
     GameBoard board;
     List<MovePattern> patterns;
@@ -76,7 +76,7 @@ public class GamePiece extends GameObject {
         patterns = piece.patterns;
         selected = piece.selected;
         attackRange = piece.attackRange;
-        SetHP(piece.HP);
+        SetInitHP(piece.HP);
         shapeType = piece.shapeType;
     }
 
@@ -84,6 +84,8 @@ public class GamePiece extends GameObject {
         this.context = context;
         gridPosX = state.gridPosX;
         gridPosY = state.gridPosY;
+        startPosX = state.startPosX;
+        startPosY = state.startPosY;
         posX = gridPosX * GameBoard.TileSize;
         posY = gridPosY * GameBoard.TileSize;
         switch(state.shapeType){
@@ -125,6 +127,7 @@ public class GamePiece extends GameObject {
         patterns = state.movePatterns;
         attackRange = state.attackRange;
         HP = state.HP;
+        initHP = state.initHP;
         ((HPDrawable)shape).setHP(HP);
         ((HPDrawable)shape).setColor(owner.GetPrimaryColor(),owner.GetSecondaryColor(), owner.GetTertiaryColor());
 
@@ -154,6 +157,8 @@ public class GamePiece extends GameObject {
         ps.attackY = attackY;
         ps.gridPosX = gridPosX;
         ps.gridPosY = gridPosY;
+        ps.startPosX = startPosX;
+        ps.startPosY = startPosY;
         ps.hasFlag = flag != null;
         ps.movePatterns = patterns;
         ps.owner = (board.getGame().players.get(0) == owner ? 0 : 1);
@@ -161,6 +166,7 @@ public class GamePiece extends GameObject {
         ps.selected = selected;
         ps.attackRange = attackRange;
         ps.HP = HP;
+        ps.initHP = initHP;
         return ps;
     }
 
@@ -179,6 +185,10 @@ public class GamePiece extends GameObject {
         this.attackRange = range;
     }
 
+    public void SetInitHP(int hp){
+        initHP = HP = hp;
+        ((HPDrawable)shape).setHP(hp);
+    }
     public void SetHP(int hp){
         HP = hp;
         ((HPDrawable)shape).setHP(hp);
@@ -256,6 +266,7 @@ public class GamePiece extends GameObject {
                 }
             }
         }
+        SetHP(initHP);
     }
 
     public void SetPatterns(List<MovePattern> patterns){

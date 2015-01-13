@@ -9,6 +9,8 @@ public class PieceState {
 
     public int gridPosX;
     public int gridPosY;
+    public int startPosX;
+    public int startPosY;
     public int shapeType;
     public int owner;
     public boolean hasFlag;
@@ -18,5 +20,6 @@ public class PieceState {
     public int attackX, attackY;
     public int attackRange;
     public int HP;
+    public int initHP;
 
 }
