@@ -33,6 +33,8 @@ public class Designer extends Game {
     Path drawPath = new Path();
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
 
+    Object sync = new Object();
+
     public Designer(Context context, Camera camera){
         super(context, camera, false, 0, "");
         this.camera = camera;
@@ -131,25 +133,27 @@ public class Designer extends Game {
 
     @Override
     public void Draw(Canvas c) {
-        c.setMatrix(camera.getTransform());
-        c.drawColor(Color.BLACK);
+        synchronized (sync) {
+            c.setMatrix(camera.getTransform());
+            c.drawColor(Color.BLACK);
 
-        for (int x = 0; x < ARRAYWIDTH; x++) {
-            for (int y = 0; y < ARRAYHEIGHT; y++) {
-                tiles[x][y].draw(c);
+            for (int x = 0; x < ARRAYWIDTH; x++) {
+                for (int y = 0; y < ARRAYHEIGHT; y++) {
+                    tiles[x][y].draw(c);
+                }
             }
-        }
 
-        for (int i = 0; i < highlights.size(); i++) {
-            highlights.get(i).draw(c);
-        }
+            for (int i = 0; i < highlights.size(); i++) {
+                highlights.get(i).draw(c);
+            }
 
-        c.drawPath(drawPath, linePaint);
-        if(arrow != null){
-            arrow.setColorFilter(Color.argb(255,50,50,255), PorterDuff.Mode.SRC);
-            arrow.draw(c);
+            c.drawPath(drawPath, linePaint);
+            if (arrow != null) {
+                arrow.setColorFilter(Color.argb(255, 50, 50, 255), PorterDuff.Mode.SRC);
+                arrow.draw(c);
+            }
+            pieceStart.draw(c);
         }
-        pieceStart.draw(c);
 
     }
 
@@ -277,44 +281,44 @@ public class Designer extends Game {
     }
 
     public void SetPattern(MovePattern p, int index){
+        synchronized (sync) {
+            int x = STARTPOINT.x, y = STARTPOINT.y;
 
-        int x = STARTPOINT.x, y = STARTPOINT.y;
+            SetpieceDrawable(index);
 
-        SetpieceDrawable(index);
-
-        for (int i = 0; i < ARRAYWIDTH; i++) {
-            for (int j = 0; j < ARRAYHEIGHT; j++) {
-                directions[i][j] = MovePattern.Direction.NODIRECTION;
-            }
-        }
-        pattern = new MovePattern();
-        drawPath.reset();
-        ClearHighlights();
-        SetStart(STARTPOINT.x, STARTPOINT.y);
-        HighlightAdjacent(x, y);
-
-        if(p != null) {
-            for (int i = 0; i < p.Size(); i++) {
-                int dir = p.Get(i);
-                switch (dir) {
-                    case MovePattern.Direction.UP:
-                        y--;
-                        break;
-                    case MovePattern.Direction.RIGHT:
-                        x++;
-                        break;
-                    case MovePattern.Direction.DOWN:
-                        y++;
-                        break;
-                    case MovePattern.Direction.LEFT:
-                        x--;
-                        break;
+            for (int i = 0; i < ARRAYWIDTH; i++) {
+                for (int j = 0; j < ARRAYHEIGHT; j++) {
+                    directions[i][j] = MovePattern.Direction.NODIRECTION;
                 }
-                AddToPattern(tiles[x][y], x, y);
             }
-        }
-        HighlightAdjacent(x, y);
+            pattern = new MovePattern();
+            drawPath.reset();
+            ClearHighlights();
+            SetStart(STARTPOINT.x, STARTPOINT.y);
+            HighlightAdjacent(x, y);
 
+            if (p != null) {
+                for (int i = 0; i < p.Size(); i++) {
+                    int dir = p.Get(i);
+                    switch (dir) {
+                        case MovePattern.Direction.UP:
+                            y--;
+                            break;
+                        case MovePattern.Direction.RIGHT:
+                            x++;
+                            break;
+                        case MovePattern.Direction.DOWN:
+                            y++;
+                            break;
+                        case MovePattern.Direction.LEFT:
+                            x--;
+                            break;
+                    }
+                    AddToPattern(tiles[x][y], x, y);
+                }
+            }
+            HighlightAdjacent(x, y);
+        }
     }
 
     public interface DesignerListener{
