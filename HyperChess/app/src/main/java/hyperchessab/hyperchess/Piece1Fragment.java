@@ -132,6 +132,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             rangespinnerpoints = temp;
             playerPoints -= rangespinnerpoints;
             rangespinnerpoints = spinnerValue;
+            if(currentPiece == null){
+                currentPiece = new PieceState();
+                currentPiece.attackRange = 1;
+                currentPiece.HP = 1;
+            }
+            currentPiece.attackRange = rangespinnerpoints + 1;
         }
     }
 
@@ -142,10 +148,17 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             healthspinnerpoints = temp;
             playerPoints -= healthspinnerpoints;
             healthspinnerpoints = spinnerValue;
+            if(currentPiece == null){
+                currentPiece = new PieceState();
+                currentPiece.attackRange = 1;
+                currentPiece.HP = 1;
+            }
+            currentPiece.HP = healthspinnerpoints + 1;
         }
 
         designer.SetpieceDrawableHP(healthspinnerpoints + 1);
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -179,14 +192,24 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     public void ChangeCurrentPiece(int index){
         if (index < Settings.differentPieces && index >= 0){
-            SavePiece(designer.GetPattern(), healthspinnerpoints, rangespinnerpoints, currentPieceIndex);
+            if(currentPiece != null){
+                SavePiece(designer.GetPattern(), currentPiece.HP, currentPiece.attackRange, currentPieceIndex);
+            }
+
             currentPiece = pieces[index];
             if(currentPiece != null){
                 designer.SetPattern(currentPiece.movePatterns.get(0), index);
+                healthspinner.setSelection(currentPiece.HP - 1);
+                rangespinner.setSelection(currentPiece.attackRange - 1);
             } else {
                 designer.SetPattern(null, index);
+                healthspinner.setSelection(0);
+                rangespinner.setSelection(0);
             }
+
             currentPieceIndex = index;
+
+
         }
     }
 
@@ -194,6 +217,11 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     public void OnDesignerInteraction() {
         playerPoints--;
         currentPattern = designer.GetPattern();
+        if(currentPiece == null){
+            currentPiece = new PieceState();
+            currentPiece.attackRange = 1;
+            currentPiece.HP = 1;
+        }
     }
 
     @Override
