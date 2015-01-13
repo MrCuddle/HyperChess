@@ -1,10 +1,10 @@
 package hyperchessab.hyperchess;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,9 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     ArrayList<GameManager.SavePiece> pieces;
     Piece1Fragment fragment;
     ActionBar actionBar;
+    //Firebase fb;
+    //ChildEventListener dbListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,18 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         setFragment(fragment, false);
 
     }
+
+    /*@Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        InitFirebase();
+    }*/
 
     private void setFragment(Fragment f, boolean addToBackStack){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -113,5 +128,54 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 //        }
 //
 //    }
+
+    /*public void InitFirebase(){
+        fb = new Firebase(DatabaseManager.URL).child("games").child(gameId);
+        dbListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                boolean turnKey = dataSnapshot.getKey().equals("turn");
+                boolean notMyTurn = !MyTurn();
+                int playerNum = 0;
+                if(turnKey) playerNum = (int)((long)dataSnapshot.child("player").getValue());
+                //If it's not the local player's turn and a new turn is added to the database - execute the other player's move!
+                if(turnKey && notMyTurn && playerNum != Game.this.localPlayerNumber){
+                    int startX = (int)((long)dataSnapshot.child("moveStartX").getValue());
+                    int startY = (int)((long)dataSnapshot.child("moveStartY").getValue());
+                    int endX = (int)((long)dataSnapshot.child("moveEndX").getValue());
+                    int endY = (int)((long)dataSnapshot.child("moveEndY").getValue());
+                    int attackX = (int)((long)dataSnapshot.child("attackX").getValue());
+                    int attackY = (int)((long)dataSnapshot.child("attackY").getValue());
+
+                    ((GamePiece)board.GetTile(startX, startY).occupier).SimulateMove(endX, endY, attackX, attackY);
+
+                    //Get rid of the turn from the database
+                    fb.child("turn").removeValue();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+        fb.addChildEventListener(dbListener);
+    }*/
 
 }
