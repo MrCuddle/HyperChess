@@ -157,18 +157,33 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
         Firebase ref;
         if(player == 0) {
-            ref = fb.child("player1").push();
             pieceStates = GameManager.GetPlayer1Pieces();
         } else {
-            ref = fb.child("player2").push();
             pieceStates = GameManager.GetPlayer2Pieces();
         }
         for (int i = 0; i < pieceStates.size(); i++) {
+            if(player == 0) {
+                ref = fb.child("player1").push();
+            } else {
+                ref = fb.child("player2").push();
+            }
             ref.child("HP").setValue(pieceStates.get(i).HP);
             ref.child("attackRange").setValue(pieceStates.get(i).attackRange);
             ref.child("shapeType").setValue(pieceStates.get(i).shapeType);
             ref.child("movePatterns").setValue(pieceStates.get(i).movePatterns);
         }
+
+    }
+
+    void StartGame(){
+
+        Intent intent = new Intent(this, MainGameActivity.class);
+        intent.putExtra("startgame", online);
+        intent.putExtra("online", online);
+        intent.putExtra("player", player);
+        intent.putExtra("gameId", gameId);
+
+        startActivity(intent);
 
     }
 
@@ -189,7 +204,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 if(otherPlayer){
                     if(player == 0){
                         ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
-                        Iterator<DataSnapshot> i = dataSnapshot.child("player2").getChildren().iterator();
+                        Iterator<DataSnapshot> i = dataSnapshot.getChildren().iterator();
                         while(i.hasNext()){
                             DataSnapshot ds = i.next();
 
@@ -200,10 +215,13 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                             ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
                             pieceStates.add(ps);
                         }
-                        //Save them somewhere...
+                        GameManager.SetPlayer2Pieces(pieceStates);
+                        if(GameManager.GetPlayer1Pieces() != null){
+                            //START THE GAME HERE!
+                        }
                     } else {
                         ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
-                        Iterator<DataSnapshot> i = dataSnapshot.child("player1").getChildren().iterator();
+                        Iterator<DataSnapshot> i = dataSnapshot.getChildren().iterator();
                         while(i.hasNext()){
                             DataSnapshot ds = i.next();
 
@@ -214,7 +232,10 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                             ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
                             pieceStates.add(ps);
                         }
-                        //Save them somewhere...
+                        GameManager.SetPlayer1Pieces(pieceStates);
+                        if(GameManager.GetPlayer2Pieces() != null){
+                            //START THE GAME HERE
+                        }
                     }
 
                 }

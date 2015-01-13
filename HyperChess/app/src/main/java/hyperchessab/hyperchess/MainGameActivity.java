@@ -23,7 +23,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
 //        Debug.startMethodTracing("trace");
         //getFragmentManager().beginTransaction().replace(R.id.fragment_container,new GameFragment(),"game_fragment").commit();
-        setFragment(new MainMenuFragment(), false);
+
         GameManager.Load(this);
 
         Firebase.setAndroidContext(this);
@@ -33,6 +33,19 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("ingame", false);
         editor.commit();
+
+        Intent intent = getIntent();
+        if(intent.getExtras() != null){
+            if(intent.getExtras().getBoolean("startgame", false)){
+                setFragment(GameFragment.newInstance(intent.getExtras().getBoolean("online", false),
+                                                        intent.getExtras().getInt("player", 0),
+                                                        intent.getExtras().getString("gameId", "")), true);
+            } else {
+                setFragment(new MainMenuFragment(), false);
+            }
+        } else {
+            setFragment(new MainMenuFragment(), false);
+        }
     }
 
     @Override
