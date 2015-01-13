@@ -6,7 +6,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class DesignerActivity extends ActionBarActivity implements ActionBar.TabListener, Piece1Fragment.Piece1Listener{
 
@@ -16,14 +22,26 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     ArrayList<GameManager.SavePiece> pieces;
     Piece1Fragment fragment;
     ActionBar actionBar;
-    //Firebase fb;
-    //ChildEventListener dbListener;
+    Firebase fb;
+    ChildEventListener dbListener;
+    boolean online = false;
+    int player; //Only used if playing online
+    String gameId; //Only used if playing online
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
+
+
+        if(savedInstanceState != null){
+            online = savedInstanceState.getBoolean("online", false);
+            if(online){
+                player = savedInstanceState.getInt("player", 0);
+                gameId = savedInstanceState.getString("gameId","");
+            }
+        }
 
 //        for (int i = 0; i < Settings.differentPieces; i++) {
 //            types.add("Name" + i);
@@ -53,17 +71,25 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
     }
 
-    /*@Override
+    @Override
     protected void onPause() {
         super.onPause();
+
+        //Remove firebase child event listener
+        if(online){
+            fb.removeEventListener(dbListener);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        InitFirebase();
-    }*/
+        //Set firebase child event listener
+        if(online) {
+            InitFirebase();
+        }
+    }
 
     private void setFragment(Fragment f, boolean addToBackStack){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -129,29 +155,72 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 //
 //    }
 
-    /*public void InitFirebase(){
+   /* public void SendPieceDefinitionsToFirebase(){
+        //TO REPLACE WITH CORRECT ARRAYLIST
+        ArrayList<PieceState> pieceStates;
+
+        Firebase ref;
+        if(player == 0) {
+            ref = fb.child("player1").push();
+            //pieceStates = GameManager.something
+        } else {
+            ref = fb.child("player2").push();
+            //pieceStates = GameManager.somethingelse
+        }
+        for (int i = 0; i < pieceStates.size(); i++) {
+            ref.child("HP").setValue(pieceStates.get(i).HP);
+            ref.child("attackRange").setValue(pieceStates.get(i).attackRange);
+            ref.child("shapeType").setValue(pieceStates.get(i).shapeType);
+            ref.child("movePatterns").setValue(pieceStates.get(i).movePatterns);
+        }
+
+    }*/
+
+    public void InitFirebase(){
         fb = new Firebase(DatabaseManager.URL).child("games").child(gameId);
         dbListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                boolean turnKey = dataSnapshot.getKey().equals("turn");
-                boolean notMyTurn = !MyTurn();
-                int playerNum = 0;
-                if(turnKey) playerNum = (int)((long)dataSnapshot.child("player").getValue());
-                //If it's not the local player's turn and a new turn is added to the database - execute the other player's move!
-                if(turnKey && notMyTurn && playerNum != Game.this.localPlayerNumber){
-                    int startX = (int)((long)dataSnapshot.child("moveStartX").getValue());
-                    int startY = (int)((long)dataSnapshot.child("moveStartY").getValue());
-                    int endX = (int)((long)dataSnapshot.child("moveEndX").getValue());
-                    int endY = (int)((long)dataSnapshot.child("moveEndY").getValue());
-                    int attackX = (int)((long)dataSnapshot.child("attackX").getValue());
-                    int attackY = (int)((long)dataSnapshot.child("attackY").getValue());
+                //We're interested in pieces sent by the other player
+                boolean otherPlayer;
+                if(player == 0)
+                    otherPlayer = dataSnapshot.getKey().equals("player2");
+                else
+                    otherPlayer = dataSnapshot.getKey().equals("player1");
 
-                    ((GamePiece)board.GetTile(startX, startY).occupier).SimulateMove(endX, endY, attackX, attackY);
+                //If the pieces were designed by the other player....
+                if(otherPlayer){
+                    if(player == 0){
+                        ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
+                        Iterator<DataSnapshot> i = dataSnapshot.child("player2").getChildren().iterator();
+                        while(i.hasNext()){
+                            DataSnapshot ds = i.next();
 
-                    //Get rid of the turn from the database
-                    fb.child("turn").removeValue();
+                            PieceState ps = new PieceState();
+                            ps.HP = (int)((long)ds.child("HP").getValue());
+                            ps.attackRange = (int)((long)ds.child("HP").getValue());
+                            ps.shapeType = (int)((long)ds.child("HP").getValue());
+                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
+                            pieceStates.add(ps);
+                        }
+                        //Save them somewhere...
+                    } else {
+                        ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
+                        Iterator<DataSnapshot> i = dataSnapshot.child("player1").getChildren().iterator();
+                        while(i.hasNext()){
+                            DataSnapshot ds = i.next();
+
+                            PieceState ps = new PieceState();
+                            ps.HP = (int)((long)ds.child("HP").getValue());
+                            ps.attackRange = (int)((long)ds.child("HP").getValue());
+                            ps.shapeType = (int)((long)ds.child("HP").getValue());
+                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
+                            pieceStates.add(ps);
+                        }
+                        //Save them somewhere...
+                    }
+
                 }
             }
 
@@ -176,6 +245,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
             }
         };
         fb.addChildEventListener(dbListener);
-    }*/
+    }
 
 }
