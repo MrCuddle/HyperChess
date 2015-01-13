@@ -60,6 +60,9 @@ public class DesignerView extends GameView {
     }
 
     @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height, desiredHeight;
         desiredHeight = GetDesigner().GetHeight();
