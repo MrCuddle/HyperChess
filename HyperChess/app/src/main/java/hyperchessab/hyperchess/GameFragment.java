@@ -1,12 +1,17 @@
 package hyperchessab.hyperchess;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +42,11 @@ public class GameFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
@@ -50,7 +60,7 @@ public class GameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         gameView = new GameView(getActivity(), online, player, id);
-
+        setHasOptionsMenu(true);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         //Load saved game state if one exists, otherwise, populate the game with the default starting layout
         if(sharedPref.getBoolean("ingame",false)){
@@ -83,16 +93,23 @@ public class GameFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_in_game, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onPause() {
         gameView.StopGameLoop();
         super.onPause();
-
+        ((ActionBarActivity)getActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onResume() {
         gameView.StartGameLoop();
         super.onResume();
-
+        ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+        actionBar.show();
     }
 }

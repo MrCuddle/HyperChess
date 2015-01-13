@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 
@@ -34,6 +35,15 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         editor.commit();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setCustomView(R.layout.action_bar_game);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.hide();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

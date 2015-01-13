@@ -1,9 +1,12 @@
 package hyperchessab.hyperchess;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -35,11 +38,14 @@ public class Game {
     ChildEventListener dbListener;
     Firebase fb;
 
+    Context context;
+
     public Object sync = new Object();
 
     private Turn thisTurn;
 
     public Game(Context context, Camera camera, boolean online, int player, String gameId){
+        this.context = context;
         players.add(new Player(0));
         players.add(new Player(1));
         players.get(0).SetPrimaryColor(Color.argb(255,147,79,236));
@@ -59,6 +65,8 @@ public class Game {
         camera.setBounds(board.Width * GameBoard.TileSize, board.Height * GameBoard.TileSize);
         currentPlayer = 0;
         hud = new HUD();
+
+        //UpdateActionBarText();
 
         //If playing online, register to listen for turn data
         if(online){
@@ -131,7 +139,7 @@ public class Game {
                 break;
         }
 
-        hud.Update();
+        //hud.Update();
     }
 
     public void IncrementCurrentPlayer(){
@@ -142,15 +150,34 @@ public class Game {
         }
 
         currentPlayer = (currentPlayer + 1) % 2;
-        hud.SetCurrentPlayer(currentPlayer);
+        //hud.SetCurrentPlayer(currentPlayer);
+        UpdateActionBarText();
+    }
+
+    public void InitializeActionBar(){
+        UpdateActionBarText();
+    }
+    private void UpdateActionBarText(){
+        final String scoreAsString = (currentPlayer == 0) ?
+                "[" + GameData.teamOneScore + "]" + " - " + GameData.teamTwoScore :
+                    GameData.teamOneScore + " - " + "[" + GameData.teamTwoScore + "]";
+        ((ActionBarActivity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView view = (TextView)(((ActionBarActivity)context).findViewById(R.id.action_bar_score_text_view));
+                view.setText(scoreAsString);
+            }
+        });
+
+
     }
 
     public void Draw(Canvas c){
         c.setMatrix(camera.getTransform());
         //c.drawColor(Color.BLACK);
         board.Draw(c);
-        c.setMatrix(new Matrix());
-        hud.Draw(c);
+        //c.setMatrix(new Matrix());
+        //hud.Draw(c);
     }
 
     public boolean MyTurn(){

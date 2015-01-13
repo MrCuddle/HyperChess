@@ -41,8 +41,4 @@ public class GameListing {
     public void setPlayers(int players) {
         this.players = players;
     }
-
-
-
-
 }
