@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class GameStatePackage {
 
+    public String gameID;
     public boolean online;
     public int playerNumber;
     public int currentPlayer;

@@ -11,9 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.widget.Toast;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 
 public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener, LobbyFragment.LobbyFragmentListener, CreateGameFragment.CreateGameFragmentListener {
@@ -67,14 +65,14 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onExitPressed() {
-        Toast.makeText(this, "Exit Pressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Exit Pressed", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     @Override
     public void onOptionsPressed() {
         setFragment(new OptionFragment(), true);
-        Toast.makeText(this, "Options Pressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Options Pressed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -94,14 +92,19 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     public void onCreatePressed(){
         setFragment(new CreateGameFragment(), true);
-        Toast.makeText(this, "Create Game Pressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Create Game Pressed", Toast.LENGTH_SHORT).show();
 
     }
 
     public void onJoinPressed(){
         setFragment(new LobbyFragment(), true);
-        Toast.makeText(this, "Join Game Pressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Join Game Pressed", Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void onContinuePressed(){
+        //Correct parameters not needed since they'll be filled in later
+        setFragment(GameFragment.newInstance(false,0,""),true);
     }
 
     @Override
@@ -121,6 +124,8 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         //Start game as player 1
         setFragment(GameFragment.newInstance(true,0, g.getId()), true);
     }
+
+
 
 
 }

@@ -73,6 +73,7 @@ public class GameFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         String state = gameView.game.GameStateToJSON();
 
+        editor.putBoolean("online", online);
         editor.putBoolean("ingame", true);
         editor.putString("gamestate",state);
         editor.commit();

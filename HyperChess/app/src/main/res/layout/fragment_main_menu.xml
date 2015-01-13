@@ -73,10 +73,18 @@
             />
 
         <Button
-            android:id="@+id/mainmenu_button_play"
+        android:id="@+id/mainmenu_button_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/play"
+        android:layout_above="@+id/mainmenu_button_continue"
+        android:background="@drawable/menu_button_shape"
+        android:layout_marginBottom="@dimen/menu_margin_buttons"/>
+        <Button
+            android:id="@+id/mainmenu_button_continue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/play"
+            android:text="@string/continue_game"
             android:layout_above="@+id/mainmenu_button_exit"
             android:background="@drawable/menu_button_shape"
             android:layout_marginBottom="@dimen/menu_margin_buttons"/>

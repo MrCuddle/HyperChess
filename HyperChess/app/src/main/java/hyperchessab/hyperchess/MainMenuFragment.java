@@ -1,6 +1,8 @@
 package hyperchessab.hyperchess;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,7 +23,7 @@ import com.firebase.client.FirebaseError;
  */
 public class MainMenuFragment extends Fragment {
 
-    Button play, options, exit, create, join;
+    Button play, options, exit, create, join, continue_game;
 
     private OnMainMenuInteractionListener mListener;
 
@@ -49,7 +51,20 @@ public class MainMenuFragment extends Fragment {
         exit = (Button)v.findViewById(R.id.mainmenu_button_exit);
         create = (Button)v.findViewById(R.id.mainmenu_button_create);
         join = (Button)v.findViewById(R.id.mainmenu_button_join);
+        continue_game = (Button)v.findViewById(R.id.mainmenu_button_continue);
 
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("ingame",false)){
+            create.setVisibility(View.GONE);
+            join.setVisibility(View.GONE);
+            play.setVisibility(View.GONE);
+        } else {
+            continue_game.setVisibility(View.GONE);
+        }
+
+        if(sharedPreferences.getBoolean("online", false)){
+            continue_game.setEnabled(false);
+        }
         //Disable the online play buttons until we connect to firebase
         create.setEnabled(false);
         join.setEnabled(false);
@@ -59,6 +74,7 @@ public class MainMenuFragment extends Fragment {
         exit.setOnClickListener(buttonListener);
         create.setOnClickListener(buttonListener);
         join.setOnClickListener(buttonListener);
+        continue_game.setOnClickListener(buttonListener);
 
         Button b = (Button)v.findViewById(R.id.mainmenu_button_designer);
         b.setOnClickListener(buttonListener);
@@ -89,6 +105,8 @@ public class MainMenuFragment extends Fragment {
                 case R.id.mainmenu_button_join:
                     mListener.onJoinPressed();
                     break;
+                case R.id.mainmenu_button_continue:
+                    mListener.onContinuePressed();
             }
         }
     }
@@ -118,7 +136,7 @@ public class MainMenuFragment extends Fragment {
 
                 create.setEnabled(true);
                 join.setEnabled(true);
-
+                continue_game.setEnabled(true);
             }
 
             @Override
@@ -140,6 +158,7 @@ public class MainMenuFragment extends Fragment {
         public void onDesignerPressed();
         public void onCreatePressed();
         public void onJoinPressed();
+        public void onContinuePressed();
     }
 
 }

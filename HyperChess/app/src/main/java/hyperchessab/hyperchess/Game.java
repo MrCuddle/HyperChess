@@ -60,57 +60,59 @@ public class Game {
         currentPlayer = 0;
         hud = new HUD();
 
-
-
         //If playing online, register to listen for turn data
         if(online){
-            fb = new Firebase(DatabaseManager.URL).child("games").child(gameId);
-            dbListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                    boolean turnKey = dataSnapshot.getKey().equals("turn");
-                    boolean notMyTurn = !MyTurn();
-                    int playerNum = 0;
-                    if(turnKey) playerNum = (int)((long)dataSnapshot.child("player").getValue());
-                    //If it's not the local player's turn and a new turn is added to the database - execute the other player's move!
-                    if(turnKey && notMyTurn && playerNum != Game.this.localPlayerNumber){
-                        int startX = (int)((long)dataSnapshot.child("moveStartX").getValue());
-                        int startY = (int)((long)dataSnapshot.child("moveStartY").getValue());
-                        int endX = (int)((long)dataSnapshot.child("moveEndX").getValue());
-                        int endY = (int)((long)dataSnapshot.child("moveEndY").getValue());
-                        int attackX = (int)((long)dataSnapshot.child("attackX").getValue());
-                        int attackY = (int)((long)dataSnapshot.child("attackY").getValue());
-
-                        ((GamePiece)board.GetTile(startX, startY).occupier).SimulateMove(endX, endY, attackX, attackY);
-
-                        //Get rid of the turn from the database
-                        fb.child("turn").removeValue();
-                    }
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            };
-            fb.addChildEventListener(dbListener);
+            InitFirebase();
         }
+    }
+
+    public void InitFirebase(){
+        fb = new Firebase(DatabaseManager.URL).child("games").child(gameId);
+        dbListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                boolean turnKey = dataSnapshot.getKey().equals("turn");
+                boolean notMyTurn = !MyTurn();
+                int playerNum = 0;
+                if(turnKey) playerNum = (int)((long)dataSnapshot.child("player").getValue());
+                //If it's not the local player's turn and a new turn is added to the database - execute the other player's move!
+                if(turnKey && notMyTurn && playerNum != Game.this.localPlayerNumber){
+                    int startX = (int)((long)dataSnapshot.child("moveStartX").getValue());
+                    int startY = (int)((long)dataSnapshot.child("moveStartY").getValue());
+                    int endX = (int)((long)dataSnapshot.child("moveEndX").getValue());
+                    int endY = (int)((long)dataSnapshot.child("moveEndY").getValue());
+                    int attackX = (int)((long)dataSnapshot.child("attackX").getValue());
+                    int attackY = (int)((long)dataSnapshot.child("attackY").getValue());
+
+                    ((GamePiece)board.GetTile(startX, startY).occupier).SimulateMove(endX, endY, attackX, attackY);
+
+                    //Get rid of the turn from the database
+                    fb.child("turn").removeValue();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+        fb.addChildEventListener(dbListener);
     }
 
     public void RemoveListeners(){
@@ -170,6 +172,7 @@ public class Game {
 
 
         GameStatePackage gsp = new GameStatePackage();
+        gsp.gameID = gameId;
         gsp.currentPlayer = currentPlayer;
         gsp.online = online;
         gsp.player1Points = 899;
@@ -195,8 +198,13 @@ public class Game {
         localPlayerNumber = gsp.playerNumber;
         currentGameState = gsp.currentGameState;
         board.AddObjects(gsp.pieces);
+        gameId = gsp.gameID;
 
         hud.SetCurrentPlayer(currentPlayer);
+
+        if(online){
+            InitFirebase();
+        }
 
     }
 }
