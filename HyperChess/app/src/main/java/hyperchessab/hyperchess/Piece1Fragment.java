@@ -188,6 +188,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 UpdateActionBarTitle();
                 break;
             case R.id.Piece1Fragment_finishbtn:
+                
                 break;
         }
 
