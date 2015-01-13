@@ -53,6 +53,15 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         ft.commit();
     }
 
+    private void StartDesigner(boolean online, int player, String gameId){
+        Intent designerIntent = new Intent(this, DesignerActivity.class);
+        designerIntent.putExtra("online", online);
+        designerIntent.putExtra("player", player);
+        designerIntent.putExtra("gameId", gameId);
+
+        startActivity(designerIntent);
+    }
+
     @Override
     public void onBackPressed() {
         if(getFragmentManager().getBackStackEntryCount() <= 0){
@@ -82,10 +91,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onDesignerPressed() {
-        Toast.makeText(this, "Designer Pressed", Toast.LENGTH_SHORT).show();
-        Intent getChatScreen = new Intent(this, DesignerActivity.class);
-
-        startActivity(getChatScreen);
+        StartDesigner(false, 0, "hej");
         //finish();
 
     }

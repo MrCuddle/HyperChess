@@ -1,6 +1,7 @@
 package hyperchessab.hyperchess;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
@@ -17,6 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +44,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     GameManager.SavePiece currentPiece;
     int currentPieceIndex;
+
+    private ArrayList<PieceState> pieces = new ArrayList<>();
 
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
@@ -186,6 +192,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     public void ChangeCurrentPiece(int index){
         if (index < Settings.differentPieces && index >= 0){
+            SavePiece(designer.GetPattern(), healthspinnerpoints, rangespinnerpoints, index);
             currentPiece = GameManager.GetSavePiece(index);
             currentPieceIndex = index;
             designer.SetPattern(currentPiece.pattern, index);
@@ -214,4 +221,27 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     public interface Piece1Listener{
         public void OnPieceNameChange(int index, String name);
     }
+
+    private void SavePiece(MovePattern pattern, int health, int range, int id){
+        PieceState piece = new PieceState();
+        piece.attackRange = range;
+        piece.HP = health;
+        ArrayList<MovePattern> newPatterns = new ArrayList<>();
+        //Init patterlist
+        for (int i = 0; i < 4; i++) {
+            newPatterns.add(new MovePattern());
+        }
+
+        //For every pattern in newPattern, for every move in pattern
+        for (int p = 0; p < 4; p++) {
+            for (int m = 0; m < pattern.Size(); m++) {
+                int newDir = (pattern.Get(m) + p) % 4;
+                newPatterns.get(p).AddDirection(newDir);
+            }
+        }
+
+        piece.movePatterns = newPatterns;
+
+    }
+
 }

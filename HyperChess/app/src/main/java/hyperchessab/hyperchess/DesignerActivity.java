@@ -25,13 +25,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
 
-//        for (int i = 0; i < Settings.differentPieces; i++) {
-//            types.add("Name" + i);
-//        }
-//        adapter = new Piece1FragmentAdapter(getSupportFragmentManager(), types);
-//        viewPager = (ViewPager)findViewById(R.id.designer_pager);
-//        viewPager.setAdapter(adapter);
-
         pieces = GameManager.GetUserSavePieces();
 
         actionBar = getSupportActionBar();
