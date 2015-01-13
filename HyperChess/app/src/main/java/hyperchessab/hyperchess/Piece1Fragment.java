@@ -1,5 +1,6 @@
 package hyperchessab.hyperchess;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -179,6 +180,24 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         listener.OnPieceNameChange(currentPieceIndex, v.getText().toString());
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (Piece1Listener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+
     public void OnButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
@@ -188,7 +207,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 UpdateActionBarTitle();
                 break;
             case R.id.Piece1Fragment_finishbtn:
-                
+                listener.OnFinishedDesigning(pieces);
                 break;
         }
 
@@ -233,7 +252,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         piece.HP = health;
         piece.shapeType = id;
         ArrayList<MovePattern> newPatterns = new ArrayList<>();
-        //Init patterlist
+        //Init patternlist
         for (int i = 0; i < 4; i++) {
             newPatterns.add(new MovePattern());
         }

@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -122,13 +121,15 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     @Override
     public void onGameClicked(GameListing g) {
         //Start game as player 2
-        setFragment(GameFragment.newInstance(true,1, g.getId()), true);
+        //setFragment(GameFragment.newInstance(true,1, g.getId()), true);
+        StartDesigner(true,1,g.getId());
     }
 
     @Override
     public void onCreateGame(GameListing g) {
         //Start game as player 1
-        setFragment(GameFragment.newInstance(true,0, g.getId()), true);
+        //setFragment(GameFragment.newInstance(true,0, g.getId()), true);
+        StartDesigner(true,0,g.getId());
     }
 
 

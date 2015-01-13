@@ -1,5 +1,6 @@
 package hyperchessab.hyperchess;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class DesignerActivity extends ActionBarActivity implements ActionBar.TabListener, Piece1Fragment.Piece1Listener{
@@ -25,7 +27,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     Firebase fb;
     ChildEventListener dbListener;
     boolean online = false;
-    int player; //Only used if playing online
+    int player = 0; //Only used if playing online
     String gameId; //Only used if playing online
 
 
@@ -34,11 +36,12 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
 
-        if(savedInstanceState != null){
-            online = savedInstanceState.getBoolean("online", false);
+        Intent intent = getIntent();
+        if(intent != null){
+            online = intent.getExtras().getBoolean("online", false);
             if(online){
-                player = savedInstanceState.getInt("player", 0);
-                gameId = savedInstanceState.getString("gameId","");
+                player = intent.getExtras().getInt("player", 0);
+                gameId = intent.getExtras().getString("gameId","");
             }
         }
         pieces = GameManager.GetUserSavePieces();
@@ -114,8 +117,32 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     }
 
     @Override
-    public void OnFinishedDesigning(PieceState[] resut) {
-        PieceState[] pieces = resut;
+    public void OnFinishedDesigning(PieceState[] result) {
+        if(online) {
+            ArrayList<PieceState> states = new ArrayList<PieceState>(Arrays.asList(result));
+            if(player == 0) {
+                GameManager.SetPlayer1Pieces(states);
+                SendPieceDefinitionsToFirebase();
+                if(GameManager.GetPlayer2Pieces() != null){
+                    //START THE GAME HERE!!!!!!!!
+                }
+            } else {
+                GameManager.SetPlayer2Pieces(states);
+                SendPieceDefinitionsToFirebase();
+                if(GameManager.GetPlayer1Pieces() != null){
+                    //START THE GAME HERE!!!!!!!!
+                }
+            }
+        } else {
+            ArrayList<PieceState> states = new ArrayList<PieceState>(Arrays.asList(result));
+            if(player == 0) {
+                GameManager.SetPlayer1Pieces(states);
+                player++;
+            } else {
+                GameManager.SetPlayer2Pieces(states);
+                //START THE GAME HERE!!!!!!!!!!!!!!!!!
+            }
+        }
     }
 
     @Override
@@ -125,47 +152,16 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         }
     }
 
-    @Override
-    public void OnFinishedDesigning(PieceState[] result) {
-        
-    }
-
-    //    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
-//        ArrayList<String> types;
-//        public Piece1FragmentAdapter(FragmentManager fm, ArrayList<String> types){
-//            super(fm);
-//            this.types = types;
-//        }
-//
-//        @Override
-//        public Fragment getItem(int i) {
-//            return Piece1Fragment.newInstance(i, this);
-//        }
-//
-//
-//        @Override
-//        public int getCount() {
-//            return Settings.differentPieces;
-//        }
-//
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return types.get(position);
-//        }
-//
-//    }
-
-   /* public void SendPieceDefinitionsToFirebase(){
-        //TO REPLACE WITH CORRECT ARRAYLIST
+    public void SendPieceDefinitionsToFirebase(){
         ArrayList<PieceState> pieceStates;
 
         Firebase ref;
         if(player == 0) {
             ref = fb.child("player1").push();
-            //pieceStates = GameManager.something
+            pieceStates = GameManager.GetPlayer1Pieces();
         } else {
             ref = fb.child("player2").push();
-            //pieceStates = GameManager.somethingelse
+            pieceStates = GameManager.GetPlayer2Pieces();
         }
         for (int i = 0; i < pieceStates.size(); i++) {
             ref.child("HP").setValue(pieceStates.get(i).HP);
@@ -174,7 +170,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
             ref.child("movePatterns").setValue(pieceStates.get(i).movePatterns);
         }
 
-    }*/
+    }
 
     public void InitFirebase(){
         fb = new Firebase(DatabaseManager.URL).child("games").child(gameId);
