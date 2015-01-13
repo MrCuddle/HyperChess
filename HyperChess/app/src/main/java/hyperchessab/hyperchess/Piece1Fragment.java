@@ -38,6 +38,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     int currentPieceIndex = 0;
     int playerPoints = Settings.playerPoints;
 
+    //Filled in by the method that checks if there are piece that are not finished yet
+    int indexOfANonFinishedPiece = 0;
+
     private PieceState[] pieces = new PieceState[Settings.differentPieces];
 
     private View.OnClickListener buttonListener = new View.OnClickListener(){
@@ -187,6 +190,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             case R.id.Piece1Fragment_finishbtn:
                 if(AllPiecesDesigned()){
                     listener.OnFinishedDesigning(pieces);
+                } else {
+
+                    ChangeTab(indexOfANonFinishedPiece);
                 }
 
                 break;
@@ -234,6 +240,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     public interface Piece1Listener{
         public void OnFinishedDesigning(PieceState[] result);
+        public void RequestTabChange(int tab);
     }
 
     private void SavePiece(MovePattern pattern, int health, int range, int id){
@@ -269,6 +276,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         for (int i = 0; i < pieces.length; i++) {
             if(pieces[i] == null){
                 allDesigned = false;
+                indexOfANonFinishedPiece = i;
+                break;
             }
         }
 
@@ -276,6 +285,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             for (int i = 0; i < pieces.length; i++) {
                 if(pieces[i].movePatterns.get(0).Size() == 0){
                     allHaveMovement = false;
+                    indexOfANonFinishedPiece = i;
+                    break;
                 }
             }
         } else {
@@ -283,6 +294,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         }
 
         return allDesigned && allHaveMovement;
+    }
+
+    private void ChangeTab(int position){
+        listener.RequestTabChange(position);
     }
 
 }

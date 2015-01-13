@@ -58,7 +58,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 tab.setTabListener(this);
                 actionBar.addTab(tab);
             }
-
         }
         fragment = Piece1Fragment.newInstance(this);
         setFragment(fragment, false);
@@ -144,6 +143,12 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
             }
         }
     }
+
+    @Override
+    public void RequestTabChange(int tab) {
+        getSupportActionBar().setSelectedNavigationItem(tab);
+    }
+
 
     public void OnPieceNameChange(int index, String name) {
         if(actionBar != null){
