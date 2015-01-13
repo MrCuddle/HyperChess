@@ -34,7 +34,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_designer);
 
-
         if(savedInstanceState != null){
             online = savedInstanceState.getBoolean("online", false);
             if(online){
@@ -42,14 +41,6 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 gameId = savedInstanceState.getString("gameId","");
             }
         }
-
-//        for (int i = 0; i < Settings.differentPieces; i++) {
-//            types.add("Name" + i);
-//        }
-//        adapter = new Piece1FragmentAdapter(getSupportFragmentManager(), types);
-//        viewPager = (ViewPager)findViewById(R.id.designer_pager);
-//        viewPager.setAdapter(adapter);
-
         pieces = GameManager.GetUserSavePieces();
 
         actionBar = getSupportActionBar();
@@ -129,8 +120,12 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         }
     }
 
+    @Override
+    public void OnFinishedDesigning(PieceState[] result) {
+        
+    }
 
-//    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
+    //    public static class Piece1FragmentAdapter extends FragmentPagerAdapter{
 //        ArrayList<String> types;
 //        public Piece1FragmentAdapter(FragmentManager fm, ArrayList<String> types){
 //            super(fm);

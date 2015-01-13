@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +32,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     int rangespinnerpoints;
 
     Button reset;
+    Button finish;
     Spinner healthspinner;
     Spinner rangespinner;
 
@@ -40,6 +42,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     GameManager.SavePiece currentPiece;
     int currentPieceIndex;
+
+    private PieceState[] pieces = new PieceState[4];
 
     private View.OnClickListener buttonListener = new View.OnClickListener(){
         @Override
@@ -73,6 +77,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_piece1, container, false);
+
+        finish = (Button) v.findViewById(R.id.Piece1Fragment_finishbtn);
+        finish.setOnClickListener(buttonListener);
 
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
         reset.setOnClickListener(buttonListener);
@@ -180,12 +187,15 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 //designerView.ResetDesigner();
                 UpdateActionBarTitle();
                 break;
+            case R.id.Piece1Fragment_finishbtn:
+                break;
         }
 
     }
 
     public void ChangeCurrentPiece(int index){
         if (index < Settings.differentPieces && index >= 0){
+            SavePiece(designer.GetPattern(), healthspinnerpoints, rangespinnerpoints, index);
             currentPiece = GameManager.GetSavePiece(index);
             currentPieceIndex = index;
             designer.SetPattern(currentPiece.pattern, index);
@@ -212,6 +222,31 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     }
 
     public interface Piece1Listener{
+        public void OnFinishedDesigning(PieceState[] result);
         public void OnPieceNameChange(int index, String name);
     }
+
+    private void SavePiece(MovePattern pattern, int health, int range, int id){
+        PieceState piece = new PieceState();
+        piece.attackRange = range;
+        piece.HP = health;
+        piece.shapeType = id;
+        ArrayList<MovePattern> newPatterns = new ArrayList<>();
+        //Init patterlist
+        for (int i = 0; i < 4; i++) {
+            newPatterns.add(new MovePattern());
+        }
+
+        //For every pattern in newPattern, for every move in pattern
+        for (int p = 0; p < 4; p++) {
+            for (int m = 0; m < pattern.Size(); m++) {
+                int newDir = (pattern.Get(m) + p) % 4;
+                newPatterns.get(p).AddDirection(newDir);
+            }
+        }
+
+        piece.movePatterns = newPatterns;
+        pieces[id] = piece;
+    }
+
 }
