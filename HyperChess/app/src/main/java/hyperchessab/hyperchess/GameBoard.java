@@ -62,7 +62,6 @@ public class GameBoard {
             this.pieces.add(gp);
             tiles[pieces.get(i).gridPosX][pieces.get(i).gridPosY].occupier = gp;
         }
-
     }
 
     public void AddObjects(){
@@ -98,8 +97,10 @@ public class GameBoard {
             p2.SetOwner(game.players.get(0));
 
             p1.SetPosition(teamOneStartPos.get(i).x,teamOneStartPos.get(i).y);
+            p1.SetStartPosition(teamOneStartPos.get(i).x,teamOneStartPos.get(i).y);
             tiles[teamOneStartPos.get(i).x][teamOneStartPos.get(i).y].occupier = p1;
             p2.SetPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
+            p2.SetStartPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
             tiles[teamOneStartPos.get(teamOneStartPos.size()-1- i).x][teamOneStartPos.get(teamOneStartPos.size()-1-i).y].occupier = p2;
 
             GamePiece p3 = new GamePiece(piecePrototypes.get(i));
@@ -108,8 +109,10 @@ public class GameBoard {
             p4.SetOwner(game.players.get(1));
 
             p3.SetPosition(teamTwoStartPos.get(i).x,teamTwoStartPos.get(i).y);
+            p3.SetStartPosition(teamTwoStartPos.get(i).x,teamTwoStartPos.get(i).y);
             tiles[teamTwoStartPos.get(i).x][teamTwoStartPos.get(i).y].occupier = p3;
             p4.SetPosition(teamTwoStartPos.get(teamTwoStartPos.size()-1-i).x,teamTwoStartPos.get(teamTwoStartPos.size()-1-i).y);
+            p4.SetStartPosition(teamTwoStartPos.get(teamTwoStartPos.size()-1-i).x,teamTwoStartPos.get(teamTwoStartPos.size()-1-i).y);
             tiles[teamTwoStartPos.get(teamTwoStartPos.size()-1-i).x][teamTwoStartPos.get(teamTwoStartPos.size()-1-i).y].occupier = p4;
 
             pieces.add(p1);
@@ -144,6 +147,15 @@ public class GameBoard {
         teamTwoStartPos.add(new Point(8, 11));
         teamTwoStartPos.add(new Point(9, 10));
         teamTwoStartPos.add(new Point(10, 11));
+    }
+
+    public ArrayList<Point> GetStartPositions(int teamId){
+        if(teamId == 0)
+            return teamOneStartPos;
+        else if(teamId == 1)
+            return teamTwoStartPos;
+        else
+            return null;
     }
 
     private void AddPrototypes(){

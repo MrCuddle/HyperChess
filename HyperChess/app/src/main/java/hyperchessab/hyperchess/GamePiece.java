@@ -21,8 +21,8 @@ public class GamePiece extends GameObject {
     Flag flag;
     float posX, posY;
     boolean selected;
-    int gridPosX;
-    int gridPosY;
+    int gridPosX, gridPosY, startPosX, startPosY;
+
     int attackRange;
     int HP;
     int shapeType;
@@ -229,6 +229,35 @@ public class GamePiece extends GameObject {
                 gridPosY*GameBoard.TileSize + GameBoard.TileSize);
     }
 
+    public void SetStartPosition(int x, int y){
+        startPosX = x;
+        startPosY = y;
+    }
+
+    private void ResetPosition(){
+        if(board.tiles[startPosX][startPosY].occupier == null) {
+            SetPosition(startPosX, startPosY);
+            board.tiles[startPosX][startPosY].occupier = this;
+        }
+        else{
+            ArrayList<Point> startPositions;
+            if(board.getGame().players.get(0) == owner) {
+                startPositions = board.GetStartPositions(0);
+                }
+            else{
+                startPositions = board.GetStartPositions(1);
+            }
+
+            for(Point p : startPositions){
+                if(board.tiles[p.x][p.y].occupier == null){
+                    SetPosition(p.x,p.y);
+                    board.tiles[p.x][p.y].occupier = this;
+                    return;
+                }
+            }
+        }
+    }
+
     public void SetPatterns(List<MovePattern> patterns){
         this.patterns = patterns;
     }
@@ -411,8 +440,10 @@ public class GamePiece extends GameObject {
                         ((GamePiece)t.occupier).Hit();
                         if(((GamePiece) t.occupier).GetHP() <= 0) {
                             ((GamePiece) t.occupier).DropFlag();
-                            board.pieces.remove(t.occupier);
+                            //board.pieces.remove(t.occupier);
+                            GamePiece piece = ((GamePiece) t.occupier);
                             t.occupier = null;
+                            piece.ResetPosition();
                         }
                         attackDestinations = null;
 

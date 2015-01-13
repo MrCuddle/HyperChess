@@ -175,8 +175,8 @@ public class Game {
         gsp.gameID = gameId;
         gsp.currentPlayer = currentPlayer;
         gsp.online = online;
-        gsp.player1Points = 899;
-        gsp.player2Points = 575;
+        gsp.player1Points = GameData.teamOneScore;
+        gsp.player2Points = GameData.teamTwoScore;
         gsp.playerNumber = localPlayerNumber;
         gsp.pieces = board.GetPieceStates();
         gsp.currentGameState = currentGameState;
@@ -199,6 +199,8 @@ public class Game {
         currentGameState = gsp.currentGameState;
         board.AddObjects(gsp.pieces);
         gameId = gsp.gameID;
+        GameData.teamOneScore = gsp.player1Points;
+        GameData.teamTwoScore = gsp.player2Points;
 
         hud.SetCurrentPlayer(currentPlayer);
 
