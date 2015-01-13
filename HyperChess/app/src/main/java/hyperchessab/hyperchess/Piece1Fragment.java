@@ -222,6 +222,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     }
 
     public interface Piece1Listener{
+        public void OnFinishedDesigning(PieceState[] resut);
         public void OnPieceNameChange(int index, String name);
     }
 
