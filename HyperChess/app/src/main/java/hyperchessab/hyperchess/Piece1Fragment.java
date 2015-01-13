@@ -32,6 +32,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     int rangespinnerpoints;
 
     Button reset;
+    Button finish;
     Spinner healthspinner;
     Spinner rangespinner;
 
@@ -76,6 +77,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_piece1, container, false);
+
+        finish = (Button) v.findViewById(R.id.Piece1Fragment_finishbtn);
+        finish.setOnClickListener(buttonListener);
 
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
         reset.setOnClickListener(buttonListener);
@@ -182,6 +186,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 designer.SetPattern(currentPiece.pattern, currentPieceIndex);
                 //designerView.ResetDesigner();
                 UpdateActionBarTitle();
+                break;
+            case R.id.Piece1Fragment_finishbtn:
                 break;
         }
 
