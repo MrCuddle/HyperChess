@@ -84,6 +84,8 @@ public class GamePiece extends GameObject {
         this.context = context;
         gridPosX = state.gridPosX;
         gridPosY = state.gridPosY;
+        startPosX = state.startPosX;
+        startPosY = state.startPosY;
         posX = gridPosX * GameBoard.TileSize;
         posY = gridPosY * GameBoard.TileSize;
         switch(state.shapeType){
@@ -125,6 +127,7 @@ public class GamePiece extends GameObject {
         patterns = state.movePatterns;
         attackRange = state.attackRange;
         HP = state.HP;
+        initHP = state.initHP;
         ((HPDrawable)shape).setHP(HP);
         ((HPDrawable)shape).setColor(owner.GetPrimaryColor(),owner.GetSecondaryColor(), owner.GetTertiaryColor());
 
@@ -154,6 +157,8 @@ public class GamePiece extends GameObject {
         ps.attackY = attackY;
         ps.gridPosX = gridPosX;
         ps.gridPosY = gridPosY;
+        ps.startPosX = startPosX;
+        ps.startPosY = startPosY;
         ps.hasFlag = flag != null;
         ps.movePatterns = patterns;
         ps.owner = (board.getGame().players.get(0) == owner ? 0 : 1);
@@ -161,6 +166,7 @@ public class GamePiece extends GameObject {
         ps.selected = selected;
         ps.attackRange = attackRange;
         ps.HP = HP;
+        ps.initHP = initHP;
         return ps;
     }
 
