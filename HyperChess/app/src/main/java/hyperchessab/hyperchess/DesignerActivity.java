@@ -14,7 +14,6 @@ import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class DesignerActivity extends ActionBarActivity implements ActionBar.TabListener, Piece1Fragment.Piece1Listener{
 
@@ -123,13 +122,13 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 GameManager.SetPlayer1Pieces(states);
                 SendPieceDefinitionsToFirebase();
                 if(GameManager.GetPlayer2Pieces() != null){
-                    //START THE GAME HERE!!!!!!!!
+                    StartGame();
                 }
             } else {
                 GameManager.SetPlayer2Pieces(states);
                 SendPieceDefinitionsToFirebase();
                 if(GameManager.GetPlayer1Pieces() != null){
-                    //START THE GAME HERE!!!!!!!!
+                    StartGame();
                 }
             }
         } else {
@@ -139,7 +138,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 player++;
             } else {
                 GameManager.SetPlayer2Pieces(states);
-                //START THE GAME HERE!!!!!!!!!!!!!!!!!
+                StartGame();
             }
         }
     }
@@ -172,10 +171,11 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
             } else {
                 ref = fb.child("player2").push();
             }
-            ref.child("HP").setValue(pieceStates.get(i).HP);
-            ref.child("attackRange").setValue(pieceStates.get(i).attackRange);
-            ref.child("shapeType").setValue(pieceStates.get(i).shapeType);
-            ref.child("movePatterns").setValue(pieceStates.get(i).movePatterns);
+            ref.child("piece").setValue(pieceStates.get(i));
+//            ref.child("HP").setValue(pieceStates.get(i).HP);
+//            ref.child("attackRange").setValue(pieceStates.get(i).attackRange);
+//            ref.child("shapeType").setValue(pieceStates.get(i).shapeType);
+//            ref.child("movePatterns").setValue(pieceStates.get(i).movePatterns);
         }
 
     }
@@ -209,37 +209,33 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 if(otherPlayer){
                     if(player == 0){
                         ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
-                        Iterator<DataSnapshot> i = dataSnapshot.getChildren().iterator();
-                        while(i.hasNext()){
-                            DataSnapshot ds = i.next();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()){
 
                             PieceState ps = new PieceState();
-                            ps.HP = (int)((long)ds.child("HP").getValue());
-                            ps.attackRange = (int)((long)ds.child("HP").getValue());
-                            ps.shapeType = (int)((long)ds.child("HP").getValue());
-                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
+                            ps.HP = (int)((long)ds.child("piece").child("HP").getValue());
+                            ps.attackRange = (int)((long)ds.child("piece").child("attackRange").getValue());
+                            ps.shapeType = (int)((long)ds.child("piece").child("shapeType").getValue());
+                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("piece").child("movePatterns").getValue();
                             pieceStates.add(ps);
                         }
                         GameManager.SetPlayer2Pieces(pieceStates);
                         if(GameManager.GetPlayer1Pieces() != null){
-                            //START THE GAME HERE!
+                            StartGame();
                         }
                     } else {
                         ArrayList<PieceState> pieceStates = new ArrayList<PieceState>();
-                        Iterator<DataSnapshot> i = dataSnapshot.getChildren().iterator();
-                        while(i.hasNext()){
-                            DataSnapshot ds = i.next();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()){
 
-                            PieceState ps = new PieceState();
-                            ps.HP = (int)((long)ds.child("HP").getValue());
-                            ps.attackRange = (int)((long)ds.child("HP").getValue());
-                            ps.shapeType = (int)((long)ds.child("HP").getValue());
-                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
+                            PieceState ps = (PieceState)ds.child("piece").getValue();
+//                            ps.HP = (int)((long)ds.child("HP").getValue());
+//                            ps.attackRange = (int)((long)ds.child("attackRange").getValue());
+//                            ps.shapeType = (int)((long)ds.child("shapeType").getValue());
+//                            ps.movePatterns = (ArrayList<MovePattern>)ds.child("movePatterns").getValue();
                             pieceStates.add(ps);
                         }
                         GameManager.SetPlayer1Pieces(pieceStates);
                         if(GameManager.GetPlayer2Pieces() != null){
-                            //START THE GAME HERE
+                            StartGame();
                         }
                     }
 
