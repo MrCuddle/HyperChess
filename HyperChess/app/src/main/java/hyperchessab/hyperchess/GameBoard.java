@@ -84,8 +84,8 @@ public class GameBoard {
             p2.SetStartPosition(teamOneStartPos.get(teamOneStartPos.size()-1- i).x,teamOneStartPos.get(teamOneStartPos.size()-1-i).y);
             tiles[teamOneStartPos.get(teamOneStartPos.size()-1- i).x][teamOneStartPos.get(teamOneStartPos.size()-1-i).y].occupier = p2;
 
-            GamePiece p3 = new GamePiece(context,GameManager.GetPlayer1Pieces().get(i),this);
-            GamePiece p4 = new GamePiece(context,GameManager.GetPlayer1Pieces().get(i),this);
+            GamePiece p3 = new GamePiece(context,GameManager.GetPlayer2Pieces().get(i),this);
+            GamePiece p4 = new GamePiece(context,GameManager.GetPlayer2Pieces().get(i),this);
             p3.SetOwner(game.players.get(1));
             p4.SetOwner(game.players.get(1));
 
