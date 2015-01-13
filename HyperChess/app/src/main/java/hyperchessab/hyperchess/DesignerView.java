@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 
 /**
  * Created by jespe_000 on 2014-12-30.
@@ -51,6 +52,11 @@ public class DesignerView extends GameView {
     @Override
     public void Update(double dt) {
         super.Update(dt);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        StartGameLoop();
     }
 
     @Override
