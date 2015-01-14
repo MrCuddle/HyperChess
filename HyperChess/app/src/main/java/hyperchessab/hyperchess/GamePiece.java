@@ -591,7 +591,9 @@ public class GamePiece extends GameObject {
         public AttackDestination(int gridX, int gridY){
             attackDestGridPosX = gridX;
             attackDestGridPosY = gridY;
-            shape = context.getResources().getDrawable(R.drawable.highlight_shape);
+            //shape = context.getResources().getDrawable(R.drawable.highlight_shape);
+            shape = new CrossDrawable(gridX * board.TileSize, gridY * board.TileSize,
+                    gridX * board.TileSize + board.TileSize, gridY * board.TileSize + board.TileSize);
             shape.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC);
             shape.setBounds(gridX * GameBoard.TileSize, gridY * GameBoard.TileSize,
                     gridX * GameBoard.TileSize + GameBoard.TileSize, gridY * GameBoard.TileSize + GameBoard.TileSize);
