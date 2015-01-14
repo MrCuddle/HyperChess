@@ -14,7 +14,7 @@ import com.firebase.client.Firebase;
 
 
 public class MainGameActivity extends ActionBarActivity implements MainMenuFragment.OnMainMenuInteractionListener, OptionFragment.OnOptionInteractionListener, LobbyFragment.LobbyFragmentListener, CreateGameFragment.CreateGameFragmentListener {
-
+    boolean gameStarted;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +40,12 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
                 setFragment(GameFragment.newInstance(intent.getExtras().getBoolean("online", false),
                                                         intent.getExtras().getInt("player", 0),
                                                         intent.getExtras().getString("gameId", "")), true);
+                gameStarted = true;
             } else {
-                setFragment(new MainMenuFragment(), true);
+                setFragment(new MainMenuFragment(), false);
             }
         } else {
-            setFragment(new MainMenuFragment(), true);
+            setFragment(new MainMenuFragment(), false);
         }
     }
 
@@ -87,6 +88,10 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onBackPressed() {
+        if(gameStarted){
+            gameStarted = false;
+            super.onBackPressed();
+        }
         if(getFragmentManager().getBackStackEntryCount() <= 0){
             super.onBackPressed();
         }
@@ -140,7 +145,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     public void GameOver(){
         FragmentManager fm = getSupportFragmentManager();
         fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        setFragment(new MainMenuFragment(), true);
+        setFragment(new MainMenuFragment(), false);
 
     }
 

@@ -138,6 +138,7 @@ public class GamePiece extends GameObject {
         this.board = board;
         rangeIndicator = new RangeDrawable();
         rangeIndicator.SetRange(attackRange);
+        rangeIndicator.setBounds(shape.getBounds().left, shape.getBounds().top, shape.getBounds().right, shape.getBounds().bottom);
     }
 
     public Drawable CreateShape(int type){
@@ -236,14 +237,16 @@ public class GamePiece extends GameObject {
     }
 
     public void SetPosition(int x, int y){
-        gridPosX = x;
-        gridPosY = y;
-        posX = gridPosX * GameBoard.TileSize;
-        posY = gridPosY * GameBoard.TileSize;
-        shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
-                gridPosX*GameBoard.TileSize + GameBoard.TileSize,
-                gridPosY*GameBoard.TileSize + GameBoard.TileSize);
-        rangeIndicator.setBounds(shape.getBounds().left, shape.getBounds().top , shape.getBounds().right,shape.getBounds().bottom);
+        synchronized (board.game.sync) {
+            gridPosX = x;
+            gridPosY = y;
+            posX = gridPosX * GameBoard.TileSize;
+            posY = gridPosY * GameBoard.TileSize;
+            shape.setBounds(gridPosX * GameBoard.TileSize, gridPosY * GameBoard.TileSize,
+                    gridPosX * GameBoard.TileSize + GameBoard.TileSize,
+                    gridPosY * GameBoard.TileSize + GameBoard.TileSize);
+            rangeIndicator.setBounds(shape.getBounds().left, shape.getBounds().top, shape.getBounds().right, shape.getBounds().bottom);
+        }
     }
 
     public void SetStartPosition(int x, int y){
@@ -587,9 +590,9 @@ public class GamePiece extends GameObject {
     }
 
     public void DrawPieceOverlays(Canvas c){
-        if(selected)
-            rangeIndicator.draw(c);
         synchronized (board.getGame().sync) {
+            if(selected)
+                rangeIndicator.draw(c);
             if (moveDestinations != null) {
                 for (MoveDestination d : moveDestinations)
                     d.Draw(c);
@@ -646,9 +649,9 @@ public class GamePiece extends GameObject {
                 highlight.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC);
             else
                 highlight.setColorFilter(Color.argb(128,128,128,128), PorterDuff.Mode.SRC);
-            highlight.setBounds(x*GameBoard.TileSize, y*GameBoard.TileSize,
-                    x*GameBoard.TileSize + GameBoard.TileSize,
-                    y*GameBoard.TileSize + GameBoard.TileSize);
+            highlight.setBounds(x * GameBoard.TileSize, y * GameBoard.TileSize,
+                    x * GameBoard.TileSize + GameBoard.TileSize,
+                    y * GameBoard.TileSize + GameBoard.TileSize);
             highlights.add(highlight);
         }
 
@@ -690,8 +693,10 @@ public class GamePiece extends GameObject {
 
 
         public void Draw(Canvas c){
-            for(Drawable d : highlights)
-            d.draw(c);
+            if(highlights != null) {
+                for (Drawable d : highlights)
+                    d.draw(c);
+            }
             shape.draw(c);
         }
     }

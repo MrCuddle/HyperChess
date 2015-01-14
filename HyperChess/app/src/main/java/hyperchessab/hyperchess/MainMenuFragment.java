@@ -43,6 +43,25 @@ public class MainMenuFragment extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("ingame",false)){
+            create.setVisibility(View.GONE);
+            join.setVisibility(View.GONE);
+            play.setVisibility(View.GONE);
+            continue_game.setVisibility(View.VISIBLE);
+
+
+        } else {
+            continue_game.setVisibility(View.GONE);
+            create.setVisibility(View.VISIBLE);
+            join.setVisibility(View.VISIBLE);
+            play.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_menu, container, false);
@@ -52,18 +71,18 @@ public class MainMenuFragment extends Fragment {
         join = (Button)v.findViewById(R.id.mainmenu_button_join);
         continue_game = (Button)v.findViewById(R.id.mainmenu_button_continue);
 
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("ingame",false)){
-            create.setVisibility(View.GONE);
-            join.setVisibility(View.GONE);
-            play.setVisibility(View.GONE);
-        } else {
-            continue_game.setVisibility(View.GONE);
-        }
-
-        if(sharedPreferences.getBoolean("online", false)){
-            continue_game.setEnabled(false);
-        }
+//        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+//        if(sharedPreferences.getBoolean("ingame",false)){
+//            create.setVisibility(View.GONE);
+//            join.setVisibility(View.GONE);
+//            play.setVisibility(View.GONE);
+//        } else {
+//            continue_game.setVisibility(View.GONE);
+//        }
+//
+//        if(sharedPreferences.getBoolean("online", false)){
+//            continue_game.setEnabled(false);
+//        }
         //Disable the online play buttons until we connect to firebase
         create.setEnabled(false);
         join.setEnabled(false);

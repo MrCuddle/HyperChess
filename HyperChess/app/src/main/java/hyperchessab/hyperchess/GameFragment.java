@@ -82,6 +82,8 @@ public class GameFragment extends Fragment {
         return v;
     }
 
+
+
     @Override
     public void onDestroyView() {
 
@@ -128,6 +130,19 @@ public class GameFragment extends Fragment {
 
     @Override
     public void onPause() {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if(gameView.game.currentGameState != Game.GameState.GameOver) {
+            editor.putBoolean("online", online);
+            editor.putBoolean("ingame", true);
+
+        } else {
+            editor.putBoolean("ingame", false);
+            editor.putBoolean("online", false);
+        }
+
+        editor.commit();
         gameView.StopGameLoop();
         super.onPause();
         ((ActionBarActivity)getActivity()).getSupportActionBar().hide();
