@@ -38,6 +38,8 @@ public class GamePiece extends GameObject {
     Context context;
     String name = Settings.defaultPieceName;
 
+    Point simulateClickPoint = new Point(0,0);
+
     int teamColor;
     boolean attackQueued = false;
     int attackX, attackY;
@@ -340,11 +342,10 @@ public class GamePiece extends GameObject {
 
     public void SimulateMove(int endX, int endY, int attackX, int attackY){
         synchronized (board.getGame().sync) {
-            InputData.Clicked = true;
-            InputData.ClickPoint = new Point((int) ((endX + 0.5) * GameBoard.TileSize), (int) ((endY + 0.5) * GameBoard.TileSize));
+            simulateClickPoint = new Point((int) ((endX + 0.5) * GameBoard.TileSize), (int) ((endY + 0.5) * GameBoard.TileSize));
             HighlightMoveable();
             for (MoveDestination d : moveDestinations) {
-                if (d.ClickedOn() && d.IsValid()) {
+                if (d.SimulateClickedOn() && d.IsValid()) {
 
                     movePath = GetMovePath(d.GetPath());
                     isMoving = true;
@@ -357,7 +358,6 @@ public class GamePiece extends GameObject {
                     break;
                 }
             }
-            InputData.Clear();
             if (attackX != -1)
                 QueueAttack(attackX, attackY);
         }
@@ -673,6 +673,11 @@ public class GamePiece extends GameObject {
         public boolean ClickedOn(){
             return InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right &&
                     InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom;
+        }
+
+        public boolean SimulateClickedOn(){
+            return simulateClickPoint.x >= shape.getBounds().left && simulateClickPoint.x <= shape.getBounds().right &&
+                    simulateClickPoint.y >= shape.getBounds().top && simulateClickPoint.y <= shape.getBounds().bottom;
         }
 
 
