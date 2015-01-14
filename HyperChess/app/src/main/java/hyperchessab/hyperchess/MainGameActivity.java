@@ -41,10 +41,10 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
                                                         intent.getExtras().getInt("player", 0),
                                                         intent.getExtras().getString("gameId", "")), true);
             } else {
-                setFragment(new MainMenuFragment(), false);
+                setFragment(new MainMenuFragment(), true);
             }
         } else {
-            setFragment(new MainMenuFragment(), false);
+            setFragment(new MainMenuFragment(), true);
         }
     }
 
@@ -77,6 +77,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     private void StartDesigner(boolean online, int player, String gameId){
         Intent designerIntent = new Intent(this, DesignerActivity.class);
+        designerIntent.setFlags(designerIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         designerIntent.putExtra("online", online);
         designerIntent.putExtra("player", player);
         designerIntent.putExtra("gameId", gameId);
