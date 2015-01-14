@@ -328,6 +328,7 @@ public class Game {
         online = gsp.online;
         currentPlayer = gsp.currentPlayer;
         localPlayerNumber = gsp.playerNumber;
+        localPlayer = players.get(localPlayerNumber);
         currentGameState = gsp.currentGameState;
         board.AddObjects(gsp.pieces);
         gameId = gsp.gameID;

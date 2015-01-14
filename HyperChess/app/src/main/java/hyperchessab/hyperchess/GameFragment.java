@@ -100,6 +100,7 @@ public class GameFragment extends Fragment {
             editor.putBoolean("online", online);
             editor.putBoolean("ingame", true);
             editor.putString("gamestate", state);
+            //editor.putString("player", gameView.game.localPlayerNumber);
 
         } else {
             editor.putBoolean("ingame", false);
