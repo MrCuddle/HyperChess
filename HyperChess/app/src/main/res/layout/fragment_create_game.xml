@@ -4,29 +4,53 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="hyperchessab.hyperchess.CreateGameFragment"
-    android:background="@drawable/menu_title_background">
+    android:background="@color/Main"
+    android:padding="20dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_weight="1">
     <EditText android:id="@+id/game_name"
         android:hint="Name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/White"
+        android:textColorHint="@color/MainLighter"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <CheckBox android:id="@+id/chk_password"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@color/White"
+            android:textColorHint="@color/MainLighter"/>
         <EditText android:id="@+id/game_password"
                   android:hint="Password"
                   android:inputType="textPassword"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content"/>
+                  android:layout_height="wrap_content"
+            android:textColor="@color/White"
+            android:textColorHint="@color/MainLighter"/>
     </LinearLayout>
     <Button android:id="@+id/btn_create"
         android:text="Create Game"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_button_shape"
+        android:textColor="@color/White"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></LinearLayout>
 
 
 </LinearLayout>
