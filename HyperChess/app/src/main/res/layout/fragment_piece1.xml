@@ -2,17 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="hyperchessab.hyperchess.Piece1Fragment"
     android:background="@color/MainLighter"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp"
+    android:paddingTop="0dp">
 
     <LinearLayout
         android:id="@+id/Piece1Fragment_designerview_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="2dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="0dp"
         android:paddingRight="1dp"
         android:background="@drawable/test">
         <hyperchessab.hyperchess.DesignerView
@@ -33,45 +33,62 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/TileColor">
-        <TextView
-            android:id="@+id/Piece1Fragment_healthtxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/health"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/Piece1Fragment_resetbtn"
-            android:gravity="center_vertical"/>
+            android:background="@color/Main"
+            android:paddingTop="2dp">
 
-        <Spinner
-            android:id="@+id/Piece1Fragment_lifeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/Piece1Fragment_resetbtn"
-            android:layout_toRightOf="@+id/Piece1Fragment_healthtxt"
-            android:layout_toEndOf="@+id/Piece1Fragment_healthtxt"
-            />
 
-        <TextView
-            android:id="@+id/Piece1Fragment_rangetxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/range"
-            android:layout_above="@+id/Piece1Fragment_resetbtn"
-            android:layout_toLeftOf="@+id/Piece1Fragment_rangeSpinner"
-            android:layout_toStartOf="@id/Piece1Fragment_rangeSpinner"
-            android:gravity="center_vertical"/>
+            <RelativeLayout
+                android:id="@+id/Piece1Fragment_spinner_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/Piece1Fragment_resetbtn"
+                android:background="@drawable/menu_button_designerbottomleft"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="4dp">
 
-        <Spinner
-            android:id="@+id/Piece1Fragment_rangeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/Piece1Fragment_resetbtn"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+                <TextView
+                    android:id="@+id/Piece1Fragment_healthtxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/health"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical"/>
+
+                <Spinner
+                    android:id="@+id/Piece1Fragment_lifeSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/Piece1Fragment_healthtxt"
+                    android:layout_toEndOf="@+id/Piece1Fragment_healthtxt"
+                    />
+
+                <TextView
+                    android:id="@+id/Piece1Fragment_rangetxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/range"
+
+                    android:layout_toLeftOf="@+id/Piece1Fragment_rangeSpinner"
+                    android:layout_toStartOf="@id/Piece1Fragment_rangeSpinner"
+                    android:gravity="center_vertical"/>
+
+                <Spinner
+                    android:id="@+id/Piece1Fragment_rangeSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:textAlignment="center"/>
+                </RelativeLayout>
+
+
 
 
         <LinearLayout
@@ -79,7 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/menu_container_shape">
+            android:orientation="vertical"
+            android:background="@color/MainDarker">
 
         </LinearLayout>
 
@@ -92,7 +110,15 @@
             android:background="@drawable/menu_button_designerbottomleft"
             android:layout_marginLeft="2dp"/>
 
-
+        <TextView
+            android:id="@+id/Piece1Fragment_points_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/Piece1Fragment_resetbtn"
+            android:layout_toLeftOf="@+id/Piece1Fragment_finishbtn"
+            android:text="POINTS: "
+            android:textColor="@color/White"
+            android:layout_alignParentBottom="true"/>
 
         <Button
             android:id="@+id/Piece1Fragment_finishbtn"
@@ -101,7 +127,7 @@
             android:text="Finish"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/Piece1Fragment_lifeSpinner"
+            android:layout_below="@+id/Piece1Fragment_spinner_container"
             android:layout_marginRight="2dp"
             android:background="@drawable/menu_button_designerbottomright"/>
         </RelativeLayout>

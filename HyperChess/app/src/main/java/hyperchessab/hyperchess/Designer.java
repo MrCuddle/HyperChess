@@ -32,6 +32,8 @@ public class Designer extends Game {
     Drawable arrow;
     Path drawPath = new Path();
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
+    boolean userInteraction = true;
+    int patternSize;
 
     Object sync = new Object();
 
@@ -195,7 +197,7 @@ public class Designer extends Game {
         lastPlacement.set(indexX, indexY);
 
         if(listener != null){
-            listener.OnDesignerInteraction();
+            listener.OnDesignerInteraction(userInteraction);
         }
     }
 
@@ -230,6 +232,7 @@ public class Designer extends Game {
     }
 
     private boolean ValidPlacement(int x, int y){
+        if(listener != null && !listener.AllowInteraction()) { return false; }
         if(x < 0 || y < 0) { return false; }
         if(x >= ARRAYWIDTH || y >= ARRAYHEIGHT ) { return false; }
         if(lastPlacement.x < 0) { return true; }
@@ -283,7 +286,7 @@ public class Designer extends Game {
     public void SetPattern(MovePattern p, int index){
         synchronized (sync) {
             int x = STARTPOINT.x, y = STARTPOINT.y;
-
+            userInteraction = false;
             SetpieceDrawable(index);
 
             for (int i = 0; i < ARRAYWIDTH; i++) {
@@ -318,12 +321,18 @@ public class Designer extends Game {
                 }
             }
             HighlightAdjacent(x, y);
+            userInteraction = true;
         }
     }
 
     public interface DesignerListener{
-        public void OnDesignerInteraction();
+        public void OnDesignerInteraction(boolean userInteraction);
+        public boolean AllowInteraction();
         public void OnChangedPattern();
+    }
+
+    public int GetPatternSize(){
+        return pattern.Size();
     }
 
 }

@@ -6,7 +6,7 @@
         android:color="@color/TileColor" />
     <stroke
         android:width="3dp"
-        android:color="@color/TileColorDark"/>
+        android:color="@color/Main"/>
     <padding android:bottom="10dp"
              android:top="10dp"/>
 

@@ -2,6 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import android.os.Handler;
+import android.os.Looper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +33,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     Button finish;
     Spinner healthspinner;
     Spinner rangespinner;
+    TextView pointsText;
 
     Designer designer;
     DesignerView designerView;
@@ -82,6 +87,8 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         reset = (Button) v.findViewById(R.id.Piece1Fragment_resetbtn);
         reset.setOnClickListener(buttonListener);
 
+        pointsText = (TextView)v.findViewById(R.id.Piece1Fragment_points_text);
+
         healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
         Integer[] healthitems = new Integer[]{1,2,3};
         ArrayAdapter<Integer> healthadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , healthitems);
@@ -91,7 +98,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         Integer[] rangeitems = new Integer[]{1,2,3};
         ArrayAdapter<Integer> rangeadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , rangeitems);
         rangespinner.setAdapter(rangeadapter);
-
         rangespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -141,6 +147,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             }
             currentPiece.attackRange = rangespinnerpoints + 1;
         }
+        UpdatePoints();
     }
 
     private void UpdateHealthPoints(int spinnerValue){
@@ -159,6 +166,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         }
 
         designer.SetpieceDrawableHP(healthspinnerpoints + 1);
+        UpdatePoints();
     }
 
     @Override
@@ -181,8 +189,17 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     public void OnButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
+                int test1 = healthspinner.getSelectedItemPosition();
+                int test2 = rangespinner.getSelectedItemPosition();
+                playerPoints += test1;
+                playerPoints += test2;
+                playerPoints += designer.GetPatternSize();
+                UpdatePoints();
                 currentPattern = new MovePattern();
                 designer.SetPattern(currentPattern, currentPieceIndex);
+                healthspinner.setSelection(0);
+                rangespinner.setSelection(0);
+
                 break;
             case R.id.Piece1Fragment_finishbtn:
                 if(AllPiecesDesigned()){
@@ -214,20 +231,29 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             }
 
             currentPieceIndex = index;
-
+            designer.SetpieceDrawableHP(healthspinnerpoints + 1);
 
         }
     }
 
     @Override
-    public void OnDesignerInteraction() {
-        playerPoints--;
+    public void OnDesignerInteraction(boolean userInteraction) {
+        if(userInteraction){
+            playerPoints--;
+        }
+
         currentPattern = designer.GetPattern();
         if(currentPiece == null){
             currentPiece = new PieceState();
             currentPiece.attackRange = 1;
             currentPiece.HP = 1;
         }
+        UpdatePoints();
+    }
+
+    @Override
+    public boolean AllowInteraction() {
+        return playerPoints > 0;
     }
 
     @Override
@@ -296,6 +322,17 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     private void ChangeTab(int position){
         listener.RequestTabChange(position);
+    }
+
+    private void UpdatePoints(){
+        Handler refresh = new Handler(Looper.getMainLooper());
+        refresh.post(new Runnable(){
+            @Override
+            public void run() {
+                pointsText.setText("POINTS: " + Integer.toString(playerPoints));
+            }
+        });
+
     }
 
 }
