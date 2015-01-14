@@ -38,6 +38,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     Designer designer;
     DesignerView designerView;
 
+    ArrayAdapter<Integer> healthadapter;
+    ArrayList<Integer> healthitems = new ArrayList<>();
+
+    ArrayAdapter<Integer> rangeadapter;
+    ArrayList<Integer> rangeitems = new ArrayList<>();
+
     PieceState currentPiece;
     MovePattern currentPattern = new MovePattern();
     int currentPieceIndex = 0;
@@ -93,15 +99,19 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         pointsText = (TextView)v.findViewById(R.id.Piece1Fragment_points_text);
         pieceCostText = (TextView)v.findViewById(R.id.Piece1Fragment_piecepoints_text);
 
+        for (int i = 0; i < 3; i++) {
+            healthitems.add(i + 1);
+            rangeitems.add(i + 1);
+        }
+
         healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
-        Integer[] healthitems = new Integer[]{1,2,3};
-        ArrayAdapter<Integer> healthadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , healthitems);
+        healthadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , healthitems);
         healthspinner.setAdapter(healthadapter);
 
         rangespinner = (Spinner) v.findViewById(R.id.Piece1Fragment_rangeSpinner);
-        Integer[] rangeitems = new Integer[]{1,2,3};
-        ArrayAdapter<Integer> rangeadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , rangeitems);
+        rangeadapter = new ArrayAdapter<>(getActivity() , android.R.layout.simple_expandable_list_item_1 , rangeitems);
         rangespinner.setAdapter(rangeadapter);
+
         rangespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -183,8 +193,11 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 designer.SetPattern(currentPattern, currentPieceIndex);
                 healthspinner.setSelection(0);
                 rangespinner.setSelection(0);
+                currentPiece.HP = 1;
+                currentPiece.attackRange = 1;
                 CalculateCurrentPieceCost();
                 UpdatePoints();
+                designer.SetPattern(currentPattern, currentPieceIndex);
                 break;
             case R.id.Piece1Fragment_finishbtn:
                 if(AllPiecesDesigned()){
@@ -317,9 +330,13 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         }
         playerPoints = Settings.playerPoints - newPoints;
         final int temp = playerPoints;
-
-
         Handler refresh = new Handler(Looper.getMainLooper());
+
+        int maxPossibleHealth = playerPoints + currentPiece.HP;
+        UpdateHealthSpinner(maxPossibleHealth);
+        int maxPossibleRange = playerPoints + currentPiece.attackRange;
+        UpdateRangeSpinner(maxPossibleRange);
+
         refresh.post(new Runnable(){
             @Override
             public void run() {
@@ -347,6 +364,66 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             pieceCost[currentPieceIndex] = designer.GetPatternSize();
         }
 
+    }
+
+    private void UpdateHealthSpinner(int maxPossible){
+        if(maxPossible <= 2){
+            Handler refresh = new Handler(Looper.getMainLooper());
+            healthitems.clear();
+            for (int i = 0; i < maxPossible; i++) {
+                healthitems.add(i + 1);
+            }
+            refresh.post(new Runnable(){
+            @Override
+            public void run() {
+                healthadapter.notifyDataSetChanged();
+                }
+            });
+        } else {
+            if(healthitems.size() < 3){
+                Handler refresh = new Handler(Looper.getMainLooper());
+                healthitems.clear();
+                for (int i = 0; i < 3; i++) {
+                    healthitems.add(i + 1);
+                }
+                refresh.post(new Runnable(){
+                    @Override
+                    public void run() {
+                        healthadapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+    }
+
+    private void UpdateRangeSpinner(int maxPossible){
+        if(maxPossible <= 2){
+            Handler refresh = new Handler(Looper.getMainLooper());
+            rangeitems.clear();
+            for (int i = 0; i < maxPossible; i++) {
+                rangeitems.add(i + 1);
+            }
+            refresh.post(new Runnable(){
+                @Override
+                public void run() {
+                    rangeadapter.notifyDataSetChanged();
+                }
+            });
+        } else {
+            if(rangeitems.size() < 3){
+                Handler refresh = new Handler(Looper.getMainLooper());
+                rangeitems.clear();
+                for (int i = 0; i < 3; i++) {
+                    rangeitems.add(i + 1);
+                }
+                refresh.post(new Runnable(){
+                    @Override
+                    public void run() {
+                        rangeadapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
     }
 
 }
