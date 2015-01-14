@@ -108,7 +108,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onPlayPressed() {
-        setFragment(GameFragment.newInstance(false,0,""), true);
+        StartDesigner(false,0,"");
     }
 
     @Override

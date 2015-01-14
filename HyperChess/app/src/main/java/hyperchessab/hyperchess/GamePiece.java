@@ -17,6 +17,8 @@ import java.util.List;
 public class GamePiece extends GameObject {
 
     Drawable shape;
+    RangeDrawable rangeIndicator;
+
     Player owner;
     Flag flag;
     float posX, posY;
@@ -66,6 +68,7 @@ public class GamePiece extends GameObject {
         this.shapeType = shapeType;
         patterns = PatternTest();
         selected = false;
+        rangeIndicator = new RangeDrawable();
     }
 
     public GamePiece(GamePiece piece)
@@ -78,6 +81,7 @@ public class GamePiece extends GameObject {
         attackRange = piece.attackRange;
         SetInitHP(piece.HP);
         shapeType = piece.shapeType;
+        rangeIndicator = new RangeDrawable();
     }
 
     public GamePiece(Context context, PieceState state, GameBoard board){
@@ -132,6 +136,8 @@ public class GamePiece extends GameObject {
         ((HPDrawable)shape).setColor(owner.GetPrimaryColor(),owner.GetSecondaryColor(), owner.GetTertiaryColor());
 
         this.board = board;
+        rangeIndicator = new RangeDrawable();
+        rangeIndicator.SetRange(attackRange);
     }
 
     public Drawable CreateShape(int type){
@@ -237,6 +243,7 @@ public class GamePiece extends GameObject {
         shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
                 gridPosX*GameBoard.TileSize + GameBoard.TileSize,
                 gridPosY*GameBoard.TileSize + GameBoard.TileSize);
+        rangeIndicator.setBounds(shape.getBounds().left, shape.getBounds().top , shape.getBounds().right,shape.getBounds().bottom);
     }
 
     public void SetStartPosition(int x, int y){
@@ -322,6 +329,7 @@ public class GamePiece extends GameObject {
             else if(targetPos.y > posY)
                 posY += 20;
             shape.setBounds((int)posX, (int)posY, (int)posX+GameBoard.TileSize, (int)posY+GameBoard.TileSize);
+            rangeIndicator.setBounds(shape.getBounds().left, shape.getBounds().top , shape.getBounds().right,shape.getBounds().bottom);
             if(Math.sqrt(Math.pow(targetPos.x - posX, 2) + Math.pow(targetPos.y - posY, 2)) < 2) {
                 posX = targetPos.x;
                 posY = targetPos.y;
@@ -578,6 +586,8 @@ public class GamePiece extends GameObject {
     }
 
     public void DrawPieceOverlays(Canvas c){
+        if(selected)
+            rangeIndicator.draw(c);
         synchronized (board.getGame().sync) {
             if (moveDestinations != null) {
                 for (MoveDestination d : moveDestinations)

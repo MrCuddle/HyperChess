@@ -183,7 +183,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
     void StartGame(){
 
         Intent intent = new Intent(this, MainGameActivity.class);
-        intent.putExtra("startgame", online);
+        intent.putExtra("startgame", true);
         intent.putExtra("online", online);
         intent.putExtra("player", player);
         intent.putExtra("gameId", gameId);
