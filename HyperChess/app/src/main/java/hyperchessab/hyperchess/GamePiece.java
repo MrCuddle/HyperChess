@@ -573,8 +573,11 @@ public class GamePiece extends GameObject {
         }
     }
 
-    public void Draw(Canvas c){
+    public void DrawPiece(Canvas c){
         shape.draw(c);
+    }
+
+    public void DrawPieceOverlays(Canvas c){
         synchronized (board.getGame().sync) {
             if (moveDestinations != null) {
                 for (MoveDestination d : moveDestinations)

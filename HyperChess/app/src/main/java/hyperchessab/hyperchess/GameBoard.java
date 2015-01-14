@@ -244,11 +244,16 @@ public class GameBoard {
             for(int j = 0; j < Height; j++)
                 tiles[i][j].Draw(c);
 
-        for(GamePiece gp : pieces){
-            gp.Draw(c);
-        }
         for(Obstacle o : obstacles){
             o.Draw(c);
+        }
+
+        for(GamePiece gp : pieces){
+            gp.DrawPiece(c);
+        }
+
+        for(GamePiece gp : pieces){
+            gp.DrawPieceOverlays(c);
         }
         flag.Draw(c);
     }
