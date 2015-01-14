@@ -344,7 +344,7 @@ public class GamePiece extends GameObject {
             InputData.ClickPoint = new Point((int) ((endX + 0.5) * GameBoard.TileSize), (int) ((endY + 0.5) * GameBoard.TileSize));
             HighlightMoveable();
             for (MoveDestination d : moveDestinations) {
-                if (d.ClickedOn()) {
+                if (d.ClickedOn() && d.IsValid()) {
 
                     movePath = GetMovePath(d.GetPath());
                     isMoving = true;
@@ -354,7 +354,7 @@ public class GamePiece extends GameObject {
                     gridPosY = newPos.y;
                     board.GetTile(gridPosX, gridPosY).occupier = this;
                     moveDestinations = null;
-
+                    break;
                 }
             }
             InputData.Clear();
