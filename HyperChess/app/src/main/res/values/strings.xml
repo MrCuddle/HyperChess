@@ -20,5 +20,6 @@
     <string name="create_game">Create Game</string>
     <string name="join_game">Join Game</string>
     <string name="continue_game">Continue Game</string>
+    <string name="forfeit_game">Forfeit Game</string>
 
 </resources>

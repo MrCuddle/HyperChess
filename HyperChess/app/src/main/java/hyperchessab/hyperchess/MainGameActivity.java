@@ -2,7 +2,9 @@ package hyperchessab.hyperchess;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +38,10 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         Intent intent = getIntent();
         if(intent.getExtras() != null){
             if(intent.getExtras().getBoolean("startgame", false)){
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("ineditor", false);
+                editor.commit();
                 //setFragment(new MainMenuFragment(), false);
                 setFragment(GameFragment.newInstance(intent.getExtras().getBoolean("online", false),
                                                         intent.getExtras().getInt("player", 0),
@@ -77,6 +83,15 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     }
 
     private void StartDesigner(boolean online, int player, String gameId){
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("ineditor", true);
+        editor.putBoolean("online", online);
+        editor.putString("gameId",gameId);
+        editor.putInt("player", player);
+        editor.commit();
+
+
         Intent designerIntent = new Intent(this, DesignerActivity.class);
         designerIntent.setFlags(designerIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         designerIntent.putExtra("online", online);
@@ -102,7 +117,7 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     @Override
     public void onPlayPressed() {
-        StartDesigner(false,0,"");
+        StartDesigner(false, 0, "");
     }
 
     public void onCreatePressed(){
@@ -119,7 +134,26 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
 
     public void onContinuePressed(){
         //Correct parameters not needed since they'll be filled in later
-        setFragment(GameFragment.newInstance(false,0,""),true);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        if(sharedPref.getBoolean("ineditor",false)){
+            StartDesigner(sharedPref.getBoolean("online",false),sharedPref.getInt("player",0),sharedPref.getString("gameId",""));
+        } else {
+            setFragment(GameFragment.newInstance(false, 0, ""), true);
+        }
+    }
+
+    public void onForfeitPressed(){
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("ineditor", false);
+        editor.putBoolean("ingame", false);
+        editor.commit();
+
+        Firebase fb = new Firebase(DatabaseManager.URL).child("games").child(sharedPref.getString("gameId",""));
+        fb.child("forfeit").setValue(0);
+        fb.child("players").setValue(2);
+
+        setFragment(new MainMenuFragment(), false);
     }
 
     @Override
@@ -139,7 +173,8 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     public void onCreateGame(GameListing g) {
         //Start game as player 1
         //setFragment(GameFragment.newInstance(true,0, g.getId()), true);
-        StartDesigner(true,0,g.getId());
+
+        StartDesigner(true, 0, g.getId());
     }
 
     public void GameOver(){

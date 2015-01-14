@@ -200,11 +200,23 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
 
     }
 
+    public void ForfeitGame(){
+        Toast.makeText(this, "Opponent left the game.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, MainGameActivity.class);
+        intent.putExtra("startgame", false);
+        startActivity(intent);
+    }
+
     public void InitFirebase(){
         fb = new Firebase(DatabaseManager.URL).child("games").child(gameId);
         dbListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                //If someone has forfeited....
+                if(dataSnapshot.getKey().equals("forfeit")){
+
+                }
 
                 //We're interested in pieces sent by the other player
                 boolean otherPlayer;

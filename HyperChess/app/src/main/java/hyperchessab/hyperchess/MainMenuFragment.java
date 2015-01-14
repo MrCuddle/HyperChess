@@ -24,7 +24,7 @@ public class MainMenuFragment extends Fragment {
 
     Firebase firebase;
     Firebase.AuthResultHandler authEventHandler;
-    Button play, create, join, continue_game;
+    Button play, create, join, continue_game, forfeit_game;
 
     private OnMainMenuInteractionListener mListener;
 
@@ -47,18 +47,23 @@ public class MainMenuFragment extends Fragment {
     public void onResume() {
         super.onResume();
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("ingame",false)){
+
+
+        if(sharedPreferences.getBoolean("ingame",false) || sharedPreferences.getBoolean("ineditor",false)){
             create.setVisibility(View.GONE);
             join.setVisibility(View.GONE);
             play.setVisibility(View.GONE);
             continue_game.setVisibility(View.VISIBLE);
+            forfeit_game.setVisibility(View.VISIBLE);
 
 
         } else {
+            forfeit_game.setVisibility(View.GONE);
             continue_game.setVisibility(View.GONE);
             create.setVisibility(View.VISIBLE);
             join.setVisibility(View.VISIBLE);
             play.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -71,6 +76,7 @@ public class MainMenuFragment extends Fragment {
         create = (Button)v.findViewById(R.id.mainmenu_button_create);
         join = (Button)v.findViewById(R.id.mainmenu_button_join);
         continue_game = (Button)v.findViewById(R.id.mainmenu_button_continue);
+        forfeit_game = (Button)v.findViewById(R.id.mainmenu_button_forfeit);
 
 //        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 //        if(sharedPreferences.getBoolean("ingame",false)){
@@ -92,6 +98,7 @@ public class MainMenuFragment extends Fragment {
         create.setOnClickListener(buttonListener);
         join.setOnClickListener(buttonListener);
         continue_game.setOnClickListener(buttonListener);
+        forfeit_game.setOnClickListener(buttonListener);
 
         FirebaseLogin();
 
@@ -112,6 +119,10 @@ public class MainMenuFragment extends Fragment {
                     break;
                 case R.id.mainmenu_button_continue:
                     mListener.onContinuePressed();
+                    break;
+                case R.id.mainmenu_button_forfeit:
+                    mListener.onForfeitPressed();
+                    break;
             }
         }
     }
@@ -171,6 +182,7 @@ public class MainMenuFragment extends Fragment {
         public void onCreatePressed();
         public void onJoinPressed();
         public void onContinuePressed();
+        public void onForfeitPressed();
     }
 
 }
