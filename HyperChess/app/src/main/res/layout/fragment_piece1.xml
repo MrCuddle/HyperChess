@@ -110,15 +110,35 @@
             android:background="@drawable/menu_button_designerbottomleft"
             android:layout_marginLeft="2dp"/>
 
-        <TextView
-            android:id="@+id/Piece1Fragment_points_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/Piece1Fragment_resetbtn"
-            android:layout_toLeftOf="@+id/Piece1Fragment_finishbtn"
-            android:text="POINTS: "
-            android:textColor="@color/White"
-            android:layout_alignParentBottom="true"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_toRightOf="@+id/Piece1Fragment_resetbtn"
+                android:layout_toLeftOf="@+id/Piece1Fragment_finishbtn"
+                android:layout_below="@+id/Piece1Fragment_spinner_container"
+                android:layout_alignParentBottom="true">
+            <TextView
+                android:id="@+id/Piece1Fragment_points_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="POINTS LEFT: "
+                android:textColor="@color/White"
+                android:layout_alignParentBottom="false"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/Piece1Fragment_piecepoints_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="PIECE VALUE: "
+                android:layout_alignParentBottom="false"
+                android:textColor="@color/White"
+                android:gravity="center"/>
+
+            </LinearLayout>
 
         <Button
             android:id="@+id/Piece1Fragment_finishbtn"

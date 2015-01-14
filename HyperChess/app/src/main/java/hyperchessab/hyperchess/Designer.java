@@ -33,7 +33,6 @@ public class Designer extends Game {
     Path drawPath = new Path();
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
     boolean userInteraction = true;
-    int patternSize;
 
     Object sync = new Object();
 

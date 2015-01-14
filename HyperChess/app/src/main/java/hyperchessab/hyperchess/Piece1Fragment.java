@@ -26,14 +26,14 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     Piece1Listener listener;
 
-    int healthspinnerpoints;
-    int rangespinnerpoints;
+//    int healthspinnerpoints;
+//    int rangespinnerpoints;
 
     Button reset;
     Button finish;
     Spinner healthspinner;
     Spinner rangespinner;
-    TextView pointsText;
+    TextView pointsText, pieceCostText;
 
     Designer designer;
     DesignerView designerView;
@@ -42,6 +42,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     MovePattern currentPattern = new MovePattern();
     int currentPieceIndex = 0;
     int playerPoints = Settings.playerPoints;
+    int pieceCost[] = new int[Settings.differentPieces];
+
+    boolean updateHealthPoints = true, updateRangePoints = true;
 
     //Filled in by the method that checks if there are piece that are not finished yet
     int indexOfANonFinishedPiece = 0;
@@ -88,6 +91,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         reset.setOnClickListener(buttonListener);
 
         pointsText = (TextView)v.findViewById(R.id.Piece1Fragment_points_text);
+        pieceCostText = (TextView)v.findViewById(R.id.Piece1Fragment_piecepoints_text);
 
         healthspinner = (Spinner) v.findViewById(R.id.Piece1Fragment_lifeSpinner);
         Integer[] healthitems = new Integer[]{1,2,3};
@@ -109,12 +113,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
             }
         });
-
         healthspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 UpdateHealthPoints(position);
-
             }
 
             @Override
@@ -134,38 +136,26 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     private void UpdateRangePoints(int spinnerValue)
     {
-        int temp = spinnerValue;
-        if(rangespinnerpoints != temp){
-            temp -= rangespinnerpoints;
-            rangespinnerpoints = temp;
-            playerPoints -= rangespinnerpoints;
-            rangespinnerpoints = spinnerValue;
-            if(currentPiece == null){
-                currentPiece = new PieceState();
-                currentPiece.attackRange = 1;
-                currentPiece.HP = 1;
-            }
-            currentPiece.attackRange = rangespinnerpoints + 1;
+        if(currentPiece == null){
+            currentPiece = new PieceState();
+            currentPiece.attackRange = 1;
+            currentPiece.HP = 1;
         }
+        currentPiece.attackRange = spinnerValue + 1;
+        CalculateCurrentPieceCost();
         UpdatePoints();
     }
 
     private void UpdateHealthPoints(int spinnerValue){
-        int temp = spinnerValue;
-        if(healthspinnerpoints != temp){
-            temp -= healthspinnerpoints;
-            healthspinnerpoints = temp;
-            playerPoints -= healthspinnerpoints;
-            healthspinnerpoints = spinnerValue;
-            if(currentPiece == null){
-                currentPiece = new PieceState();
-                currentPiece.attackRange = 1;
-                currentPiece.HP = 1;
-            }
-            currentPiece.HP = healthspinnerpoints + 1;
+        if(currentPiece == null){
+            currentPiece = new PieceState();
+            currentPiece.attackRange = 1;
+            currentPiece.HP = 1;
         }
+        currentPiece.HP = spinnerValue + 1;
 
-        designer.SetpieceDrawableHP(healthspinnerpoints + 1);
+        designer.SetpieceDrawableHP(currentPiece.HP);
+        CalculateCurrentPieceCost();
         UpdatePoints();
     }
 
@@ -189,17 +179,12 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     public void OnButtonPressed(int id) {
         switch (id) {
             case R.id.Piece1Fragment_resetbtn:
-                int test1 = healthspinner.getSelectedItemPosition();
-                int test2 = rangespinner.getSelectedItemPosition();
-                playerPoints += test1;
-                playerPoints += test2;
-                playerPoints += designer.GetPatternSize();
-                UpdatePoints();
                 currentPattern = new MovePattern();
                 designer.SetPattern(currentPattern, currentPieceIndex);
                 healthspinner.setSelection(0);
                 rangespinner.setSelection(0);
-
+                CalculateCurrentPieceCost();
+                UpdatePoints();
                 break;
             case R.id.Piece1Fragment_finishbtn:
                 if(AllPiecesDesigned()){
@@ -208,7 +193,6 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
                     ChangeTab(indexOfANonFinishedPiece);
                 }
-
                 break;
         }
     }
@@ -218,28 +202,28 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             if(currentPiece != null){
                 SavePiece(designer.GetPattern(), currentPiece.HP, currentPiece.attackRange, currentPieceIndex);
             }
-
             currentPiece = pieces[index];
-            if(currentPiece != null){
-                designer.SetPattern(currentPiece.movePatterns.get(0), index);
-                healthspinner.setSelection(currentPiece.HP - 1);
-                rangespinner.setSelection(currentPiece.attackRange - 1);
-            } else {
-                designer.SetPattern(null, index);
-                healthspinner.setSelection(0);
-                rangespinner.setSelection(0);
-            }
-
             currentPieceIndex = index;
-            designer.SetpieceDrawableHP(healthspinnerpoints + 1);
+            if(currentPiece == null) {
+                currentPiece = new PieceState();
+                currentPiece.movePatterns = new ArrayList<>();
+                currentPiece.movePatterns.add(new MovePattern());
+                currentPiece.HP = 1;
+                currentPiece.attackRange = 1;
+            }
+            designer.SetPattern(currentPiece.movePatterns.get(0), index);
+            healthspinner.setSelection(currentPiece.HP - 1);
+            rangespinner.setSelection(currentPiece.attackRange - 1);
 
+            designer.SetpieceDrawableHP(currentPiece.HP);
+            UpdatePieceCost();
         }
     }
 
     @Override
     public void OnDesignerInteraction(boolean userInteraction) {
         if(userInteraction){
-            playerPoints--;
+
         }
 
         currentPattern = designer.GetPattern();
@@ -248,6 +232,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
             currentPiece.attackRange = 1;
             currentPiece.HP = 1;
         }
+        CalculateCurrentPieceCost();
         UpdatePoints();
     }
 
@@ -325,13 +310,42 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
     }
 
     private void UpdatePoints(){
+        int newPoints = 0;
+
+        for (int i = 0; i < pieceCost.length; i++) {
+            newPoints += pieceCost[i];
+        }
+        playerPoints = Settings.playerPoints - newPoints;
+        final int temp = playerPoints;
+
+
         Handler refresh = new Handler(Looper.getMainLooper());
         refresh.post(new Runnable(){
             @Override
             public void run() {
-                pointsText.setText("POINTS: " + Integer.toString(playerPoints));
+                pointsText.setText("POINTS LEFT: " + Integer.toString(temp));
             }
         });
+        UpdatePieceCost();
+    }
+
+    private void UpdatePieceCost(){
+        final int tempPieceCost = pieceCost[currentPieceIndex];
+        Handler refresh = new Handler(Looper.getMainLooper());
+        refresh.post(new Runnable(){
+            @Override
+            public void run() {
+                pieceCostText.setText("PIECE VALUE: " + Integer.toString(tempPieceCost));
+            }
+        });
+    }
+
+    private void CalculateCurrentPieceCost(){
+        if(currentPiece != null){
+            pieceCost[currentPieceIndex] = designer.GetPatternSize() + currentPiece.HP - 1 + currentPiece.attackRange - 1;
+        } else {
+            pieceCost[currentPieceIndex] = designer.GetPatternSize();
+        }
 
     }
 
