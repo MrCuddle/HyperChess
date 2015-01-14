@@ -62,6 +62,9 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
         fragment = Piece1Fragment.newInstance(this, player);
         setFragment(fragment, false);
 
+        GameManager.SetPlayer1Pieces(null);
+        GameManager.SetPlayer2Pieces(null);
+
     }
 
     @Override
