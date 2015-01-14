@@ -12,8 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 /**
@@ -59,7 +63,13 @@ public class GameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_game,null);
+
+
         gameView = new GameView(getActivity(), online, player, id);
+        gameView.game.notificationText = (TextView)v.findViewById(R.id.notification_text);
+        gameView.game.notificationPanel = (LinearLayout)v.findViewById(R.id.notification_panel);
         setHasOptionsMenu(true);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         //Load saved game state if one exists, otherwise, populate the game with the default starting layout
@@ -68,8 +78,8 @@ public class GameFragment extends Fragment {
         } else {
             gameView.game.board.AddObjects();
         }
-
-        return gameView;
+        ((FrameLayout)v.findViewById(R.id.game_container)).addView(gameView);
+        return v;
     }
 
     @Override
@@ -78,14 +88,22 @@ public class GameFragment extends Fragment {
         gameView.game.RemoveListeners();
         Log.d("GAME", "DESTROYED");
 
-
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        String state = gameView.game.GameStateToJSON();
 
-        editor.putBoolean("online", online);
-        editor.putBoolean("ingame", true);
-        editor.putString("gamestate",state);
+        if(gameView.game.currentGameState != Game.GameState.GameOver) {
+
+            String state = gameView.game.GameStateToJSON();
+
+            editor.putBoolean("online", online);
+            editor.putBoolean("ingame", true);
+            editor.putString("gamestate", state);
+
+        } else {
+            editor.putBoolean("ingame", false);
+            editor.putBoolean("online", false);
+        }
+
         editor.commit();
 
 
@@ -96,6 +114,16 @@ public class GameFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_in_game, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.action_forfeit:
+                gameView.game.Forfeit();
+                break;
+        }
+        return true;
     }
 
     @Override

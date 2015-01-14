@@ -2,11 +2,10 @@ package hyperchessab.hyperchess;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -29,14 +28,15 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         Firebase.setAndroidContext(this);
 
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("ingame", false);
-        editor.commit();
+//        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putBoolean("ingame", false);
+//        editor.commit();
 
         Intent intent = getIntent();
         if(intent.getExtras() != null){
             if(intent.getExtras().getBoolean("startgame", false)){
+                //setFragment(new MainMenuFragment(), false);
                 setFragment(GameFragment.newInstance(intent.getExtras().getBoolean("online", false),
                                                         intent.getExtras().getInt("player", 0),
                                                         intent.getExtras().getString("gameId", "")), true);
@@ -153,6 +153,13 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         //Start game as player 1
         //setFragment(GameFragment.newInstance(true,0, g.getId()), true);
         StartDesigner(true,0,g.getId());
+    }
+
+    public void GameOver(){
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        setFragment(new MainMenuFragment(), true);
+
     }
 
 

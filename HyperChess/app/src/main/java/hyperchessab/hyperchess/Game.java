@@ -1,11 +1,13 @@
 package hyperchessab.hyperchess;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -15,13 +17,15 @@ import com.firebase.client.FirebaseError;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Perlwin on 29/12/2014.
  */
 public class Game {
 
-    public enum GameState { Moving, Attacking }
+    public enum GameState { Moving, Attacking, GameOver }
     public GameState currentGameState = GameState.Moving;
 
     //Flyttas till PlayerManager senare
@@ -37,6 +41,9 @@ public class Game {
     public String gameId;
     ChildEventListener dbListener;
     Firebase fb;
+
+    public LinearLayout notificationPanel;
+    public TextView notificationText;
 
     Context context;
 
@@ -98,6 +105,14 @@ public class Game {
                     //Get rid of the turn from the database
                     fb.child("turn").removeValue();
                 }
+
+
+                //Check if a player has forfeited the game:
+                if(dataSnapshot.getKey().equals("forfeit") && currentGameState != GameState.GameOver){
+                    currentGameState = GameState.GameOver;
+                    ShowNotification("Player " + (localPlayerNumber == 0 ? 2 : 1) + " forfeited");
+                    EndGame();
+                }
             }
 
             @Override
@@ -121,6 +136,32 @@ public class Game {
             }
         };
         fb.addChildEventListener(dbListener);
+    }
+
+
+    public void Forfeit(){
+        ShowNotification("Game Over");
+
+        if(online){
+            fb.child("forfeit").setValue(localPlayerNumber);
+        }
+        currentGameState = GameState.GameOver;
+        EndGame();
+    }
+
+    public void EndGame(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ((ActionBarActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((MainGameActivity) context).GameOver();
+                    }
+                });
+            }
+        }, 5000);
     }
 
     public void RemoveListeners(){
@@ -152,6 +193,38 @@ public class Game {
         currentPlayer = (currentPlayer + 1) % 2;
         //hud.SetCurrentPlayer(currentPlayer);
         UpdateActionBarText();
+    }
+
+    public void ShowNotification(final String text){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        final float px = 50 * (metrics.densityDpi / 160f);
+
+
+        ((ActionBarActivity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                ViewGroup.LayoutParams lp = notificationPanel.getLayoutParams();
+                lp.height = (int) px;
+                notificationPanel.setLayoutParams(lp);
+                notificationText.setText(text);
+            }
+        });
+    }
+
+    public void HideNotification(){
+        ((ActionBarActivity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams lp = notificationPanel.getLayoutParams();
+                lp.height = 0;
+                notificationPanel.setLayoutParams(lp);
+                notificationText.setText("");
+            }
+        });
+
     }
 
     public void InitializeActionBar(){

@@ -4,8 +4,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <TextView
-        android:text="TJA"
+        android:text=""
         android:textSize="40dp"
+        android:textColor="@color/MainLighter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/action_bar_score_text_view"
