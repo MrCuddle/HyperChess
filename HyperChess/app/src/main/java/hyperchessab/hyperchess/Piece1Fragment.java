@@ -2,6 +2,7 @@ package hyperchessab.hyperchess;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,8 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import android.os.Handler;
-import android.os.Looper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -227,7 +226,11 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
                 currentPiece.HP = 1;
                 currentPiece.attackRange = 1;
             }
-            designer.SetPattern(currentPiece.movePatterns.get(0), index);
+            if(currentPiece.movePatterns != null) {
+                designer.SetPattern(currentPiece.movePatterns.get(0), index);
+            } else {
+                designer.SetPattern(null, index);
+            }
             healthspinner.setSelection(currentPiece.HP - 1);
             rangespinner.setSelection(currentPiece.attackRange - 1);
 
@@ -275,55 +278,57 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         piece.shapeType = id;
 
         MovePattern normal = pattern;
-        MovePattern inverted = new MovePattern();
-        int staticDir = normal.Get(0);
-        boolean firstIsEven = (staticDir % 2) == 0;
+        if(normal.Size() != 0) {
+            MovePattern inverted = new MovePattern();
+            int staticDir = normal.Get(0);
+            boolean firstIsEven = (staticDir % 2) == 0;
 
-        for (int i = 0; i < pattern.Size(); i++) {
+            for (int i = 0; i < pattern.Size(); i++) {
 
-            int dir = pattern.Get(i);
-            int newDir = dir;
-            if(firstIsEven){
-                if(dir == MovePattern.Direction.LEFT){
-                    newDir = MovePattern.Direction.RIGHT;
-                } else if(dir == MovePattern.Direction.RIGHT) {
-                    newDir = MovePattern.Direction.LEFT;
+                int dir = pattern.Get(i);
+                int newDir = dir;
+                if (firstIsEven) {
+                    if (dir == MovePattern.Direction.LEFT) {
+                        newDir = MovePattern.Direction.RIGHT;
+                    } else if (dir == MovePattern.Direction.RIGHT) {
+                        newDir = MovePattern.Direction.LEFT;
+                    }
+                } else {
+                    if (dir == MovePattern.Direction.UP) {
+                        newDir = MovePattern.Direction.DOWN;
+                    } else if (dir == MovePattern.Direction.DOWN) {
+                        newDir = MovePattern.Direction.UP;
+                    }
                 }
-            } else{
-                if(dir == MovePattern.Direction.UP){
-                    newDir = MovePattern.Direction.DOWN;
-                } else if(dir == MovePattern.Direction.DOWN) {
-                    newDir = MovePattern.Direction.UP;
+                inverted.AddDirection(newDir);
+
+            }
+
+
+            ArrayList<MovePattern> newPatterns = new ArrayList<>();
+
+            //Init patternlist
+            for (int i = 0; i < 8; i++) {
+                newPatterns.add(new MovePattern());
+            }
+
+            //For every pattern in newPattern, for every move in pattern
+            for (int p = 0; p < 4; p++) {
+                for (int m = 0; m < normal.Size(); m++) {
+                    int newDir = (normal.Get(m) + p) % 4;
+                    newPatterns.get(p).AddDirection(newDir);
                 }
             }
-            inverted.AddDirection(newDir);
 
-        }
-
-
-        ArrayList<MovePattern> newPatterns = new ArrayList<>();
-
-        //Init patternlist
-        for (int i = 0; i < 8; i++) {
-            newPatterns.add(new MovePattern());
-        }
-
-        //For every pattern in newPattern, for every move in pattern
-        for (int p = 0; p < 4; p++) {
-            for (int m = 0; m < normal.Size(); m++) {
-                int newDir = (normal.Get(m) + p) % 4;
-                newPatterns.get(p).AddDirection(newDir);
+            for (int p = 4; p < 8; p++) {
+                for (int m = 0; m < inverted.Size(); m++) {
+                    int newDir = (inverted.Get(m) + p) % 4;
+                    newPatterns.get(p).AddDirection(newDir);
+                }
             }
-        }
 
-        for (int p = 4; p < 8; p++) {
-            for (int m = 0; m < inverted.Size(); m++) {
-                int newDir = (inverted.Get(m) + p) % 4;
-                newPatterns.get(p).AddDirection(newDir);
-            }
+            piece.movePatterns = newPatterns;
         }
-
-        piece.movePatterns = newPatterns;
         pieces[id] = piece;
     }
 
@@ -344,7 +349,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
         if(allDesigned){
             for (int i = 0; i < pieces.length; i++) {
-                if(pieces[i].movePatterns.get(0).Size() == 0){
+                if(pieces[i].movePatterns == null || pieces[i].movePatterns.get(0).Size() == 0){
                     allHaveMovement = false;
                     indexOfANonFinishedPiece = i;
                     break;
