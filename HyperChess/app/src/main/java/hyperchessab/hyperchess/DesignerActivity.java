@@ -58,7 +58,7 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 actionBar.addTab(tab);
             }
         }
-        fragment = Piece1Fragment.newInstance(this);
+        fragment = Piece1Fragment.newInstance(this, player);
         setFragment(fragment, false);
 
     }
@@ -136,6 +136,9 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
             if(player == 0) {
                 GameManager.SetPlayer1Pieces(states);
                 player++;
+                getSupportActionBar().setSelectedNavigationItem(0);
+                fragment = Piece1Fragment.newInstance(this, player);
+                setFragment(fragment, false);
             } else {
                 GameManager.SetPlayer2Pieces(states);
                 StartGame();

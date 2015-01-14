@@ -33,6 +33,12 @@ public class Designer extends Game {
     Path drawPath = new Path();
     Point lastPlacement = new Point(-1, -1), lastPosition = new Point(-1, -1);
     boolean userInteraction = true;
+    boolean colorHasBeenChanged = false;
+
+    //Secondary colors
+    int primaryColor = Color.argb(255,228,21,21);
+    int secondaryColor = Color.argb(255,234,39,39);
+    int tertiaryColor = Color.argb(255,239,90,90);
 
     Object sync = new Object();
 
@@ -69,6 +75,8 @@ public class Designer extends Game {
         linePaint.setColor(Color.argb(255,50,50,255));
         linePaint.setStyle(Paint.Style.STROKE);
 
+        arrow.setColorFilter(Color.argb(255, 50, 50, 255), PorterDuff.Mode.SRC);
+
         pieceStart = new Piece1Drawable();
         pieceStart.setBounds(STARTPOINT.x * tileSize, STARTPOINT.y*tileSize,
                 STARTPOINT.x * tileSize + tileSize,
@@ -77,6 +85,13 @@ public class Designer extends Game {
         SetStart(STARTPOINT.x, STARTPOINT.y);
         HighlightAdjacent(STARTPOINT.x, STARTPOINT.y);
 
+    }
+
+    public void SetDrawableColor(){
+        ((HPDrawable)pieceStart).setColor(primaryColor, secondaryColor, tertiaryColor);
+        linePaint.setColor(primaryColor);
+        arrow.setColorFilter(primaryColor, PorterDuff.Mode.SRC);
+        colorHasBeenChanged = true;
     }
 
     public void SetpieceDrawableHP(int i)
@@ -103,6 +118,10 @@ public class Designer extends Game {
             case 3:
                 pieceStart = new Piece4Drawable();
                 break;
+        }
+
+        if(colorHasBeenChanged){
+            ((HPDrawable)pieceStart).setColor(primaryColor, secondaryColor, tertiaryColor);
         }
 
         pieceStart.setBounds(STARTPOINT.x * tileSize, STARTPOINT.y*tileSize,
@@ -150,7 +169,6 @@ public class Designer extends Game {
 
             c.drawPath(drawPath, linePaint);
             if (arrow != null) {
-                arrow.setColorFilter(Color.argb(255, 50, 50, 255), PorterDuff.Mode.SRC);
                 arrow.draw(c);
             }
             pieceStart.draw(c);
@@ -191,6 +209,11 @@ public class Designer extends Game {
         }
 
         arrow = clone;
+        if(colorHasBeenChanged){
+            arrow.setColorFilter(primaryColor, PorterDuff.Mode.SRC);
+        }else {
+            arrow.setColorFilter(Color.argb(255, 50, 50, 255), PorterDuff.Mode.SRC);
+        }
 
         pattern.AddDirection(dir);
         lastPlacement.set(indexX, indexY);

@@ -3,7 +3,8 @@
              android:orientation="vertical"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="hyperchessab.hyperchess.CreateGameFragment">
+             tools:context="hyperchessab.hyperchess.CreateGameFragment"
+    android:background="@drawable/menu_title_background">
 
     <EditText android:id="@+id/game_name"
         android:hint="Name"

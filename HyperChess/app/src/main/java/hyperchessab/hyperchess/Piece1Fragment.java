@@ -46,6 +46,7 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
 
     PieceState currentPiece;
     MovePattern currentPattern = new MovePattern();
+    int playerNumber;
     int currentPieceIndex = 0;
     int playerPoints = Settings.playerPoints;
     int pieceCost[] = new int[Settings.differentPieces];
@@ -70,10 +71,10 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
      *
      * @return A new instance of fragment Piece1Fragment.
      */
-    public static Piece1Fragment newInstance(Piece1Listener listener) {
+    public static Piece1Fragment newInstance(Piece1Listener listener, int playerNumber) {
         Piece1Fragment fragment = new Piece1Fragment();
         fragment.listener = listener;
-
+        fragment.playerNumber = playerNumber;
         for (int i = 0; i < Settings.differentPieces; i++) {
             fragment.pieces[i] = null;
         }
@@ -139,7 +140,9 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         designer = designerView.GetDesigner();
         designer.SetListener(this);
         designer.SetPattern(currentPattern, currentPieceIndex);
-
+        if(playerNumber == 1){
+            designer.SetDrawableColor();
+        }
 
         return v;
     }
