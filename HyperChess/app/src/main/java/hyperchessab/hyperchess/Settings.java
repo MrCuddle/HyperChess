@@ -26,4 +26,6 @@ public class Settings {
     public static final int designerWidth = 3;
     public static final int designerHeight = 3;
 
+    public static final int winningScore = 5;
+
 }

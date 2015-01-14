@@ -1,15 +1,14 @@
 package hyperchessab.hyperchess;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
@@ -23,6 +22,8 @@ import com.firebase.client.FirebaseError;
  */
 public class MainMenuFragment extends Fragment {
 
+    Firebase firebase;
+    Firebase.AuthResultHandler authEventHandler;
     Button play, create, join, continue_game;
 
     private OnMainMenuInteractionListener mListener;
@@ -133,8 +134,11 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void FirebaseLogin(){
-        Firebase firebase = new Firebase(DatabaseManager.URL);
-        firebase.authAnonymously(new Firebase.AuthResultHandler() {
+        firebase = new Firebase(DatabaseManager.URL);
+
+        authEventHandler = new Firebase.AuthResultHandler() {
+
+
             @Override
             public void onAuthenticated(AuthData authData) {
 
@@ -148,11 +152,18 @@ public class MainMenuFragment extends Fragment {
 
                 switch(firebaseError.getCode()) {
                     default:
-                        Toast.makeText(getActivity(), "Could not connect to internet", Toast.LENGTH_SHORT).show();
+                        //if(!destroyed) Toast.makeText(getActivity(), "Could not connect to internet", Toast.LENGTH_SHORT).show();
                 }
 
             }
-        });
+        };
+
+        firebase.authAnonymously(authEventHandler);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     public interface OnMainMenuInteractionListener {

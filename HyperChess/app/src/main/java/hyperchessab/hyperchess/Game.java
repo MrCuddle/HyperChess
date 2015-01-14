@@ -161,7 +161,7 @@ public class Game {
                     }
                 });
             }
-        }, 5000);
+        }, 3000);
     }
 
     public void RemoveListeners(){
@@ -171,12 +171,43 @@ public class Game {
     }
 
     public void Update(double dt){
-        board.Update(dt);
+
+        if(GameData.teamOneScore >= Settings.winningScore){
+            if(online) {
+                if (localPlayerNumber == 0)
+                    ShowNotification("You won!");
+                else
+                    ShowNotification("You lost.");
+            } else {
+                ShowNotification("Player 1 won");
+            }
+            EndGame();
+            currentGameState = GameState.GameOver;
+            GameData.teamOneScore = 0;
+        } else if (GameData.teamTwoScore >= Settings.winningScore){
+            if(online) {
+                if (localPlayerNumber == 1)
+                    ShowNotification("You won!");
+                else
+                    ShowNotification("You lost.");
+            } else {
+                ShowNotification("Player 2 won");
+            }
+            EndGame();
+            currentGameState = GameState.GameOver;
+            GameData.teamTwoScore = 0;
+        }
 
         switch(currentGameState){
             case Moving:
+
+                board.Update(dt);
                 break;
             case Attacking:
+                board.Update(dt);
+                break;
+            case GameOver:
+
                 break;
         }
 
