@@ -273,16 +273,52 @@ public class Piece1Fragment extends Fragment implements Designer.DesignerListene
         piece.HP = health;
         piece.initHP = health;
         piece.shapeType = id;
+
+        MovePattern normal = pattern;
+        MovePattern inverted = new MovePattern();
+        int staticDir = normal.Get(0);
+        boolean firstIsEven = (staticDir % 2) == 0;
+
+        for (int i = 0; i < pattern.Size(); i++) {
+
+            int dir = pattern.Get(i);
+            int newDir = dir;
+            if(firstIsEven){
+                if(dir == MovePattern.Direction.LEFT){
+                    newDir = MovePattern.Direction.RIGHT;
+                } else if(dir == MovePattern.Direction.RIGHT) {
+                    newDir = MovePattern.Direction.LEFT;
+                }
+            } else{
+                if(dir == MovePattern.Direction.UP){
+                    newDir = MovePattern.Direction.DOWN;
+                } else if(dir == MovePattern.Direction.DOWN) {
+                    newDir = MovePattern.Direction.UP;
+                }
+            }
+            inverted.AddDirection(newDir);
+
+        }
+
+
         ArrayList<MovePattern> newPatterns = new ArrayList<>();
+
         //Init patternlist
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             newPatterns.add(new MovePattern());
         }
 
         //For every pattern in newPattern, for every move in pattern
         for (int p = 0; p < 4; p++) {
-            for (int m = 0; m < pattern.Size(); m++) {
-                int newDir = (pattern.Get(m) + p) % 4;
+            for (int m = 0; m < normal.Size(); m++) {
+                int newDir = (normal.Get(m) + p) % 4;
+                newPatterns.get(p).AddDirection(newDir);
+            }
+        }
+
+        for (int p = 4; p < 8; p++) {
+            for (int m = 0; m < inverted.Size(); m++) {
+                int newDir = (inverted.Get(m) + p) % 4;
                 newPatterns.get(p).AddDirection(newDir);
             }
         }
