@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -123,12 +124,16 @@ public class DesignerActivity extends ActionBarActivity implements ActionBar.Tab
                 SendPieceDefinitionsToFirebase();
                 if(GameManager.GetPlayer2Pieces() != null){
                     StartGame();
+                } else {
+                    Toast.makeText(this, "Waiting for player 2", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 GameManager.SetPlayer2Pieces(states);
                 SendPieceDefinitionsToFirebase();
                 if(GameManager.GetPlayer1Pieces() != null){
                     StartGame();
+                } else {
+                    Toast.makeText(this, "Waiting for player 1", Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
