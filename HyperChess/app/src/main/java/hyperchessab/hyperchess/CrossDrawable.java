@@ -19,13 +19,22 @@ public class CrossDrawable extends Drawable {
         paint = new Paint();
         paint.setColor(R.color.MainLighter);
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10f);
 
         Rect bounds = new Rect(getBounds().left, getBounds().top, getBounds().right, getBounds().bottom);
 
-        path.moveTo(bounds.left, bounds.top);
-        path.lineTo(bounds.right,bounds.bottom);
-        path.moveTo(bounds.right, bounds.top);
-        path.lineTo(bounds.left,bounds.bottom);
+        int margin = 20;
+        path = new Path();
+
+        path.moveTo(bounds.left + margin, bounds.top + margin);
+        path.lineTo(bounds.right - margin,bounds.bottom - margin);
+        path.moveTo(bounds.right - margin, bounds.top + margin);
+        path.lineTo(bounds.left + margin, bounds.bottom - margin);
+        path.moveTo(bounds.left + margin, bounds.top + margin);
+        path.lineTo(bounds.left + margin, bounds.bottom - margin);
+        path.lineTo(bounds.right - margin, bounds.bottom - margin);
+        path.lineTo(bounds.right - margin, bounds.top + margin);
+        path.lineTo(bounds.left + margin, bounds.top + margin);
     }
 
     @Override
