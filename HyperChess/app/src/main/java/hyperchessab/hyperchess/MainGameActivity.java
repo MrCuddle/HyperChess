@@ -95,27 +95,8 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
     }
 
     @Override
-    public void onExitPressed() {
-        //Toast.makeText(this, "Exit Pressed", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    @Override
-    public void onOptionsPressed() {
-        setFragment(new OptionFragment(), true);
-        //Toast.makeText(this, "Options Pressed", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onPlayPressed() {
         StartDesigner(false,0,"");
-    }
-
-    @Override
-    public void onDesignerPressed() {
-        StartDesigner(false, 0, "hej");
-        //finish();
-
     }
 
     public void onCreatePressed(){
@@ -154,8 +135,4 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         //setFragment(GameFragment.newInstance(true,0, g.getId()), true);
         StartDesigner(true,0,g.getId());
     }
-
-
-
-
 }

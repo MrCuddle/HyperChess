@@ -7,50 +7,30 @@
     android:paddingLeft="@dimen/menu_layout_padding_sides"
     android:paddingRight="@dimen/menu_layout_padding_sides"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/mainmenu_text_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/game_name"
-        android:textSize="@dimen/menu_fontsize_gametitle"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:clickable="false"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:textColor="@color/Accent"
-        android:layout_alignParentTop="true"/>
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/mainmenu_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_weight="1"
         android:padding="25dp"
-        android:background="@drawable/menu_title_background"
-        android:layout_below="@+id/mainmenu_text_header">
+        android:background="@color/Main">
 
-
-    <Button
-        android:id="@+id/mainmenu_button_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/options"
-        android:layout_above="@+id/mainmenu_button_designer"
-        android:background="@drawable/menu_button_shape"
-        android:layout_marginBottom="@dimen/menu_margin_buttons"
-        />
-
-    <Button
-        android:id="@+id/mainmenu_button_designer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="DESIGNER Test"
-        android:layout_above="@+id/mainmenu_button_create"
-        android:background="@drawable/menu_button_shape"
-        android:layout_marginBottom="@dimen/menu_margin_buttons"/>
+        <TextView
+            android:id="@+id/mainmenu_text_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/game_name"
+            android:textSize="@dimen/menu_fontsize_gametitle"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:clickable="false"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/Accent"
+            android:layout_marginBottom="80dp"
+            android:layout_alignParentTop="true"/>
 
         <Button
             android:id="@+id/mainmenu_button_create"
@@ -58,7 +38,6 @@
             android:layout_height="wrap_content"
             android:text="@string/create_game"
             android:background="@drawable/menu_button_shape"
-            android:layout_above="@+id/mainmenu_button_join"
             android:layout_marginBottom="@dimen/menu_margin_buttons"
             />
 
@@ -68,7 +47,6 @@
             android:layout_height="wrap_content"
             android:text="@string/join_game"
             android:background="@drawable/menu_button_shape"
-            android:layout_above="@+id/mainmenu_button_play"
             android:layout_marginBottom="@dimen/menu_margin_buttons"
             />
 
@@ -77,7 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/play"
-        android:layout_above="@+id/mainmenu_button_continue"
         android:background="@drawable/menu_button_shape"
         android:layout_marginBottom="@dimen/menu_margin_buttons"/>
         <Button
@@ -85,19 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_game"
-            android:layout_above="@+id/mainmenu_button_exit"
-            android:background="@drawable/menu_button_shape"
-            android:layout_marginBottom="@dimen/menu_margin_buttons"/>
-        <Button
-            android:id="@+id/mainmenu_button_exit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/exit"
             android:background="@drawable/menu_button_shape"
             android:layout_marginBottom="@dimen/menu_margin_buttons"
-            android:layout_alignParentBottom="true"
-            />
-    </RelativeLayout>
-
-
+            android:layout_alignParentBottom="true"/>
+    </LinearLayout>
 </RelativeLayout>
