@@ -398,6 +398,7 @@ public class GamePiece extends GameObject {
                         moveDestinations = null;
                         shape.setColorFilter(teamColor, PorterDuff.Mode.SRC);
                         moved = true;
+                        break;
                     }
                 }
             }
