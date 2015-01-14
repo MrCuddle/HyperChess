@@ -190,7 +190,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         game.Update(dt);
-        InputData.Clear();
+        synchronized (game.sync) {
+            InputData.Clear();
+        }
         clicked = false;
     }
 
