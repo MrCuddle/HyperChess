@@ -306,18 +306,6 @@ public class GamePiece extends GameObject {
             board.getGame().currentGameState = Game.GameState.Attacking;
             Select();
             HighlightAttackable();
-            if(flag == null && board.IsOnFlag(gridPosX, gridPosY)) {
-                flag = board.GetFlag();
-                flag.SetHolder(this);
-            }
-            if(flag != null){
-                flag.SetGridPosition(gridPosX, gridPosY);
-                if(board.GetTile(gridPosX, gridPosY) instanceof GoalTile && ((GoalTile) board.GetTile(gridPosX, gridPosY)).owner == owner){
-                    flag.ResetPosition();
-                    flag = null;
-                    GameData.IncrementScore(owner.GetTeamId());
-                }
-            }
         }
         else{
             if(targetPos.x < posX)
@@ -333,6 +321,19 @@ public class GamePiece extends GameObject {
             if(Math.sqrt(Math.pow(targetPos.x - posX, 2) + Math.pow(targetPos.y - posY, 2)) < 2) {
                 posX = targetPos.x;
                 posY = targetPos.y;
+                if(flag == null && board.IsOnFlag(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize)) {
+                    flag = board.GetFlag();
+                    flag.SetHolder(this);
+                }
+                if(flag != null){
+                    flag.SetGridPosition(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize);
+                    if(board.GetTile(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize) instanceof GoalTile &&
+                            ((GoalTile) board.GetTile(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize)).owner == owner){
+                        flag.ResetPosition();
+                        flag = null;
+                        GameData.IncrementScore(owner.GetTeamId());
+                    }
+                }
                 movePath.poll();
             }
         }
