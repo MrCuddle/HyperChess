@@ -221,6 +221,7 @@ public class Game {
             fb.setValue(thisTurn);
         }
 
+        board.DecrementRespawnTimers(players.get(currentPlayer));
         currentPlayer = (currentPlayer + 1) % 2;
         //hud.SetCurrentPlayer(currentPlayer);
         UpdateActionBarText();

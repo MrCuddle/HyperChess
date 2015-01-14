@@ -65,6 +65,11 @@ public class GameBoard {
         }
     }
 
+    public void DecrementRespawnTimers(Player owner){
+        for(GamePiece p : pieces)
+            p.DecrementRespawnTime(owner);
+    }
+
     public void AddObjects(){
 
         AddStaticObjects();

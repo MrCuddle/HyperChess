@@ -21,5 +21,6 @@ public class PieceState {
     public int attackRange;
     public int HP;
     public int initHP;
+    public int respawnTimer;
 
 }

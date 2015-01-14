@@ -27,6 +27,14 @@ public class HPDrawable extends Drawable {
         setBounds(getBounds());
     }
 
+    public void Disable(){
+        primaryColor = Color.argb(255,117,148,191);
+        secondaryColor = Color.argb(255, 97, 128, 171);
+        tertiaryColor = Color.argb(255,77,108,151);
+
+        setBounds(getBounds());
+    }
+
     @Override
     public void draw(Canvas canvas) {
 

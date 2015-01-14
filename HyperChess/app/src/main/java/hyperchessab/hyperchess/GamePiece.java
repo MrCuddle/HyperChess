@@ -28,6 +28,7 @@ public class GamePiece extends GameObject {
     int attackRange;
     int HP, initHP;
     int shapeType;
+    int respawnTimer;
     GameBoard board;
     List<MovePattern> patterns;
     List<MoveDestination> moveDestinations;
@@ -40,49 +41,6 @@ public class GamePiece extends GameObject {
     int teamColor;
     boolean attackQueued = false;
     int attackX, attackY;
-
-
-
-
-    public GamePiece(Context context, int x, int y, GameBoard board){
-        this.context = context;
-        gridPosX = x;
-        gridPosY = y;
-        posX = gridPosX * GameBoard.TileSize;
-        posY = gridPosY * GameBoard.TileSize;
-        //shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
-        shape = new Piece1Drawable();
-        shape.setBounds(gridPosX*GameBoard.TileSize, gridPosY*GameBoard.TileSize,
-                gridPosX*GameBoard.TileSize + GameBoard.TileSize,
-                gridPosY*GameBoard.TileSize + GameBoard.TileSize);
-        this.board = board;
-
-        patterns = PatternTest();
-        selected = false;
-    }
-
-    public GamePiece(Context context, GameBoard board, int shapeType){
-        this.context = context;
-        this.board = board;
-        shape = CreateShape(shapeType);
-        this.shapeType = shapeType;
-        patterns = PatternTest();
-        selected = false;
-        rangeIndicator = new RangeDrawable();
-    }
-
-    public GamePiece(GamePiece piece)
-    {
-        this.context = piece.context;
-        this.board = piece.board;
-        shape = CreateShape(piece.shapeType);
-        patterns = piece.patterns;
-        selected = piece.selected;
-        attackRange = piece.attackRange;
-        SetInitHP(piece.HP);
-        shapeType = piece.shapeType;
-        rangeIndicator = new RangeDrawable();
-    }
 
     public GamePiece(Context context, PieceState state, GameBoard board){
         this.context = context;
@@ -140,6 +98,8 @@ public class GamePiece extends GameObject {
         rangeIndicator = new RangeDrawable();
         rangeIndicator.SetRange(attackRange);
         rangeIndicator.setBounds(shape.getBounds().left, shape.getBounds().top, shape.getBounds().right, shape.getBounds().bottom);
+
+        respawnTimer = state.respawnTimer;
     }
 
     public Drawable CreateShape(int type){
@@ -156,6 +116,19 @@ public class GamePiece extends GameObject {
             default:
                 return new Piece1Drawable();
         }
+    }
+
+    public void DecrementRespawnTime(Player owner){
+        if(this.owner == owner) {
+            if (respawnTimer > 0)
+                respawnTimer--;
+            if (respawnTimer == 0)
+                ((HPDrawable) shape).setColor(owner.GetPrimaryColor(), owner.GetSecondaryColor(), owner.GetTertiaryColor());
+        }
+    }
+
+    public boolean IsActive(){
+        return respawnTimer == 0;
     }
 
     public PieceState GetPieceState(){
@@ -175,6 +148,7 @@ public class GamePiece extends GameObject {
         ps.attackRange = attackRange;
         ps.HP = HP;
         ps.initHP = initHP;
+        ps.respawnTimer = respawnTimer;
         return ps;
     }
 
@@ -429,7 +403,7 @@ public class GamePiece extends GameObject {
             }
 
             if (!moved) {
-                if (InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom) {
+                if (IsActive() && InputData.ClickPoint.x >= shape.getBounds().left && InputData.ClickPoint.x <= shape.getBounds().right && InputData.ClickPoint.y >= shape.getBounds().top && InputData.ClickPoint.y <= shape.getBounds().bottom) {
                     Select();
                     HighlightMoveable();
                 } else {
@@ -467,6 +441,8 @@ public class GamePiece extends GameObject {
                             GamePiece piece = ((GamePiece) t.occupier);
                             t.occupier = null;
                             piece.ResetPosition();
+                            piece.respawnTimer = 3;
+                            ((HPDrawable)piece.shape).Disable();
                         }
                         attackDestinations = null;
 
@@ -507,7 +483,8 @@ public class GamePiece extends GameObject {
             Tile t = board.GetTile(gridPosX + i, gridPosY);
             if(t != null && t.occupier instanceof Obstacle)
                 keepSearching = false;
-            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+            else if(t != null && t.occupier instanceof GamePiece &&
+                    (((GamePiece) t.occupier).GetOwner() != this.owner) && ((GamePiece) t.occupier).IsActive())
                 attackDestinations.add(new AttackDestination(gridPosX+i, gridPosY));
         }
 
@@ -518,7 +495,8 @@ public class GamePiece extends GameObject {
             Tile t = board.GetTile(gridPosX - i, gridPosY);
             if(t != null && t.occupier instanceof Obstacle)
                 keepSearching = false;
-            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+            else if(t != null && t.occupier instanceof GamePiece &&
+                    (((GamePiece) t.occupier).GetOwner() != this.owner) && ((GamePiece) t.occupier).IsActive())
                 attackDestinations.add(new AttackDestination(gridPosX-i, gridPosY));
         }
 
@@ -529,7 +507,8 @@ public class GamePiece extends GameObject {
             Tile t = board.GetTile(gridPosX, gridPosY + i);
             if(t != null && t.occupier instanceof Obstacle)
                 keepSearching = false;
-            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+            else if(t != null && t.occupier instanceof GamePiece &&
+                    (((GamePiece) t.occupier).GetOwner() != this.owner) && ((GamePiece) t.occupier).IsActive())
                 attackDestinations.add(new AttackDestination(gridPosX, gridPosY+i));
         }
 
@@ -540,7 +519,8 @@ public class GamePiece extends GameObject {
             Tile t = board.GetTile(gridPosX, gridPosY - i);
             if(t != null && t.occupier instanceof Obstacle)
                 keepSearching = false;
-            else if(t != null && t.occupier instanceof GamePiece && (((GamePiece) t.occupier).GetOwner() != this.owner))
+            else if(t != null && t.occupier instanceof GamePiece &&
+                    (((GamePiece) t.occupier).GetOwner() != this.owner) && ((GamePiece) t.occupier).IsActive())
                 attackDestinations.add(new AttackDestination(gridPosX, gridPosY-i));
         }
     }
