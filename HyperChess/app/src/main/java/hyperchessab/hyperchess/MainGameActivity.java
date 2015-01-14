@@ -41,6 +41,10 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("ineditor", false);
+//                editor.putBoolean("ingame", true);
+                editor.putBoolean("online", intent.getExtras().getBoolean("online", false));
+                editor.putString("gameId", intent.getExtras().getString("gameId", ""));
+                editor.putInt("player", intent.getExtras().getInt("player", 0));
                 editor.commit();
                 //setFragment(new MainMenuFragment(), false);
                 setFragment(GameFragment.newInstance(intent.getExtras().getBoolean("online", false),
@@ -149,9 +153,11 @@ public class MainGameActivity extends ActionBarActivity implements MainMenuFragm
         editor.putBoolean("ingame", false);
         editor.commit();
 
-        Firebase fb = new Firebase(DatabaseManager.URL).child("games").child(sharedPref.getString("gameId",""));
-        fb.child("forfeit").setValue(0);
-        fb.child("players").setValue(2);
+        if(sharedPref.getBoolean("online", false)) {
+            Firebase fb = new Firebase(DatabaseManager.URL).child("games").child(sharedPref.getString("gameId", ""));
+            fb.child("forfeit").setValue(0);
+            fb.child("players").setValue(2);
+        }
 
         setFragment(new MainMenuFragment(), false);
     }
