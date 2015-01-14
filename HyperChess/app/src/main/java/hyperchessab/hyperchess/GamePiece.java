@@ -92,6 +92,7 @@ public class GamePiece extends GameObject {
         startPosY = state.startPosY;
         posX = gridPosX * GameBoard.TileSize;
         posY = gridPosY * GameBoard.TileSize;
+        shapeType = state.shapeType;
         switch(state.shapeType){
             case 0:
                 shape = new Piece1Drawable();
