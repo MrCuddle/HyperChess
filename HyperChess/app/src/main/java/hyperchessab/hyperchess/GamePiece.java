@@ -306,18 +306,6 @@ public class GamePiece extends GameObject {
             board.getGame().currentGameState = Game.GameState.Attacking;
             Select();
             HighlightAttackable();
-            if(flag == null && board.IsOnFlag(gridPosX, gridPosY)) {
-                flag = board.GetFlag();
-                flag.SetHolder(this);
-            }
-            if(flag != null){
-                flag.SetGridPosition(gridPosX, gridPosY);
-                if(board.GetTile(gridPosX, gridPosY) instanceof GoalTile && ((GoalTile) board.GetTile(gridPosX, gridPosY)).owner == owner){
-                    flag.ResetPosition();
-                    flag = null;
-                    GameData.IncrementScore(owner.GetTeamId());
-                }
-            }
         }
         else{
             if(targetPos.x < posX)
@@ -333,6 +321,19 @@ public class GamePiece extends GameObject {
             if(Math.sqrt(Math.pow(targetPos.x - posX, 2) + Math.pow(targetPos.y - posY, 2)) < 2) {
                 posX = targetPos.x;
                 posY = targetPos.y;
+                if(flag == null && board.IsOnFlag(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize)) {
+                    flag = board.GetFlag();
+                    flag.SetHolder(this);
+                }
+                if(flag != null){
+                    flag.SetGridPosition(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize);
+                    if(board.GetTile(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize) instanceof GoalTile &&
+                            ((GoalTile) board.GetTile(targetPos.x/GameBoard.TileSize, targetPos.y/GameBoard.TileSize)).owner == owner){
+                        flag.ResetPosition();
+                        flag = null;
+                        GameData.IncrementScore(owner.GetTeamId());
+                    }
+                }
                 movePath.poll();
             }
         }
@@ -403,7 +404,7 @@ public class GamePiece extends GameObject {
             boolean moved = false;
             if (moveDestinations != null) {
                 for (MoveDestination d : moveDestinations) {
-                    if (d.ClickedOn()) {
+                    if (d.ClickedOn() && d.IsValid()) {
 
                         movePath = GetMovePath(d.GetPath());
                         isMoving = true;
@@ -568,9 +569,9 @@ public class GamePiece extends GameObject {
                 if(patterns.get(i).GetPattern().get(j) == MovePattern.Direction.RIGHT)
                     x++;
 
+                destination.AddHighlight(x,y);
                 if(board.GetTile(x,y) == null || board.GetTile(x,y).occupier != null){
-                    destination = null;
-                    break;
+                    destination.Invalidate();
                 }
             }
             if(destination != null){
@@ -581,11 +582,13 @@ public class GamePiece extends GameObject {
         }
     }
 
-    public void Draw(Canvas c){
+    public void DrawPiece(Canvas c){
         shape.draw(c);
+    }
+
+    public void DrawPieceOverlays(Canvas c){
         if(selected)
             rangeIndicator.draw(c);
-
         synchronized (board.getGame().sync) {
             if (moveDestinations != null) {
                 for (MoveDestination d : moveDestinations)
@@ -620,26 +623,52 @@ public class GamePiece extends GameObject {
         int gridPosX, gridPosY;
         MovePattern pathTo;
         Drawable shape;
+        ArrayList<Drawable> highlights = new ArrayList<Drawable>();
+        boolean isValid;
 
         public MoveDestination(){
             shape = context.getResources().getDrawable(R.drawable.highlight_shape);
             shape.setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC);
-
+            isValid = true;
         }
 
         public MoveDestination(int x, int y, MovePattern pathTo){
-            shape = context.getResources().getDrawable(R.drawable.piece_shape_1);
-            shape.setColorFilter(Color.YELLOW, PorterDuff.Mode.ADD);
+            shape = context.getResources().getDrawable(R.drawable.highlight_shape);
+            shape.setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC);
             SetPosition(x, y);
             this.pathTo = pathTo;
+            isValid = true;
+        }
+
+        public void AddHighlight(int x, int y){
+            Drawable highlight = context.getResources().getDrawable(R.drawable.highlight_shape);
+            if(isValid)
+                highlight.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC);
+            else
+                highlight.setColorFilter(Color.argb(128,128,128,128), PorterDuff.Mode.SRC);
+            highlight.setBounds(x*GameBoard.TileSize, y*GameBoard.TileSize,
+                    x*GameBoard.TileSize + GameBoard.TileSize,
+                    y*GameBoard.TileSize + GameBoard.TileSize);
+            highlights.add(highlight);
         }
 
         public MovePattern GetPath(){
             return pathTo;
         }
 
+
+        public boolean IsValid(){
+            return isValid;
+        }
         public Point GetPosition(){
             return new Point(gridPosX,gridPosY);
+        }
+
+        public void Invalidate(){
+            isValid = false;
+            for(Drawable d : highlights)
+                d.setColorFilter(Color.argb(128,128,128,128), PorterDuff.Mode.SRC);
+            shape.setColorFilter(Color.argb(128,128,128,128),PorterDuff.Mode.SRC);
         }
 
         public void SetPosition(int x, int y){
@@ -661,6 +690,8 @@ public class GamePiece extends GameObject {
 
 
         public void Draw(Canvas c){
+            for(Drawable d : highlights)
+            d.draw(c);
             shape.draw(c);
         }
     }

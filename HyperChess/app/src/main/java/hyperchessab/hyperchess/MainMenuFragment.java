@@ -23,7 +23,7 @@ import com.firebase.client.FirebaseError;
  */
 public class MainMenuFragment extends Fragment {
 
-    Button play, options, exit, create, join, continue_game;
+    Button play, create, join, continue_game;
 
     private OnMainMenuInteractionListener mListener;
 
@@ -48,8 +48,6 @@ public class MainMenuFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main_menu, container, false);
 
         play = (Button)v.findViewById(R.id.mainmenu_button_play);
-        options = (Button)v.findViewById(R.id.mainmenu_button_options);
-        exit = (Button)v.findViewById(R.id.mainmenu_button_exit);
         create = (Button)v.findViewById(R.id.mainmenu_button_create);
         join = (Button)v.findViewById(R.id.mainmenu_button_join);
         continue_game = (Button)v.findViewById(R.id.mainmenu_button_continue);
@@ -71,14 +69,9 @@ public class MainMenuFragment extends Fragment {
         join.setEnabled(false);
 
         play.setOnClickListener(buttonListener);
-        options.setOnClickListener(buttonListener);
-        exit.setOnClickListener(buttonListener);
         create.setOnClickListener(buttonListener);
         join.setOnClickListener(buttonListener);
         continue_game.setOnClickListener(buttonListener);
-
-        Button b = (Button)v.findViewById(R.id.mainmenu_button_designer);
-        b.setOnClickListener(buttonListener);
 
         FirebaseLogin();
 
@@ -90,15 +83,6 @@ public class MainMenuFragment extends Fragment {
             switch (buttonId){
                 case R.id.mainmenu_button_play:
                     mListener.onPlayPressed();
-                    break;
-                case R.id.mainmenu_button_options:
-                    mListener.onOptionsPressed();
-                    break;
-                case R.id.mainmenu_button_exit:
-                    mListener.onExitPressed();
-                    break;
-                case R.id.mainmenu_button_designer:
-                    mListener.onDesignerPressed();
                     break;
                 case R.id.mainmenu_button_create:
                     mListener.onCreatePressed();
@@ -153,10 +137,7 @@ public class MainMenuFragment extends Fragment {
     }
 
     public interface OnMainMenuInteractionListener {
-        public void onExitPressed();
-        public void onOptionsPressed();
         public void onPlayPressed();
-        public void onDesignerPressed();
         public void onCreatePressed();
         public void onJoinPressed();
         public void onContinuePressed();

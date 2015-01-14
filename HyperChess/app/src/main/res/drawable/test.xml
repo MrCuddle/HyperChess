@@ -2,13 +2,15 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="rectangle">
 
-    <gradient
-        android:angle="-45"
-        android:startColor="@color/MainLighter"
-        android:endColor="@color/Main"
-        android:type="linear"/>
-    <corners
-        android:bottomRightRadius="0dp"
-        android:bottomLeftRadius="3dp"/>
+    <!--<gradient-->
+        <!--android:angle="-45"-->
+        <!--android:startColor="@color/MainLighter"-->
+        <!--android:endColor="@color/Main"-->
+        <!--android:type="linear"/>-->
+    <!--<corners-->
+        <!--android:bottomRightRadius="0dp"-->
+        <!--android:bottomLeftRadius="3dp"/>-->
+    <solid
+        android:color="@color/MainDarker"/>
 
 </shape>
